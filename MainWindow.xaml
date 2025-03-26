@@ -13,5 +13,4 @@
         <Button x:Name="myButton" Click="myButton_Click">Click Me</Button>
         <TextBlock>Mars ma de acici</TextBlock>
     </StackPanel>
-    
 </Window>

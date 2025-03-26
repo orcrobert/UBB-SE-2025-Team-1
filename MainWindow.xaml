@@ -9,8 +9,9 @@
     mc:Ignorable="d"
     Title="WinUIApp">
 
-    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+    <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="10">
         <Button x:Name="myButton" Click="myButton_Click">Click Me</Button>
-        <TextBlock>Mars ma de acici</TextBlock>
+        <TextBlock x:Name="myTextBlock">Mars ma de acici</TextBlock>
+        <TextBlock x:Name="myTextBlock2" Text="Query result here..." FontWeight="Bold"/>
     </StackPanel>
 </Window>

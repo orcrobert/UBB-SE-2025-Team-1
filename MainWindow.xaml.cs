@@ -1,58 +1,80 @@
 using System;
-using System.Configuration;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using WinUIApp.Services;
 using MySql.Data.MySqlClient;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Text;
 
 namespace WinUIApp
 {
     public sealed partial class MainWindow : Window
     {
-        private readonly string _connectionString;
-
         public MainWindow()
         {
-            _connectionString = ConfigurationManager.ConnectionStrings["cn"].ConnectionString;
             this.InitializeComponent();
+        }
+
+        private void insertButton_Click(object sender, RoutedEventArgs e)
+        {
+            var dbService = DatabaseService.Instance;
+            try
+            {
+                string brandName = brandTextBox.Text.Trim();
+                string query = "INSERT INTO Brand (BrandName) VALUES (@BrandName)";
+
+                var parameter = new List<MySqlParameter>
+                {
+                    new MySqlParameter("@BrandName", MySqlDbType.VarChar) { Value = brandName }
+                };
+
+                dbService.ExecuteQuery(query, parameter);
+            }
+            catch (Exception ex)
+            {
+                myTextBlock.Text = $"Error: {ex.Message}";
+            }
         }
 
         private void myButton_Click(object sender, RoutedEventArgs e)
         {
-            if (string.IsNullOrEmpty(_connectionString))
-            {
-                myTextBlock.Text = "Connection string is not loaded!";
-                return;
-            }
+            var dbService = DatabaseService.Instance;
 
-            using (var connection = new MySqlConnection(_connectionString))
+            try
             {
-                try
+                dbService.OpenConnection();
+                myTextBlock.Text = "Connected to MySQL!";
+
+                string query = "SELECT * FROM Brand ORDER BY BrandId;";
+                var selectResult = dbService.ExecuteSelect(query);
+
+                if (selectResult.Count > 0)
                 {
-                    connection.Open();
-                    myTextBlock.Text = "Connected to MySQL!";
+                    StringBuilder sb = new StringBuilder();
 
-                    string query = "SELECT * FROM Brand;";
-                    using (var command = new MySqlCommand(query, connection))
+                    foreach (var row in selectResult)
                     {
-                        using (var reader = command.ExecuteReader())
-                        {
-                            if (reader.Read())
-                            {
-                                int brandId = reader.GetInt32(0);
-                                string brandName = reader.GetString(1);
-                                myTextBlock2.Text = $"Brand: {brandName} (ID: {brandId})";
-                            }
-                            else
-                            {
-                                myTextBlock2.Text = "No data found!";
-                            }
-                        }
+                        int brandId = Convert.ToInt32(row["BrandId"]);
+                        string brandName = row["BrandName"].ToString();
+
+                        sb.AppendLine($"Brand: {brandName} (ID: {brandId})");
                     }
+
+                    myTextBlock2.Text = sb.ToString();
                 }
-                catch (Exception ex)
+                else
                 {
-                    myTextBlock.Text = $"Connection failed: {ex.Message}";
+                    myTextBlock2.Text = "No data found!";
                 }
+            }
+            catch (Exception ex)
+            {
+                myTextBlock.Text = $"Connection failed: {ex.Message}";
+            }
+            finally
+            {
+                dbService.CloseConnection();
             }
         }
     }

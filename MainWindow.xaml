@@ -13,5 +13,8 @@
         <Button x:Name="myButton" Click="myButton_Click">Click Me</Button>
         <TextBlock x:Name="myTextBlock">Mars ma de acici</TextBlock>
         <TextBlock x:Name="myTextBlock2" Text="Query result here..." FontWeight="Bold"/>
+
+        <TextBox x:Name="brandTextBox" Width="200" Height="30" PlaceholderText="Enter a brand"/>
+        <Button x:Name="insertButton" Click="insertButton_Click">Insert</Button>
     </StackPanel>
 </Window>

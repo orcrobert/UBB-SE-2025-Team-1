@@ -4,6 +4,7 @@ using Microsoft.UI.Xaml.Controls;
 using WinUIApp.Services;
 using MySql.Data.MySqlClient;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 
 namespace WinUIApp

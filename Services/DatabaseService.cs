@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using MySql.Data.MySqlClient;
 using System.Configuration;
+using System.Diagnostics;
 
 namespace WinUIApp.Services
 {
@@ -95,7 +96,7 @@ namespace WinUIApp.Services
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error executing query: {ex.Message}");
+                Debug.WriteLine($"Error executing query: {ex.Message}");
             }
             finally
             {
@@ -124,7 +125,7 @@ namespace WinUIApp.Services
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error executing query: {ex.Message}");
+                Debug.WriteLine($"Error executing query: {ex.Message}");
             }
             finally
             {

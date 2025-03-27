@@ -36,7 +36,7 @@ namespace WinUIApp.Services
 
         private DatabaseService()
         {
-            _databaseConnection = new DatabaseConnection();
+            _databaseConnection = DatabaseConnection.Instance;
         }
 
         public List<Dictionary<string, object>> ExecuteSelect(string query, List<MySqlParameter> parameters = null)

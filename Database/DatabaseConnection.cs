@@ -17,7 +17,7 @@ namespace WinUIApp.Database
             _connectionString = ConfigurationManager.ConnectionStrings["cn"].ConnectionString;
         }
 
-        private DatabaseConnection()
+        public DatabaseConnection()
         {
             _connection = new MySqlConnection(_connectionString);
         }

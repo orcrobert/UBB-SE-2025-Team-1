@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using MySql.Data.MySqlClient;
 using System.Configuration;
 using System.Diagnostics;
+using WinUIApp.Database;
 
 namespace WinUIApp.Services
 {
@@ -13,18 +14,7 @@ namespace WinUIApp.Services
     {
         private static DatabaseService _instance;
         private static readonly object _lock = new object();
-        private MySqlConnection _connection;
-        private static string _connectionString;
-
-        static DatabaseService()
-        {
-            _connectionString = ConfigurationManager.ConnectionStrings["cn"].ConnectionString;
-        }
-
-        private DatabaseService()
-        {
-            _connection = new MySqlConnection(_connectionString);
-        }
+        private DatabaseConnection _databaseConnection;
 
         public static DatabaseService Instance
         {
@@ -44,25 +34,9 @@ namespace WinUIApp.Services
             }
         }
 
-        public MySqlConnection GetConnection()
+        private DatabaseService()
         {
-            return _connection;
-        }
-
-        public void OpenConnection()
-        {
-            if (_connection.State == System.Data.ConnectionState.Closed)
-            {
-                _connection.Open();
-            }
-        }
-
-        public void CloseConnection()
-        {
-            if (_connection.State == System.Data.ConnectionState.Open)
-            {
-                _connection.Close();
-            }
+            _databaseConnection = new DatabaseConnection();
         }
 
         public List<Dictionary<string, object>> ExecuteSelect(string query, List<MySqlParameter> parameters = null)
@@ -71,9 +45,8 @@ namespace WinUIApp.Services
 
             try
             {
-                OpenConnection();
-
-                using (var command = new MySqlCommand(query, _connection))
+                _databaseConnection.OpenConnection();
+                using (var command = new MySqlCommand(query, _databaseConnection.GetConnection()))
                 {
                     if (parameters != null)
                     {
@@ -100,7 +73,7 @@ namespace WinUIApp.Services
             }
             finally
             {
-                CloseConnection();
+                _databaseConnection.CloseConnection();
             }
 
             return result;
@@ -112,9 +85,8 @@ namespace WinUIApp.Services
 
             try
             {
-                OpenConnection();
-
-                using (var command = new MySqlCommand(query, _connection))
+                _databaseConnection.OpenConnection();
+                using (var command = new MySqlCommand(query, _databaseConnection.GetConnection()))
                 {
                     if (parameters != null)
                     {
@@ -129,7 +101,7 @@ namespace WinUIApp.Services
             }
             finally
             {
-                CloseConnection();
+                _databaseConnection.CloseConnection();
             }
 
             return rowsAffected;

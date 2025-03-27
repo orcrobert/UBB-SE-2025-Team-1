@@ -15,6 +15,27 @@ namespace WinUIApp
             this.InitializeComponent();
         }
 
+        private void insertButton_Click(object sender, RoutedEventArgs e)
+        {
+            var dbService = DatabaseService.Instance;
+            try
+            {
+                string brandName = brandTextBox.Text.Trim();
+                string query = "INSERT INTO Brand (BrandName) VALUES (@BrandName)";
+
+                var parameter = new List<MySqlParameter>
+                {
+                    new MySqlParameter("@BrandName", MySqlDbType.VarChar) { Value = brandName }
+                };
+
+                dbService.ExecuteQuery(query, parameter);
+            }
+            catch (Exception ex)
+            {
+                myTextBlock.Text = $"Error: {ex.Message}";
+            }
+        }
+
         private void myButton_Click(object sender, RoutedEventArgs e)
         {
             var dbService = DatabaseService.Instance;

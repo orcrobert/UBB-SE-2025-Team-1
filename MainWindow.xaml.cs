@@ -4,6 +4,7 @@ using Microsoft.UI.Xaml.Controls;
 using WinUIApp.Services;
 using MySql.Data.MySqlClient;
 using System.Collections.Generic;
+using System.Text;
 
 namespace WinUIApp
 {
@@ -23,16 +24,22 @@ namespace WinUIApp
                 dbService.OpenConnection();
                 myTextBlock.Text = "Connected to MySQL!";
 
-                string query = "SELECT * FROM Brand;";
+                string query = "SELECT * FROM Brand ORDER BY BrandId;";
                 var selectResult = dbService.ExecuteSelect(query);
 
                 if (selectResult.Count > 0)
                 {
-                    var firstRow = selectResult[0];
-                    int brandId = Convert.ToInt32(firstRow["BrandId"]);
-                    string brandName = firstRow["BrandName"].ToString();
+                    StringBuilder sb = new StringBuilder();
 
-                    myTextBlock2.Text = $"Brand: {brandName} (ID: {brandId})";
+                    foreach (var row in selectResult)
+                    {
+                        int brandId = Convert.ToInt32(row["BrandId"]);
+                        string brandName = row["BrandName"].ToString();
+
+                        sb.AppendLine($"Brand: {brandName} (ID: {brandId})");
+                    }
+
+                    myTextBlock2.Text = sb.ToString();
                 }
                 else
                 {

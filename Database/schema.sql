@@ -51,4 +51,5 @@ CREATE TABLE UserDrink (
 
 INSERT INTO Brand (BrandName) VALUES ("Ursugi");
 INSERT INTO Brand (BrandName) VALUES ("Bergenbir");
+INSERT INTO Brand (BrandName) VALUES ("Duvel");
 SELECT * FROM Brand;

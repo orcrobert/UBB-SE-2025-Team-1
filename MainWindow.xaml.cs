@@ -43,7 +43,6 @@ namespace WinUIApp
 
             try
             {
-                dbService.OpenConnection();
                 myTextBlock.Text = "Connected to MySQL!";
 
                 string query = "SELECT * FROM Brand ORDER BY BrandId;";
@@ -71,10 +70,6 @@ namespace WinUIApp
             catch (Exception ex)
             {
                 myTextBlock.Text = $"Connection failed: {ex.Message}";
-            }
-            finally
-            {
-                dbService.CloseConnection();
             }
         }
     }

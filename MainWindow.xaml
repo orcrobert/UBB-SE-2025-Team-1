@@ -16,9 +16,11 @@
 
         <TextBox x:Name="brandTextBox" Width="200" Height="30" PlaceholderText="Enter a brand"/>
         <Button x:Name="insertButton" Click="insertButton_Click">Insert</Button>
-        
-        <Button x:Name="displayCurrentUserButton" Click="displayCurrentUserButton_Click">Get current user</Button>
+
+        <Button x:Name="testButton" Click="testButton_Click">Test model and services</Button>
         <TextBlock x:Name="currentUserTextBlock" Text="Current user will be displayed here"></TextBlock>
         <TextBlock x:Name="reviewTextBlock" Text="Review for drink with ID = 1"></TextBlock>
+
+        <TextBlock x:Name="testModelsTextBlock"></TextBlock>
     </StackPanel>
 </Window>

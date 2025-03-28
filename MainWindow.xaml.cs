@@ -75,7 +75,7 @@ namespace WinUIApp
             }
         }
 
-        private void displayCurrentUserButton_Click(object sender, RoutedEventArgs e)
+        private void testButton_Click(object sender, RoutedEventArgs e)
         {
             UserService userService = new UserService();
             AdminService adminService = new AdminService();
@@ -102,6 +102,25 @@ namespace WinUIApp
             reviewTextBlock.Text = sb.ToString();
 
             adminService.SendNotification(1, "test", "test");
+
+            Category category1 = new Category(1, "Brown Beer");
+            Category category2 = new Category(2, "Strong Beer");
+            List<Category> categories = new List<Category>();
+            categories.Add(category1);
+            categories.Add(category2);
+            Brand brand = new Brand(100, "Chimay");
+            Drink drink = new Drink(100, categories, brand, (float)9.0);
+            sb = new StringBuilder();
+
+            sb.AppendLine($"Drink ID: {drink.Id}");
+            sb.AppendLine($"Brand: {drink.Brand.Name}");
+            sb.AppendLine("Categories:");
+            foreach (var category in drink.Categories)
+                sb.AppendLine($"  - {category.Name}");
+            sb.AppendLine($"Alcohol Content: {drink.AlcoholContent}%");
+            sb.AppendLine(new string('-', 30));
+
+            testModelsTextBlock.Text = sb.ToString();
         }
     }
 }

@@ -16,5 +16,8 @@
 
         <TextBox x:Name="brandTextBox" Width="200" Height="30" PlaceholderText="Enter a brand"/>
         <Button x:Name="insertButton" Click="insertButton_Click">Insert</Button>
+        
+        <Button x:Name="displayCurrentUserButton" Click="displayCurrentUserButton_Click">Get current user</Button>
+        <TextBlock x:Name="currentUserTextBlock" Text="Current user will be displayed here"></TextBlock>
     </StackPanel>
 </Window>

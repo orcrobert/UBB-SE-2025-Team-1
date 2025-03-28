@@ -6,6 +6,7 @@ using MySql.Data.MySqlClient;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
+using WinUIApp.Services.DummyServies;
 
 namespace WinUIApp
 {
@@ -71,6 +72,12 @@ namespace WinUIApp
             {
                 myTextBlock.Text = $"Connection failed: {ex.Message}";
             }
+        }
+
+        private void displayCurrentUserButton_Click(object sender, RoutedEventArgs e)
+        {
+            UserService userService = new UserService();
+            currentUserTextBlock.Text = userService.GetCurrentUserID().ToString();
         }
     }
 }

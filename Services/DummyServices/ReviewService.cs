@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 namespace WinUIApp.Services.DummyServies
 {
     // Temp class until the other clandestine implements the model!
-
     public class Review
     {
         public int DrinkID { get; set; }

@@ -4,51 +4,41 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WinUIApp.Models;
 
 namespace WinUIApp.Services.DummyServies
 {
-    // Temp class until the other clandestine implements the model!
-
-    public class Review
-    {
-        public int DrinkID { get; set; }
-        public float Score { get; set; }
-        public int ReviewerID { get; set; }
-        public string Title { get; set; }
-        public string Description { get; set; }
-        public DateTime PostedDateTime { get; set; }
-    }
     class ReviewService
     {
         private HashSet<Review> dummyReviews = new HashSet<Review>
         {
             new Review
-            {
-                DrinkID = 1,
-                ReviewerID = 1,
-                Title = "Awesome!",
-                Description = "Loved it!",
-                Score = 4.5f,
-                PostedDateTime = DateTime.Now.AddDays(-2)
-            },
+            (
+                drinkID: 1,
+                score: 4.5f,
+                reviewerID: 1,
+                title: "Awesome!",
+                description: "Loved it!",
+                postedDateTime: DateTime.Now.AddDays(-2)
+            ),
             new Review
-            {
-                DrinkID = 1,
-                ReviewerID = 2,
-                Title = "Not bad",
-                Description = "Decent flavor.",
-                Score = 4.0f,
-                PostedDateTime = DateTime.Now.AddDays(-1)
-            },
+            (
+                drinkID: 1,
+                score: 4.0f,
+                reviewerID: 2,
+                title: "Not bad",
+                description: "Decent flavor.",
+                postedDateTime: DateTime.Now.AddDays(-1)
+            ),
             new Review
-            {
-                DrinkID = 2,
-                ReviewerID = 3,
-                Title = "Meh",
-                Description = "Was okay.",
-                Score = 2.5f,
-                PostedDateTime = DateTime.Now
-            }
+            (
+                drinkID: 2,
+                score: 2.5f,
+                reviewerID: 3,
+                title: "Meh",
+                description: "Was okay.",
+                postedDateTime: DateTime.Now
+            )
         };
 
         public List<Review> GetReviewsByID(int drinkID)

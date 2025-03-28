@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 using WinUIApp.Services.DummyServies;
+using WinUIApp.Models;
 
 namespace WinUIApp
 {

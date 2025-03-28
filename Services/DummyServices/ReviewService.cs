@@ -10,30 +10,56 @@ namespace WinUIApp.Services.DummyServies
 
     public class Review
     {
-        public int Id { get; set; }
-        public int DrinkId { get; set; }
-        public string Comment { get; set; }
-        public float Rating { get; set; }
+        public int DrinkID { get; set; }
+        public float Score { get; set; }
+        public int ReviewerID { get; set; }
+        public string Title { get; set; }
+        public string Description { get; set; }
+        public DateTime PostedDateTime { get; set; }
     }
     class ReviewService
     {
         private List<Review> dummyReviews = new List<Review>
         {
-            new Review { Id = 1, DrinkId = 1, Comment = "Great drink!", Rating = 4.5f },
-            new Review { Id = 2, DrinkId = 1, Comment = "Pretty good.", Rating = 4.0f },
-            new Review { Id = 3, DrinkId = 2, Comment = "Not my taste.", Rating = 2.5f }
+            new Review
+            {
+                DrinkID = 1,
+                ReviewerID = 1,
+                Title = "Awesome!",
+                Description = "Loved it!",
+                Score = 4.5f,
+                PostedDateTime = DateTime.Now.AddDays(-2)
+            },
+            new Review
+            {
+                DrinkID = 1,
+                ReviewerID = 2,
+                Title = "Not bad",
+                Description = "Decent flavor.",
+                Score = 4.0f,
+                PostedDateTime = DateTime.Now.AddDays(-1)
+            },
+            new Review
+            {
+                DrinkID = 2,
+                ReviewerID = 3,
+                Title = "Meh",
+                Description = "Was okay.",
+                Score = 2.5f,
+                PostedDateTime = DateTime.Now
+            }
         };
 
         public List<Review> GetReviewsByID(int drinkID)
         {
-            return dummyReviews.Where(r => r.DrinkId == drinkID).ToList();
+            return dummyReviews.Where(r => r.DrinkID == drinkID).ToList();
         }
 
         public float GetReviewAverageByID(int drinkID)
         {
             var reviews = GetReviewsByID(drinkID);
             if (reviews.Count == 0) return 0;
-            return reviews.Average(r => r.Rating);
+            return reviews.Average(r => r.Score);
         }
     }
 }

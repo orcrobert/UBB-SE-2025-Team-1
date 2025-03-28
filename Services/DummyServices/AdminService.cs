@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace WinUIApp.Services.DummyServies
 {
     class AdminService
     {
-        private List<int> adminUserIds = new List<int> { 1, 42 };
+        private HashSet<int> adminUserIds = new HashSet<int> { 1, 42, 30, 10 };
 
         public bool IsAdmin(int userID)
         {
@@ -17,7 +18,7 @@ namespace WinUIApp.Services.DummyServies
 
         public void SendNotification(int senderUserID, string title, string description)
         {
-            Console.WriteLine($"[Notification]\nFrom User: {senderUserID}\nTitle: {title}\nDescription: {description}");
+            Debug.WriteLine($"[Notification]\nFrom User: {senderUserID}\nTitle: {title}\nDescription: {description}");
         }
     }
 }

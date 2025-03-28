@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace WinUIApp.Services.DummyServies
 {
+    // Temp class until the other clandestine implements the model!
 
     public class Review
     {
@@ -19,7 +20,7 @@ namespace WinUIApp.Services.DummyServies
     }
     class ReviewService
     {
-        private List<Review> dummyReviews = new List<Review>
+        private HashSet<Review> dummyReviews = new HashSet<Review>
         {
             new Review
             {

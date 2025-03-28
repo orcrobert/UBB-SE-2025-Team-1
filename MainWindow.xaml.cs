@@ -77,7 +77,30 @@ namespace WinUIApp
         private void displayCurrentUserButton_Click(object sender, RoutedEventArgs e)
         {
             UserService userService = new UserService();
-            currentUserTextBlock.Text = userService.GetCurrentUserID().ToString();
+            AdminService adminService = new AdminService();
+            ReviewService reviewService = new ReviewService();
+
+            int userId = userService.GetCurrentUserID();
+            string userType = adminService.IsAdmin(userId) ? "admin" : "not admin";
+
+            List<Review> reviews = reviewService.GetReviewsByID(1);
+
+            Review review = reviews[0];
+
+            StringBuilder sb = new StringBuilder();
+
+            sb.AppendLine($"Title: {review.Title}");
+            sb.AppendLine($"Reviewer ID: {review.ReviewerID}");
+            sb.AppendLine($"Drink ID: {review.DrinkID}");
+            sb.AppendLine($"Score: {review.Score}/5");
+            sb.AppendLine($"Review: {review.Description}");
+            sb.AppendLine($"Posted: {review.PostedDateTime.ToString("yyyy-MM-dd HH:mm")}");
+            sb.AppendLine(new string('-', 30));
+
+            currentUserTextBlock.Text = $"User with id {userId.ToString()} ({userType})";
+            reviewTextBlock.Text = sb.ToString();
+
+            adminService.SendNotification(1, "test", "test");
         }
     }
 }

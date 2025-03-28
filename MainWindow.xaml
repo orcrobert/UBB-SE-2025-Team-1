@@ -19,5 +19,6 @@
         
         <Button x:Name="displayCurrentUserButton" Click="displayCurrentUserButton_Click">Get current user</Button>
         <TextBlock x:Name="currentUserTextBlock" Text="Current user will be displayed here"></TextBlock>
+        <TextBlock x:Name="reviewTextBlock" Text="Review for drink with ID = 1"></TextBlock>
     </StackPanel>
 </Window>

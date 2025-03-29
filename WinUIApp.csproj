@@ -14,6 +14,7 @@
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Views\Components\DrinkComponent.xaml" />
+    <None Remove="Views\Components\DrinkListComponent.xaml" />
   </ItemGroup>
   <ItemGroup>
     <Page Remove="GlobalStyles.xaml" />
@@ -55,6 +56,7 @@
       <Generator>MSBuild:Compile</Generator>
     </None>
     <Page Update="Views\Components\DrinkComponent.xaml">
+    <Page Update="Views\Components\DrinkListComponent.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>

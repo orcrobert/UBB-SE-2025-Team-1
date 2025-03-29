@@ -24,6 +24,6 @@
 
         <TextBlock x:Name="testModelsTextBlock"></TextBlock>
 
-        <components:DrinkComponent Brand="Chimay" Category="Dark Beer" Alcohol="20.0" ImageSource="https://www.beeracademy.ro/3124-home_default/bere-belgia-chimay-rouge.jpg"></components:DrinkComponent>
+        <components:DrinkListComponent></components:DrinkListComponent>
     </StackPanel>
 </Window>

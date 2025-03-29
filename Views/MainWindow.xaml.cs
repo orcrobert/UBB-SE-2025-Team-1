@@ -130,26 +130,5 @@ namespace WinUIApp.Views
             testModelsTextBlock.Text = sb.ToString();
         }
 
-        private async void buttonGetDrinks_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                // Fetch drinks from the model
-                DrinkModel model = new DrinkModel();
-                List<Drink> drinks = model.getDrinks();
-
-                // Clear existing data and add new drinks to the ObservableCollection
-                DrinksList.Clear();
-                foreach (Drink drink in drinks)
-                {
-                    DrinksList.Add(drink);
-                }
-            }
-            catch (Exception ex)
-            {
-                getDrinkTextBlock.Text = $"{ex.Message}";
-            }
-        }
-
     }
 }

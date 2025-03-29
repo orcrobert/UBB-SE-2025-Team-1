@@ -22,16 +22,5 @@
         <TextBlock x:Name="reviewTextBlock" Text="Review for drink with ID = 1"></TextBlock>
 
         <TextBlock x:Name="testModelsTextBlock"></TextBlock>
-
-        <Button Content="Open DrinkModelCrudTest Page" Click="buttonOpenPage_Click" Margin="10"/>
-        <Frame x:Name="MainFrame" Width="800" Height="500"/>
-
-        <Button x:Name="addDrinkButton" Click="addDrinkButton_Click" Style="{StaticResource DefaultButton}" Content="Add Drink" Margin="10"/>
-
-        <Button x:Name="buttonGetDrinks" Click="buttonGetDrinks_Click" Content="Get Drinks" Margin="10"/>
-        <DataGrid x:Name="dataGridDrinks" AutoGenerateColumns="True" Width="800" Height="400" Margin="10"/>
-        <TextBlock x:Name="getDrinkTextBlock" Text=""></TextBlock>
-
-
     </StackPanel>
 </Window>

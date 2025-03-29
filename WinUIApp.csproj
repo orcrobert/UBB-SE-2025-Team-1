@@ -56,6 +56,8 @@
       <Generator>MSBuild:Compile</Generator>
     </None>
     <Page Update="Views\Components\DrinkComponent.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Update="Views\Components\DrinkListComponent.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>

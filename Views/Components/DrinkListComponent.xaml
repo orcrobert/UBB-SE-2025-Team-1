@@ -6,49 +6,20 @@
     xmlns:local="using:WinUIApp.Views.Components"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:components="using:WinUIApp.Views.Components"
     mc:Ignorable="d">
 
     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="20">
-        <StackPanel Orientation="Vertical" Spacing="10" Background="{StaticResource Anthracite}"
-                    Padding="10" CornerRadius="6" Width="150">
-            <Image Source="https://www.beeracademy.ro/3124-home_default/bere-belgia-chimay-rouge.jpg"
-                   Width="100" Height="100"></Image>
-            <TextBlock>Chimay</TextBlock>
-            <TextBlock>Dark Beer</TextBlock>
-            <TextBlock>9.0</TextBlock>
-        </StackPanel>
-        <StackPanel Orientation="Vertical" Spacing="10" Background="{StaticResource Anthracite}"
-            Padding="10" CornerRadius="6" Width="150">
-            <Image Source="https://www.beeracademy.ro/3124-home_default/bere-belgia-chimay-rouge.jpg"
-           Width="100" Height="100"></Image>
-            <TextBlock>Chimay</TextBlock>
-            <TextBlock>Dark Beer</TextBlock>
-            <TextBlock>9.0</TextBlock>
-        </StackPanel>
-        <StackPanel Orientation="Vertical" Spacing="10" Background="{StaticResource Anthracite}"
-            Padding="10" CornerRadius="6" Width="150">
-            <Image Source="https://www.beeracademy.ro/3124-home_default/bere-belgia-chimay-rouge.jpg"
-           Width="100" Height="100"></Image>
-            <TextBlock>Chimay</TextBlock>
-            <TextBlock>Dark Beer</TextBlock>
-            <TextBlock>9.0</TextBlock>
-        </StackPanel>
-        <StackPanel Orientation="Vertical" Spacing="10" Background="{StaticResource Anthracite}"
-            Padding="10" CornerRadius="6" Width="150">
-            <Image Source="https://www.beeracademy.ro/3124-home_default/bere-belgia-chimay-rouge.jpg"
-           Width="100" Height="100"></Image>
-            <TextBlock>Chimay</TextBlock>
-            <TextBlock>Dark Beer</TextBlock>
-            <TextBlock>9.0</TextBlock>
-        </StackPanel>
-        <StackPanel Orientation="Vertical" Spacing="10" Background="{StaticResource Anthracite}"
-            Padding="10" CornerRadius="6" Width="150">
-            <Image Source="https://www.beeracademy.ro/3124-home_default/bere-belgia-chimay-rouge.jpg"
-           Width="100" Height="100"></Image>
-            <TextBlock>Chimay</TextBlock>
-            <TextBlock>Dark Beer</TextBlock>
-            <TextBlock>9.0</TextBlock>
-        </StackPanel>
+        <components:DrinkComponent Brand="Chimay1" Category="Dark Beer" Alcohol="9.0" 
+                                   ImageSource="https://www.beeracademy.ro/3124-home_default/bere-belgia-chimay-rouge.jpg" />
+        <components:DrinkComponent Brand="Chimay2" Category="Dark Beer" Alcohol="9.0" 
+                           ImageSource="https://www.beeracademy.ro/3124-home_default/bere-belgia-chimay-rouge.jpg" />
+        <components:DrinkComponent Brand="Chimay3" Category="Dark Beer" Alcohol="9.0" 
+                           ImageSource="https://www.beeracademy.ro/3124-home_default/bere-belgia-chimay-rouge.jpg" />
+        <components:DrinkComponent Brand="Chimay4" Category="Dark Beer" Alcohol="9.0" 
+                           ImageSource="https://www.beeracademy.ro/3124-home_default/bere-belgia-chimay-rouge.jpg" />
+        <components:DrinkComponent Brand="Chimay5" Category="Dark Beer" Alcohol="9.0" 
+                           ImageSource="https://www.beeracademy.ro/3124-home_default/bere-belgia-chimay-rouge.jpg" />
     </StackPanel>
     
 </UserControl>

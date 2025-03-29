@@ -125,5 +125,10 @@ namespace WinUIApp.Views
 
             testModelsTextBlock.Text = sb.ToString();
         }
+
+        private void buttonOpenPage_Click(object sender, RoutedEventArgs e)
+        {
+            MainFrame.Navigate(typeof(DrinkModelCrudTest)); 
+        }
     }
 }

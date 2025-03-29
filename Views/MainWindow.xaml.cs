@@ -8,11 +8,15 @@ using System.Diagnostics;
 using System.Text;
 using WinUIApp.Services.DummyServies;
 using WinUIApp.Models;
+using System.Collections.ObjectModel;
 
 namespace WinUIApp.Views
 {
     public sealed partial class MainWindow : Window
     {
+
+        private ObservableCollection<Drink> DrinksList { get; set; } = new ObservableCollection<Drink>();
+
         public MainWindow()
         {
             this.InitializeComponent();
@@ -126,9 +130,26 @@ namespace WinUIApp.Views
             testModelsTextBlock.Text = sb.ToString();
         }
 
-        private void buttonOpenPage_Click(object sender, RoutedEventArgs e)
+        private async void buttonGetDrinks_Click(object sender, RoutedEventArgs e)
         {
-            MainFrame.Navigate(typeof(DrinkModelCrudTest)); 
+            try
+            {
+                // Fetch drinks from the model
+                DrinkModel model = new DrinkModel();
+                List<Drink> drinks = model.getDrinks();
+
+                // Clear existing data and add new drinks to the ObservableCollection
+                DrinksList.Clear();
+                foreach (Drink drink in drinks)
+                {
+                    DrinksList.Add(drink);
+                }
+            }
+            catch (Exception ex)
+            {
+                getDrinkTextBlock.Text = $"{ex.Message}";
+            }
         }
+
     }
 }

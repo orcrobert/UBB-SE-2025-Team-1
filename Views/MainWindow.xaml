@@ -28,8 +28,10 @@
 
         <Button x:Name="addDrinkButton" Click="addDrinkButton_Click" Style="{StaticResource DefaultButton}" Content="Add Drink" Margin="10"/>
 
-        <TextBox x:Name="brandNameTextBox" Width="200" Height="30" PlaceholderText="Enter Brand Name" Margin="10"/>
-        <TextBox x:Name="alcoholContentTextBox" Width="200" Height="30" PlaceholderText="Enter Alcohol Content" Margin="10"/>
-        <TextBox x:Name="categoryIdsTextBox" Width="200" Height="30" PlaceholderText="Enter Category IDs (comma separated)" Margin="10"/>
+        <Button x:Name="buttonGetDrinks" Click="buttonGetDrinks_Click" Content="Get Drinks" Margin="10"/>
+        <DataGrid x:Name="dataGridDrinks" AutoGenerateColumns="True" Width="800" Height="400" Margin="10"/>
+        <TextBlock x:Name="getDrinkTextBlock" Text=""></TextBlock>
+
+
     </StackPanel>
 </Window>

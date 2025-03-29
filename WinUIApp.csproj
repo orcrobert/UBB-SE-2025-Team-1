@@ -13,6 +13,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Views\Components\DrinkListComponent.xaml" />
+  </ItemGroup>
+  <ItemGroup>
     <Page Remove="GlobalStyles.xaml" />
   </ItemGroup>
 
@@ -51,9 +54,11 @@
     <None Update="Styles\GlobalStyles.xaml">
       <Generator>MSBuild:Compile</Generator>
     </None>
+    <Page Update="Views\Components\DrinkListComponent.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Views\Components\" />
     <Folder Include="Views\Windows\" />
     <Folder Include="Views\Pages\" />
   </ItemGroup>

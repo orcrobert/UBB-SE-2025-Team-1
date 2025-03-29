@@ -110,6 +110,9 @@ namespace WinUIApp
             categories.Add(category2);
             Brand brand = new Brand(100, "Chimay");
             Drink drink = new Drink(100, categories, brand, (float)9.0);
+
+            drink.AlcoholContent = (float)12;
+
             sb = new StringBuilder();
 
             sb.AppendLine($"Drink ID: {drink.Id}");

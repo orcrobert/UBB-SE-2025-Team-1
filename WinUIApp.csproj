@@ -12,6 +12,9 @@
     <EnableMsixTooling>true</EnableMsixTooling>
     <Nullable>enable</Nullable>
   </PropertyGroup>
+  <ItemGroup>
+    <Page Remove="GlobalStyles.xaml" />
+  </ItemGroup>
 
   <ItemGroup>
     <Content Include="Assets\SplashScreen.scale-200.png" />
@@ -43,6 +46,11 @@
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.6.250205002" />
     <PackageReference Include="MySql.Data" Version="9.2.0" />
     <PackageReference Include="MySqlConnector" Version="2.4.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="Styles\GlobalStyles.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </None>
   </ItemGroup>
 
   <!--

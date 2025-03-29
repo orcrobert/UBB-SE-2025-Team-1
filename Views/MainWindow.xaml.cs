@@ -9,7 +9,7 @@ using System.Text;
 using WinUIApp.Services.DummyServies;
 using WinUIApp.Models;
 
-namespace WinUIApp
+namespace WinUIApp.Views
 {
     public sealed partial class MainWindow : Window
     {

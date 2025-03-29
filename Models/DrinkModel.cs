@@ -71,6 +71,7 @@ namespace WinUIApp.Models
             }
         }
 
+
         public void addDrink(List<Category> categories, string brandName, float alcoholContent)
         {
             var dbService = DatabaseService.Instance;

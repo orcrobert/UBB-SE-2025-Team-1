@@ -20,20 +20,19 @@ namespace WinUIApp.Models
 
             try
             {
-                string query = @"
-            SELECT 
-                D.DrinkId, D.AlcoholContent, 
-                B.BrandId, B.BrandName, 
-                GROUP_CONCAT(C.CategoryId ORDER BY C.CategoryId) AS CategoryIds, 
-                GROUP_CONCAT(C.CategoryName ORDER BY C.CategoryId) AS CategoryNames
-            FROM Drink AS D
-            INNER JOIN Brand AS B ON D.BrandId = B.BrandId
-            LEFT JOIN DrinkCategory AS DC ON D.DrinkId = DC.DrinkId
-            LEFT JOIN Category AS C ON DC.CategoryId = C.CategoryId
-            GROUP BY D.DrinkId, B.BrandId
-            ORDER BY D.DrinkId;";
+                string getDrinksQuery = @" SELECT D.DrinkId, D.AlcoholContent, 
+                                         B.BrandId, B.BrandName, 
+                                         GROUP_CONCAT(C.CategoryId ORDER BY C.CategoryId) AS CategoryIds, 
+                                         GROUP_CONCAT(C.CategoryName ORDER BY C.CategoryId) AS CategoryNames
+                                    FROM Drink AS D
+                                    INNER JOIN Brand AS B ON D.BrandId = B.BrandId
+                                    LEFT JOIN DrinkCategory AS DC ON D.DrinkId = DC.DrinkId
+                                    LEFT JOIN Category AS C ON DC.CategoryId = C.CategoryId
+                                    GROUP BY D.DrinkId, B.BrandId
+                                    ORDER BY D.DrinkId;";
 
-                var selectResult = dbService.ExecuteSelect(query);
+                var selectResult = dbService.ExecuteSelect(getDrinksQuery);
+
 
                 foreach (var row in selectResult)
                 {
@@ -77,42 +76,50 @@ namespace WinUIApp.Models
             var dbService = DatabaseService.Instance;
             try
             {
-                string brandidQuery = @"SELECT BrandId FROM Brand WHERE BrandName = @BrandName";
-                var brandNameParameter = new List<MySqlParameter>
+                string brandIdQuery = @"SELECT BrandId 
+                                        FROM Brand 
+                                        WHERE BrandName = @BrandName";
+
+                List<MySqlParameter> brandNameParameter = new List<MySqlParameter>
                 {
                     new MySqlParameter("@BrandName", MySqlDbType.VarChar) { Value = brandName }
                 };
-                var brandIdResult = dbService.ExecuteSelect(brandidQuery, brandNameParameter);
+                var brandIdResult = dbService.ExecuteSelect(brandIdQuery, brandNameParameter);
                 int brandId = brandIdResult.Count > 0 ? Convert.ToInt32(brandIdResult[0]["BrandId"]) : -1;
+
 
                 if (brandId == -1)
                 {
                     throw new Exception("Brand does not exist");
                 }
 
-                string query = @"INSERT INTO Drink (AlcoholContent, BrandId) VALUES (@AlcoholContent, @BrandId);";
-                var parameters = new List<MySqlParameter>
+                string addDrinkQuery = @"INSERT INTO Drink (AlcoholContent, BrandId) 
+                                VALUES (@AlcoholContent, @BrandId);";
+
+                List<MySqlParameter> drinkParameters = new List<MySqlParameter>
                 {
                     new MySqlParameter("@AlcoholContent", MySqlDbType.Float) { Value = alcoholContent },
                     new MySqlParameter("@BrandId", MySqlDbType.Int32) { Value = brandId }
                 };
 
-                dbService.ExecuteQuery(query, parameters);
+                dbService.ExecuteQuery(addDrinkQuery, drinkParameters);
 
 
                 string lastDrinkIdQuery = "SELECT LAST_INSERT_ID() AS DrinkId";
                 var lastDrinkIdResult = dbService.ExecuteSelect(lastDrinkIdQuery);
                 int drinkId = Convert.ToInt32(lastDrinkIdResult[0]["DrinkId"]);
 
-                foreach (var category in categories)
+                foreach (Category category in categories)
                 {
-                    query = @"INSERT INTO DrinkCategory (DrinkId, CategoryId) VALUES (@DrinkId, @CategoryId);";
-                    parameters = new List<MySqlParameter>
+                    string addCategoriesQuery = @"INSERT INTO DrinkCategory (DrinkId, CategoryId) 
+                                               VALUES (@DrinkId, @CategoryId);";
+                    List<MySqlParameter> categoryParameters = new List<MySqlParameter>
                     {
                         new MySqlParameter("@DrinkId", MySqlDbType.Int32) { Value = drinkId },
                         new MySqlParameter("@CategoryId", MySqlDbType.Int32) { Value = category.Id }
                     };
-                    dbService.ExecuteQuery(query, parameters);
+
+                    dbService.ExecuteQuery(addCategoriesQuery, categoryParameters);
                 }
             }
             catch (Exception ex)
@@ -121,5 +128,91 @@ namespace WinUIApp.Models
             }
         }
 
+        public void deleteDrink(int drinkId)
+        {
+            var dbService = DatabaseService.Instance;
+            try
+            {
+                string deleteDrinkQuery = @"DELETE FROM Drink WHERE DrinkId = @DrinkId";
+                List<MySqlParameter> drinkIdParameter = new List<MySqlParameter>
+                {
+                    new MySqlParameter("@DrinkId", MySqlDbType.Int32) { Value = drinkId }
+                };
+                dbService.ExecuteQuery(deleteDrinkQuery, drinkIdParameter);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Database error occurred", ex);
+            }
+        }
+
+        public void updateDrink(int drinkId, List<Category> categories, string brandName, float alcoholContent)
+        {
+            var dbService = DatabaseService.Instance;
+            try
+            {
+                string brandidQuery = @"SELECT BrandId FROM Brand 
+                                        WHERE BrandName = @BrandName";
+                List<MySqlParameter> brandNameParameter = new List<MySqlParameter>
+                {
+                    new MySqlParameter("@BrandName", MySqlDbType.VarChar) { Value = brandName }
+                };
+                var brandIdResult = dbService.ExecuteSelect(brandidQuery, brandNameParameter);
+                int brandId = brandIdResult.Count > 0 ? Convert.ToInt32(brandIdResult[0]["BrandId"]) : -1;
+                if (brandId == -1)
+                {
+                    throw new Exception("Brand does not exist");
+                }
+
+
+                string updateDrinkQuery = @"UPDATE Drink SET AlcoholContent = @AlcoholContent, BrandId = @BrandId 
+                                            WHERE DrinkId = @DrinkId;";
+                List<MySqlParameter> drinkParameters = new List<MySqlParameter>
+                {
+                    new MySqlParameter("@AlcoholContent", MySqlDbType.Float) { Value = alcoholContent },
+                    new MySqlParameter("@BrandId", MySqlDbType.Int32) { Value = brandId },
+                    new MySqlParameter("@DrinkId", MySqlDbType.Int32) { Value = drinkId }
+                };
+                dbService.ExecuteQuery(updateDrinkQuery, drinkParameters);
+
+
+                string getExistingCategoriesQuery = @"SELECT CategoryId FROM DrinkCategory 
+                                                    WHERE DrinkId = @DrinkId";
+                var existingCategoriesResult = dbService.ExecuteSelect(getExistingCategoriesQuery, drinkParameters);
+                HashSet<int> existingCategories = new HashSet<int>(existingCategoriesResult.Select(row => Convert.ToInt32(row["CategoryId"])));
+                HashSet<int> newCategories = new HashSet<int>(categories.Select(c => c.Id));
+
+                var categoriesToInsert = newCategories.Except(existingCategories).ToList();
+                var categoriesToDelete = existingCategories.Except(newCategories).ToList();
+
+                foreach (int categoryId in categoriesToInsert)
+                {
+                    string addCategoriesQuery = @"INSERT INTO DrinkCategory (DrinkId, CategoryId) 
+                                               VALUES (@DrinkId, @CategoryId);";
+                    List<MySqlParameter> categoryParameters = new List<MySqlParameter>
+                    {
+                        new MySqlParameter("@DrinkId", MySqlDbType.Int32) { Value = drinkId },
+                        new MySqlParameter("@CategoryId", MySqlDbType.Int32) { Value = categoryId }
+                    };
+                    dbService.ExecuteQuery(addCategoriesQuery, categoryParameters);
+                }
+
+                foreach (int categoryId in categoriesToDelete)
+                {
+                    string deleteCategoriesQuery = @"DELETE FROM DrinkCategory 
+                                                 WHERE DrinkId = @DrinkId AND CategoryId = @CategoryId";
+                    List<MySqlParameter> categoryParameters = new List<MySqlParameter>
+                    {
+                        new MySqlParameter("@DrinkId", MySqlDbType.Int32) { Value = drinkId },
+                        new MySqlParameter("@CategoryId", MySqlDbType.Int32) { Value = categoryId }
+                    };
+                    dbService.ExecuteQuery(deleteCategoriesQuery, categoryParameters);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Database error occurred", ex);
+            }
+        }
     }
 }

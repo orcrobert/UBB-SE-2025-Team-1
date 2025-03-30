@@ -73,6 +73,7 @@ namespace WinUIApp.Models
         public void addDrink(List<Category> categories, string brandName, float alcoholContent)
         {
             var dbService = DatabaseService.Instance;
+
             try
             {
                 string brandIdQuery = @"SELECT BrandId 
@@ -130,6 +131,7 @@ namespace WinUIApp.Models
         public void deleteDrink(int drinkId)
         {
             var dbService = DatabaseService.Instance;
+
             try
             {
                 string deleteDrinkQuery = @"DELETE FROM Drink WHERE DrinkId = @DrinkId";
@@ -148,6 +150,7 @@ namespace WinUIApp.Models
         public void updateDrink(int drinkId, List<Category> categories, string brandName, float alcoholContent)
         {
             var dbService = DatabaseService.Instance;
+
             try
             {
                 string brandidQuery = @"SELECT BrandId FROM Brand 
@@ -217,6 +220,7 @@ namespace WinUIApp.Models
         public List<Category> getDrinkCategories()
         {
             var dbService = DatabaseService.Instance;
+
             try
             {
                 string getCategoriesQuery = "SELECT * FROM Category ORDER BY CategoryId;";
@@ -240,6 +244,7 @@ namespace WinUIApp.Models
         public List<Brand> getDrinkBrands()
         {
             var dbService = DatabaseService.Instance;
+
             try
             {
                 string getBrandsQuery = "SELECT * FROM Brand ORDER BY BrandId;";
@@ -262,6 +267,7 @@ namespace WinUIApp.Models
         public List<Drink> getPersonalDrinkList(int userId, int numberOfDrinks = 1)
         {
             var dbService = DatabaseService.Instance;
+
             try
             {
                 string getPersonalDrinkList = "SELECT d.DrinkId, d.AlcoholContent, " +
@@ -317,6 +323,54 @@ namespace WinUIApp.Models
             catch (Exception ex)
             {
                 throw new Exception("Database error occurred", ex);
+            }
+        }
+
+        public bool addToPersonalDrinkList(int userId, int drinkId)
+        {
+            var dbService = DatabaseService.Instance;
+
+            try
+            {
+                string insertQuery = "INSERT INTO UserDrink (UserId, DrinkId) VALUES (@UserId, @DrinkId);";
+
+                List<MySqlParameter> parameters = new List<MySqlParameter>
+                {
+                    new MySqlParameter("@UserId", MySqlDbType.Int32) { Value = userId },
+                    new MySqlParameter("@DrinkId", MySqlDbType.Int32) { Value = drinkId }
+                };
+
+                int rowsAffected = dbService.ExecuteQuery(insertQuery, parameters);
+
+                return rowsAffected > 0;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Failed to add drink to personal list", ex);
+            }
+        }
+
+        public bool deleteFromPersonalDrinkList(int userId, int drinkId)
+        {
+            var dbService = DatabaseService.Instance;
+
+            try
+            {
+                string deleteQuery = "DELETE FROM UserDrink WHERE UserId = @UserId AND DrinkId = @DrinkId;";
+
+                List<MySqlParameter> parameters = new List<MySqlParameter>
+                {
+                    new MySqlParameter("@UserId", MySqlDbType.Int32) { Value = userId },
+                    new MySqlParameter("@DrinkId", MySqlDbType.Int32) { Value = drinkId }
+                };
+
+                int rowsAffected = dbService.ExecuteQuery(deleteQuery, parameters);
+
+                return rowsAffected > 0;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Failed to delete drink from personal list", ex);
             }
         }
     }

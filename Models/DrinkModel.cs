@@ -8,7 +8,6 @@ using System.Text;
 using System.Threading.Tasks;
 using WinUIApp.Services;
 
-
 namespace WinUIApp.Models
 {
     class DrinkModel
@@ -253,6 +252,67 @@ namespace WinUIApp.Models
                     brands.Add(new Brand(brandId, brandName));
                 }
                 return brands;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Database error occurred", ex);
+            }
+        }
+
+        public List<Drink> getPersonalDrinkList(int userId, int numberOfDrinks = 1)
+        {
+            var dbService = DatabaseService.Instance;
+            try
+            {
+                string getPersonalDrinkList = "SELECT d.DrinkId, d.AlcoholContent, " +
+                            "b.BrandId, b.BrandName, " +
+                            "GROUP_CONCAT(c.CategoryId ORDER BY c.CategoryId) AS CategoryIds, " +
+                            "GROUP_CONCAT(c.CategoryName ORDER BY c.CategoryId) AS CategoryNames " +
+                            "FROM UserDrink ud " +
+                            "JOIN Drink d ON ud.DrinkId = d.DrinkId " +
+                            "JOIN Brand b ON d.BrandId = b.BrandId " +
+                            "LEFT JOIN DrinkCategory dc ON d.DrinkId = dc.DrinkId " +
+                            "LEFT JOIN Category c ON dc.CategoryId = c.CategoryId " +
+                            "WHERE ud.UserId = @UserId " +
+                            "GROUP BY d.DrinkId, b.BrandId " +
+                            "ORDER BY d.DrinkId " +
+                            "LIMIT @NumbersOfDrinks;";
+
+
+                List<MySqlParameter> parameters = new List<MySqlParameter>
+                {
+                    new MySqlParameter("@UserId", MySqlDbType.Int32) { Value = userId },
+                    new MySqlParameter("@NumbersOfDrinks", MySqlDbType.Int32) { Value = numberOfDrinks },
+                };
+
+                var selectResult = dbService.ExecuteSelect(getPersonalDrinkList, parameters);
+                List<Drink> drinks = new List<Drink>();
+
+                foreach (var row in selectResult)
+                {
+                    int drinkId = Convert.ToInt32(row["DrinkId"]);
+                    float alcoholContent = (float)(row["AlcoholContent"]);
+
+                    int brandId = Convert.ToInt32(row["BrandId"]);
+                    string brandName = row["BrandName"].ToString();
+                    Brand brand = new Brand(brandId, brandName);
+
+                    List<Category> categories = new List<Category>();
+                    if (row["CategoryIds"] != DBNull.Value && row["CategoryNames"] != DBNull.Value)
+                    {
+                        string[] categoryIds = row["CategoryIds"].ToString().Split(',');
+                        string[] categoryNames = row["CategoryNames"].ToString().Split(',');
+
+                        for (int i = 0; i < categoryIds.Length; i++)
+                        {
+                            categories.Add(new Category(Convert.ToInt32(categoryIds[i]), categoryNames[i]));
+                        }
+                    }
+
+                    Drink drink = new Drink(drinkId, categories, brand, alcoholContent);
+                    drinks.Add(drink);
+                }
+                return drinks;
             }
             catch (Exception ex)
             {

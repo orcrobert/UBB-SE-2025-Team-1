@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UserControl
+    x:Class="WinUIApp.Views.Components.DrinkListComponent"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:WinUIApp.Views.Components"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:components="using:WinUIApp.Views.Components"
+    mc:Ignorable="d">
+
+    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="20">
+        <components:DrinkComponent Brand="Chimay1" Category="Dark Beer" Alcohol="9.0" 
+                                   ImageSource="https://www.beeracademy.ro/3124-home_default/bere-belgia-chimay-rouge.jpg" />
+        <components:DrinkComponent Brand="Chimay2" Category="Dark Beer" Alcohol="9.0" 
+                           ImageSource="https://www.beeracademy.ro/3124-home_default/bere-belgia-chimay-rouge.jpg" />
+        <components:DrinkComponent Brand="Chimay3" Category="Dark Beer" Alcohol="9.0" 
+                           ImageSource="https://www.beeracademy.ro/3124-home_default/bere-belgia-chimay-rouge.jpg" />
+        <components:DrinkComponent Brand="Chimay4" Category="Dark Beer" Alcohol="9.0" 
+                           ImageSource="https://www.beeracademy.ro/3124-home_default/bere-belgia-chimay-rouge.jpg" />
+        <components:DrinkComponent Brand="Chimay5" Category="Dark Beer" Alcohol="9.0" 
+                           ImageSource="https://www.beeracademy.ro/3124-home_default/bere-belgia-chimay-rouge.jpg" />
+    </StackPanel>
+    
+</UserControl>

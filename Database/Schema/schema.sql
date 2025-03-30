@@ -1,4 +1,13 @@
-﻿CREATE TABLE Brand (
+﻿DROP TABLE Brand;
+DROP TABLE Category;
+DROP TABLE Drink;
+DROP TABLE DrinkCategory;
+DROP TABLE User;
+DROP TABLE Vote;
+DROP TABLE DrinkOfTheDay;
+DROP TABLE UserDrink;
+
+CREATE TABLE Brand (
     BrandId INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     BrandName VARCHAR(255) NOT NULL UNIQUE
 );
@@ -52,4 +61,28 @@ CREATE TABLE UserDrink (
 INSERT INTO Brand (BrandName) VALUES ("Ursugi");
 INSERT INTO Brand (BrandName) VALUES ("Bergenbir");
 INSERT INTO Brand (BrandName) VALUES ("Duvel");
-SELECT * FROM Brand;
+
+INSERT INTO Category (CategoryName) VALUES ("Lager");
+INSERT INTO Category (CategoryName) VALUES ("IPA");
+INSERT INTO Category (CategoryName) VALUES ("Stout");
+INSERT INTO Category (CategoryName) VALUES ("Pilsner");
+
+INSERT INTO Drink (BrandId, AlcoholContent) VALUES (1, 5.0);
+INSERT INTO Drink (BrandId, AlcoholContent) VALUES (2, 7.2);
+INSERT INTO Drink (BrandId, AlcoholContent) VALUES (3, 8.5);
+
+INSERT INTO DrinkCategory (DrinkId, CategoryId) VALUES (1, 1);
+INSERT INTO DrinkCategory (DrinkId, CategoryId) VALUES (2, 2);
+INSERT INTO DrinkCategory (DrinkId, CategoryId) VALUES (3, 3);
+
+INSERT INTO User (UserId) VALUES (1);
+INSERT INTO User (UserId) VALUES (2);
+
+INSERT INTO Vote (UserId, DrinkId, VoteTime) VALUES (1, 1, "2025-03-29 12:00:00");
+INSERT INTO Vote (UserId, DrinkId, VoteTime) VALUES (2, 2, "2025-03-29 14:00:00");
+
+INSERT INTO DrinkOfTheDay (DrinkId, DrinkTime) VALUES (1, "2025-03-29 10:00:00");
+
+INSERT INTO UserDrink (UserId, DrinkId) VALUES (1, 1);
+INSERT INTO UserDrink (UserId, DrinkId) VALUES (1, 2);
+INSERT INTO UserDrink (UserId, DrinkId) VALUES (2, 2);

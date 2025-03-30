@@ -13,8 +13,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
-    <None Remove="Views\Components\BlankPage1.xaml" />
-    <None Remove="Views\Pages\SearchPage.xaml" />
+    <None Remove="Views\DrinkModelCrudTest.xaml" />
+    <None Remove="Views\Components\DrinkComponent.xaml" />
+    <None Remove="Views\Components\DrinkListComponent.xaml" />
   </ItemGroup>
   <ItemGroup>
     <Page Remove="GlobalStyles.xaml" />
@@ -43,6 +44,7 @@
     <ProjectCapability Include="Msix" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="CommunityToolkit.WinUI.UI.Controls.DataGrid" Version="7.1.2" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.3" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="9.0.3" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="9.0.3" />
@@ -55,10 +57,13 @@
     <None Update="Styles\GlobalStyles.xaml">
       <Generator>MSBuild:Compile</Generator>
     </None>
-    <Page Update="Views\Pages\SearchPage.xaml">
+    <Page Update="Views\DrinkModelCrudTest.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Update="Views\Components\BlankPage1.xaml">
+    <Page Update="Views\Components\DrinkComponent.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Views\Components\DrinkListComponent.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>

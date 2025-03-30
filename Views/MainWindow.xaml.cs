@@ -8,11 +8,15 @@ using System.Diagnostics;
 using System.Text;
 using WinUIApp.Services.DummyServies;
 using WinUIApp.Models;
+using System.Collections.ObjectModel;
 
 namespace WinUIApp.Views
 {
     public sealed partial class MainWindow : Window
     {
+
+        private ObservableCollection<Drink> DrinksList { get; set; } = new ObservableCollection<Drink>();
+
         public MainWindow()
         {
             this.InitializeComponent();
@@ -125,5 +129,6 @@ namespace WinUIApp.Views
 
             testModelsTextBlock.Text = sb.ToString();
         }
+
     }
 }

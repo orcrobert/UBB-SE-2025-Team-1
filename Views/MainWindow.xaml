@@ -8,7 +8,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     Title="WinUIApp">
-
+    <!--
     <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="10">
         <Button x:Name="myButton" Click="myButton_Click" Style="{StaticResource DefaultButton}">Click Me</Button>
         <TextBlock x:Name="myTextBlock">Mars ma de acici</TextBlock>
@@ -22,5 +22,8 @@
         <TextBlock x:Name="reviewTextBlock" Text="Review for drink with ID = 1"></TextBlock>
 
         <TextBlock x:Name="testModelsTextBlock"></TextBlock>
-    </StackPanel>
+    </StackPanel>-->
+    <Grid>
+        <Frame x:Name="MainFrame"/>
+    </Grid>
 </Window>

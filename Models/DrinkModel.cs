@@ -13,7 +13,7 @@ namespace WinUIApp.Models
 {
     class DrinkModel
     {
-        public List<Drink> getDrinks(List<string>? brandNameFilter, List<string>? categoryFilter, float? minAlcohol, float? maxAlcohol, Dictionary<string, bool>? orderBy)
+        public List<Drink> getDrinks(string searchedTerm, List<string>? brandNameFilter, List<string>? categoryFilter, float? minAlcohol, float? maxAlcohol, Dictionary<string, bool>? orderBy)
         {
             var dbService = DatabaseService.Instance;
             List<Drink> drinks = [];
@@ -33,6 +33,19 @@ namespace WinUIApp.Models
                 List<string> queryParts = [getDrinksQuery];
                 List<string> queryConditions = [];
                 List<MySqlParameter> queryParameters = [];
+
+                if (!string.IsNullOrEmpty(searchedTerm))
+                {
+                    List<string> searchTerms = searchedTerm.Split(' ').ToList();
+
+                    for (int i = 0; i < searchTerms.Count; i++)
+                    {
+                        string parameterName = $"@SearchTerm{i}";
+                        queryConditions.Add($"(B.BrandName LIKE {parameterName} OR C.CategoryName LIKE {parameterName})");
+
+                        queryParameters.Add(new MySqlParameter(parameterName, MySqlDbType.VarChar) { Value = "%" + searchTerms[i] + "%" });
+                    }
+                }
 
                 if (brandNameFilter != null && brandNameFilter.Count != 0)
                 {

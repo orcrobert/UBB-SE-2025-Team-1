@@ -214,5 +214,50 @@ namespace WinUIApp.Models
                 throw new Exception("Database error occurred", ex);
             }
         }
+
+        public List<Category> getDrinkCategories()
+        {
+            var dbService = DatabaseService.Instance;
+            try
+            {
+                string getCategoriesQuery = "SELECT * FROM Category ORDER BY CategoryId;";
+                var selectResult = dbService.ExecuteSelect(getCategoriesQuery);
+
+                List<Category> categories = new List<Category>();
+                foreach (var row in selectResult)
+                {
+                    int categoryId = Convert.ToInt32(row["CategoryId"]);
+                    string categoryName = row["CategoryName"].ToString();
+                    categories.Add(new Category(categoryId, categoryName));
+                }
+                return categories;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Database error occurred", ex);
+            }
+        }
+
+        public List<Brand> getDrinkBrands()
+        {
+            var dbService = DatabaseService.Instance;
+            try
+            {
+                string getBrandsQuery = "SELECT * FROM Brand ORDER BY BrandId;";
+                var selectResult = dbService.ExecuteSelect(getBrandsQuery);
+                List<Brand> brands = new List<Brand>();
+                foreach (var row in selectResult)
+                {
+                    int brandId = Convert.ToInt32(row["BrandId"]);
+                    string brandName = row["BrandName"].ToString();
+                    brands.Add(new Brand(brandId, brandName));
+                }
+                return brands;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Database error occurred", ex);
+            }
+        }
     }
 }

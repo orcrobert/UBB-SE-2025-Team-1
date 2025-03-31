@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using WinUIApp.Models;
 
-namespace WinUIApp.Views.Components
+namespace WinUIApp.Views.Components.SearchPageComponents
 {
     public sealed partial class VerticalDrinkListComponent : UserControl
     {
@@ -26,7 +26,7 @@ namespace WinUIApp.Views.Components
         public void SetDrinks(IEnumerable<Drink> drinks)
         {
             DrinksList = drinks;
-            DrinkListView.ItemsSource = drinks;
+            DrinkListView.ItemsSource = DrinksList;
         }
 
 

@@ -2,6 +2,7 @@ using Microsoft.UI;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using System;
+using WinUIApp.Services;
 using WinUIApp.Views.ModelViews;
 using WinUIApp.Views.Pages;
 
@@ -13,7 +14,8 @@ namespace WinUIApp.Views
         {
             this.InitializeComponent();
             SetFixedSize(1440, 900);
-            SearchPageViewModel searchPageViewModel = new SearchPageViewModel(MainFrame);
+            DrinkService drinkService = new DrinkService();
+            SearchPageViewModel searchPageViewModel = new SearchPageViewModel(MainFrame, drinkService);
             MainFrame.Navigate(typeof(SearchPage), searchPageViewModel);
         }
 

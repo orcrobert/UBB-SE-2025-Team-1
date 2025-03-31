@@ -39,7 +39,7 @@
                         <!-- Image -->
                         <Image Grid.Row="0" Grid.Column="0" Grid.RowSpan="4"
                                Width="80" Height="80" Margin="0,0,10,0"
-                               Source="{x:Bind ImageUrl, Mode=OneWay, Converter={StaticResource ImageUrlConverter}}"
+                               Source="{x:Bind DrinkURL, Mode=OneWay, Converter={StaticResource ImageUrlConverter}}"
                                Stretch="Uniform"/>
 
                         <!-- Brand -->
@@ -51,7 +51,7 @@
                         <!-- Name -->
                         <TextBlock Grid.Row="1" Grid.Column="1" Margin="0,0,0,5">
                             <Run Text="Name: " FontWeight="Bold" FontSize="16"/>
-                            <Run Text="{x:Bind Name, Mode=OneWay}" FontSize="16"/>
+                            <Run Text="{x:Bind DrinkName, Mode=OneWay}" FontSize="16"/>
                         </TextBlock>
 
                         <!-- Categories -->

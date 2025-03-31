@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using WinUIApp.Models;
 
 
 namespace WinUIApp.Services
 {
-    class DrinkService
+    public class DrinkService
     {
         private DrinkModel drinkModel;
         public DrinkService()

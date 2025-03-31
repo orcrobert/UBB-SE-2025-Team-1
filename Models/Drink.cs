@@ -1,30 +1,43 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace WinUIApp.Models
 {
     public class Drink
     {
         private int _id;
+        private string? _drinkName;
+        private string _drinkURL;
         private List<Category> _categories;
         private Brand _brand;
         private float _alcoholContent;
 
-        public Drink(int id, List<Category> categories, Brand brand, float alcoholContent)
+        public Drink(int id, string? drinkName, string drinkURL, List<Category> categories, Brand brand, float alcoholContent)
         {
             _id = id;
+            _drinkName = drinkName;
+            _drinkURL = drinkURL ?? string.Empty;
             _categories = categories ?? new List<Category>();
             _brand = brand;
-            _alcoholContent = alcoholContent;
+            AlcoholContent = alcoholContent;
         }
 
         public int Id
         {
             get { return _id; }
             set { _id = value; }
+        }
+
+        public string? DrinkName
+        {
+            get { return _drinkName; }
+            set { _drinkName = value; }
+        }
+
+        public string DrinkURL
+        {
+            get { return _drinkURL; }
+            set { _drinkURL = value ?? string.Empty; }
         }
 
         public List<Category> Categories

@@ -5,16 +5,16 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:WinUIApp.Views.Pages"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:component="using:WinUIApp.Views.Components"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <Grid>
-        <Grid Background="LightGray">
-            <TextBlock Text="Welcome to the Home Page!" 
-                   HorizontalAlignment="Center" 
-                   VerticalAlignment="Center" 
-                   FontSize="24"/>
-        </Grid>
+    <Grid Background="LightGray">
+        <TextBlock Text="Welcome to the Home Page!" 
+                HorizontalAlignment="Center" 
+                VerticalAlignment="Center" 
+                FontSize="24"/>
+        <component:VerticalDrinkListComponent x:Name="VerticalDrinkListControl"/>
     </Grid>
 </Page>

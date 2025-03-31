@@ -13,7 +13,7 @@ namespace WinUIApp.Models
 {
     class DrinkModel
     {
-        public List<Drink> getDrinks(string searchedTerm, List<string>? brandNameFilter, List<string>? categoryFilter, float? minAlcohol, float? maxAlcohol, Dictionary<string, bool>? orderBy)
+        public List<Drink> getDrinks(string? searchedTerm, List<string>? brandNameFilter, List<string>? categoryFilter, float? minAlcohol, float? maxAlcohol, Dictionary<string, bool>? orderBy)
         {
             var dbService = DatabaseService.Instance;
             List<Drink> drinks = [];

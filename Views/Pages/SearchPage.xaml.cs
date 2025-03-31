@@ -22,6 +22,7 @@ namespace WinUIApp.Views.Pages
             {
                 _searchPageViewModel = viewModel;
                 VerticalDrinkListControl.DrinkClicked += VerticalDrinkListControl_DrinkClicked;
+                SortSelectorControl.SetSortOrder(_searchPageViewModel.IsAscending);
                 LoadDrinks();
             }
         }
@@ -31,10 +32,17 @@ namespace WinUIApp.Views.Pages
             _searchPageViewModel.OpenDrinkDetailPage(drinkId);
         }
 
+
         private void LoadDrinks()
         {
             IEnumerable<DrinkDisplayItem> drinks = _searchPageViewModel.GetDrinks();
             VerticalDrinkListControl.SetDrinks(drinks);
+        }
+
+        private void SortSelectorControl_SortOrderChanged(object sender, bool isAscending)
+        {
+            _searchPageViewModel.SetSortOrder(isAscending);
+            LoadDrinks(); // Refresh the list with new sort order
         }
     }
 }

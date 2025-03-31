@@ -9,21 +9,7 @@
     xmlns:components="using:WinUIApp.Views.Components"
     mc:Ignorable="d"
     Title="WinUIApp">
-    <!--
-    <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="10">
-        <Button x:Name="myButton" Click="myButton_Click" Style="{StaticResource DefaultButton}">Click Me</Button>
-        <TextBlock x:Name="myTextBlock">Mars ma de acici</TextBlock>
-        <TextBlock x:Name="myTextBlock2" Text="Query result here..." FontWeight="Bold"/>
 
-        <TextBox x:Name="brandTextBox" Width="200" Height="30" PlaceholderText="Enter a brand"/>
-        <Button x:Name="insertButton" Click="insertButton_Click" Style="{StaticResource DefaultButton}">Insert</Button>
-
-        <Button x:Name="testButton" Click="testButton_Click" Style="{StaticResource DefaultButton}">Test model and services</Button>
-        <TextBlock x:Name="currentUserTextBlock" Text="Current user will be displayed here"></TextBlock>
-        <TextBlock x:Name="reviewTextBlock" Text="Review for drink with ID = 1"></TextBlock>
-
-        <TextBlock x:Name="testModelsTextBlock"></TextBlock>
-    </StackPanel>-->
     <Grid>
         <Frame x:Name="MainFrame"/>
     </Grid>

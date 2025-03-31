@@ -33,7 +33,7 @@ namespace WinUIApp.Views.ModelViews
 
         public void ClearFilters()
         {
-
+            //
         }
 
         public void RefreshDrinkList()

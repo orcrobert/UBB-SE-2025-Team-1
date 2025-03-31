@@ -29,11 +29,11 @@ namespace WinUIApp.Services
             }
         }
 
-        public void addDrink(List<Category> categories, string brandName, float alcoholContent)
+        public void addDrink(string drinkName, string drinkUrl, List<Category> categories, string brandName, float alcoholContent)
         {
             try
             {
-                drinkModel.addDrink(categories, brandName, alcoholContent);
+                drinkModel.addDrink(drinkName, drinkUrl, categories, brandName, alcoholContent);
             }
             catch (Exception e)
             {

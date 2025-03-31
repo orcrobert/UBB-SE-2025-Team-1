@@ -113,7 +113,7 @@ namespace WinUIApp.Views
             categories.Add(category1);
             categories.Add(category2);
             Brand brand = new Brand(100, "Chimay");
-            Drink drink = new Drink(100, categories, brand, (float)9.0);
+            Drink drink = new Drink(100, "RandomName", "noUrl", categories, brand, (float)9.0);
 
             drink.AlcoholContent = (float)12;
 

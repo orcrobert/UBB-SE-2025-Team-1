@@ -20,7 +20,7 @@ namespace WinUIApp.Models
 
             try
             {
-                string getDrinksQuery = @" SELECT D.DrinkId, D.AlcoholContent, 
+                string getDrinksQuery = @" SELECT D.DrinkId, D.AlcoholContent, D.DrinkName, D.DrinkURL,
                                           B.BrandId, B.BrandName, 
                                           GROUP_CONCAT(C.CategoryId ORDER BY C.CategoryId) AS CategoryIds, 
                                           GROUP_CONCAT(C.CategoryName ORDER BY C.CategoryId) AS CategoryNames
@@ -41,7 +41,7 @@ namespace WinUIApp.Models
                     for (int i = 0; i < searchTerms.Count; i++)
                     {
                         string parameterName = $"@SearchTerm{i}";
-                        queryConditions.Add($"(B.BrandName LIKE {parameterName} OR C.CategoryName LIKE {parameterName})");
+                        queryConditions.Add($"(B.BrandName LIKE {parameterName} OR C.CategoryName LIKE {parameterName} OR D.DrinkName LIKE {parameterName})");
 
                         queryParameters.Add(new MySqlParameter(parameterName, MySqlDbType.VarChar) { Value = "%" + searchTerms[i] + "%" });
                     }
@@ -98,6 +98,8 @@ namespace WinUIApp.Models
                 {
                     int drinkId = Convert.ToInt32(row["DrinkId"]);
                     float alcoholContent = Convert.ToSingle(row["AlcoholContent"]);
+                    string drinkName = row["DrinkName"].ToString();
+                    string drinkURL = row["DrinkURL"].ToString();
 
                     int brandId = Convert.ToInt32(row["BrandId"]);
                     string brandName = row["BrandName"].ToString();
@@ -118,7 +120,7 @@ namespace WinUIApp.Models
                         }
                     }
 
-                    Drink drink = new Drink(drinkId, categories, brand, alcoholContent);
+                    Drink drink = new Drink(drinkId, drinkName, drinkURL, categories, brand, alcoholContent);
                     drinks.Add(drink);
                 }
 
@@ -132,7 +134,7 @@ namespace WinUIApp.Models
 
 
 
-        public void addDrink(List<Category> categories, string brandName, float alcoholContent)
+        public void addDrink(string drinkName, string drinkUrl, List<Category> categories, string brandName, float alcoholContent)
         {
             var dbService = DatabaseService.Instance;
 
@@ -155,11 +157,13 @@ namespace WinUIApp.Models
                     throw new Exception("Brand does not exist");
                 }
 
-                string addDrinkQuery = @"INSERT INTO Drink (AlcoholContent, BrandId) 
-                                VALUES (@AlcoholContent, @BrandId);";
+                string addDrinkQuery = @"INSERT INTO Drink (DrinkName, DrinkUrl, AlcoholContent, BrandId) 
+                                VALUES (@DrinkName, @DrinkUrl, @AlcoholContent, @BrandId);";
 
                 List<MySqlParameter> drinkParameters =
                 [
+                    new MySqlParameter("@DrinkName", MySqlDbType.VarChar) { Value = drinkName },
+                    new MySqlParameter("@DrinkUrl", MySqlDbType.VarChar) { Value = drinkUrl },
                     new MySqlParameter("@AlcoholContent", MySqlDbType.Float) { Value = alcoholContent },
                     new MySqlParameter("@BrandId", MySqlDbType.Int32) { Value = brandId }
                 ];
@@ -229,10 +233,12 @@ namespace WinUIApp.Models
                 }
 
 
-                string updateDrinkQuery = @"UPDATE Drink SET AlcoholContent = @AlcoholContent, BrandId = @BrandId 
+                string updateDrinkQuery = @"UPDATE Drink SET AlcoholContent = @AlcoholContent, BrandId = @BrandId, DrinkName = @DrinkName, DrinkUrl = @DrinkUrl
                                             WHERE DrinkId = @DrinkId;";
                 List<MySqlParameter> drinkParameters =
                 [
+                    new MySqlParameter("@DrinkName", MySqlDbType.VarChar) { Value = drink.DrinkName },
+                    new MySqlParameter("@DrinkUrl", MySqlDbType.VarChar) { Value = drink.DrinkURL },
                     new MySqlParameter("@AlcoholContent", MySqlDbType.Float) { Value = drink.AlcoholContent },
                     new MySqlParameter("@BrandId", MySqlDbType.Int32) { Value = brandId },
                     new MySqlParameter("@DrinkId", MySqlDbType.Int32) { Value = drink.Id }
@@ -360,6 +366,8 @@ namespace WinUIApp.Models
                 {
                     int drinkId = Convert.ToInt32(row["DrinkId"]);
                     float alcoholContent = (float)(row["AlcoholContent"]);
+                    string drinkName = row["DrinkName"].ToString();
+                    string drinkURL = row["DrinkURL"].ToString();
 
                     int brandId = Convert.ToInt32(row["BrandId"]);
                     string brandName = row["BrandName"].ToString();
@@ -377,7 +385,7 @@ namespace WinUIApp.Models
                         }
                     }
 
-                    Drink drink = new Drink(drinkId, categories, brand, alcoholContent);
+                    Drink drink = new Drink(drinkId, drinkName, drinkURL, categories, brand, alcoholContent);
                     drinks.Add(drink);
                 }
                 return drinks;

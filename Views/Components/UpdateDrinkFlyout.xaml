@@ -17,16 +17,19 @@
 
         <StackPanel x:Name="LayoutPanel" Spacing="10">
             <TextBlock Text="Update Drink Info" FontSize="18" FontWeight="Bold"/>
-            <TextBlock Text="Categories:"/>
 
+            <TextBlock Text="Categories:"/>
             <TextBox x:Name="SearchBox" PlaceholderText="Search categories..." />
             <ListView x:Name="CategoryList"
-          Height="120"
-          SelectionMode="Multiple"/>
-            <TextBox PlaceholderText="Brand" />
-            <TextBox PlaceholderText="Alcohol %" />
-            <TextBox PlaceholderText="Description" />
-            
+                      Height="120"
+                      SelectionMode="Multiple"/>
+
+            <TextBlock Text="Brand:"/>
+            <TextBox x:Name="BrandBox" PlaceholderText="Brand" />
+
+            <TextBlock Text="Alcohol Content (%):"/>
+            <TextBox x:Name="AlcoholBox" PlaceholderText="Alcohol %" />
+
             <Button Content="Save"
                     HorizontalAlignment="Right"
                     Click="SaveButton_Click"/>

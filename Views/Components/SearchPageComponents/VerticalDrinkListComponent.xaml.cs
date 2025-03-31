@@ -8,7 +8,7 @@ namespace WinUIApp.Views.Components.SearchPageComponents
     public sealed partial class VerticalDrinkListComponent : UserControl
     {
         public event EventHandler<int> DrinkClicked;
-        public IEnumerable<Drink> DrinksList { get; set; }
+        public IEnumerable<DrinkDisplayItem> DrinksList { get; set; }
 
         public VerticalDrinkListComponent()
         {
@@ -23,7 +23,7 @@ namespace WinUIApp.Views.Components.SearchPageComponents
             }
         }
 
-        public void SetDrinks(IEnumerable<Drink> drinks)
+        public void SetDrinks(IEnumerable<DrinkDisplayItem> drinks)
         {
             DrinksList = drinks;
             DrinkListView.ItemsSource = DrinksList;

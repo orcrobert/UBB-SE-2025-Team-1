@@ -2,28 +2,29 @@
 using System.Collections.Generic;
 using WinUIApp.Models;
 using WinUIApp.Services;
+using WinUIApp.Services.DummyServies;
+using WinUIApp.Views.Components.SearchPageComponents;
 using WinUIApp.Views.Pages;
 
 namespace WinUIApp.Views.ModelViews
 {
-    public class SearchPageViewModel(/*ReviewService reviewService*/ Frame frame, DrinkService drinkService)
+    public class SearchPageViewModel(Frame frame, DrinkService drinkService, ReviewService reviewService)
     {
         private readonly Frame _frame = frame;
         private readonly DrinkService _drinkService = drinkService;
 
-        /*private ReviewService _reviewService = reviewService;
-        
+        private ReviewService _reviewService = reviewService;
+        /*
          * TO DO
          * add Drink Service field
          * implement methods
-        
+        */
 
         public ReviewService ReviewService
         {
             get => _reviewService;
             set => _reviewService = value;
         }
-        */
 
         public void OpenDrinkDetailPage(int id)
         {
@@ -40,10 +41,21 @@ namespace WinUIApp.Views.ModelViews
 
         }
 
-        public IEnumerable<Drink> GetDrinks()
+        public IEnumerable<DrinkDisplayItem> GetDrinks()
         {
-            return _drinkService.getDrinks(null, null, null, null, null, null);
+            List<Drink> drinks = _drinkService.getDrinks(null, null, null, null, null, null);
+            List<DrinkDisplayItem> displayItems = new List<DrinkDisplayItem>();
+
+            foreach (Drink drink in drinks)
+            {
+                float averageScore = _reviewService.GetReviewAverageByID(drink.Id);
+                DrinkDisplayItem item = new DrinkDisplayItem(drink, averageScore);
+                displayItems.Add(item);
+            }
+
+            return displayItems;
         }
+
 
     }
 }

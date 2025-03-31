@@ -6,7 +6,6 @@
     xmlns:local="using:WinUIApp.Views.Components.SearchPageComponents"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-    xmlns:local1="using:WinUIApp.Models"
     mc:Ignorable="d">
 
     <Grid>
@@ -17,7 +16,7 @@
             IsItemClickEnabled="True" 
             ItemClick="DrinkList_ItemClick">
             <ListView.ItemTemplate>
-                <DataTemplate x:DataType="local1:Drink">
+                <DataTemplate x:DataType="local:DrinkDisplayItem">
                     <Grid Padding="10">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>
@@ -34,36 +33,45 @@
                             <!-- Categories -->
                             <RowDefinition Height="Auto"/>
                             <!-- Alcohol Content -->
+                            <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
 
                         <!-- Image -->
                         <Image Grid.Row="0" Grid.Column="0" Grid.RowSpan="4"
-                               Width="80" Height="80" Margin="0,0,10,0"
-                               Source="{x:Bind DrinkURL, Mode=OneWay, Converter={StaticResource ImageUrlConverter}}"
-                               Stretch="Uniform"/>
+                               Width="120" Height="120" Margin="0,0,10,0"
+                               Source="{x:Bind Drink.DrinkURL, Mode=OneWay, Converter={StaticResource ImageUrlConverter}}"
+                               Stretch="Uniform"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"/>
 
                         <!-- Brand -->
                         <TextBlock Grid.Row="0" Grid.Column="1" Margin="0,0,0,5">
                             <Run Text="Brand: " FontWeight="Bold" FontSize="16"/>
-                            <Run Text="{x:Bind Brand.Name, Mode=OneWay}" FontSize="16"/>
+                            <Run Text="{x:Bind Drink.Brand.Name, Mode=OneWay}" FontSize="16"/>
                         </TextBlock>
 
                         <!-- Name -->
                         <TextBlock Grid.Row="1" Grid.Column="1" Margin="0,0,0,5">
                             <Run Text="Name: " FontWeight="Bold" FontSize="16"/>
-                            <Run Text="{x:Bind DrinkName, Mode=OneWay}" FontSize="16"/>
+                            <Run Text="{x:Bind Drink.DrinkName, Mode=OneWay}" FontSize="16"/>
                         </TextBlock>
 
                         <!-- Categories -->
                         <TextBlock Grid.Row="2" Grid.Column="1" Margin="0,0,0,5">
                             <Run Text="Categories: " FontWeight="Bold" FontSize="16"/>
-                            <Run Text="{x:Bind Categories, Mode=OneWay, Converter={StaticResource CategoriesConverter}}" FontSize="16"/>
+                            <Run Text="{x:Bind Drink.Categories, Mode=OneWay, Converter={StaticResource CategoriesConverter}}" FontSize="16"/>
                         </TextBlock>
 
                         <!-- Alcohol Content -->
                         <TextBlock Grid.Row="3" Grid.Column="1" Margin="0,0,0,5">
                             <Run Text="Alcohol Content: " FontWeight="Bold" FontSize="16"/>
-                            <Run Text="{x:Bind AlcoholContent, Mode=OneWay, Converter={StaticResource AlcoholContentConverter}}" FontSize="16"/>
+                            <Run Text="{x:Bind Drink.AlcoholContent, Mode=OneWay, Converter={StaticResource AlcoholContentConverter}}" FontSize="16"/>
+                        </TextBlock>
+                        
+                        <!-- Average Review Score -->
+                        <TextBlock Grid.Row="4" Grid.Column="1" Margin="0,0,0,5">
+                            <Run Text="Average Review Score: " FontWeight="Bold" FontSize="16"/>
+                            <Run Text="{x:Bind AverageReviewScore, Mode=OneWay, Converter={StaticResource ReviewContentConverter}}" FontSize="16"/>
                         </TextBlock>
                     </Grid>
                 </DataTemplate>

@@ -1,5 +1,7 @@
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
+using System.Collections.Generic;
+using WinUIApp.Views.Components.SearchPageComponents;
 using WinUIApp.Views.ModelViews;
 
 namespace WinUIApp.Views.Pages
@@ -31,7 +33,7 @@ namespace WinUIApp.Views.Pages
 
         private void LoadDrinks()
         {
-            var drinks = _searchPageViewModel.GetDrinks();
+            IEnumerable<DrinkDisplayItem> drinks = _searchPageViewModel.GetDrinks();
             VerticalDrinkListControl.SetDrinks(drinks);
         }
     }

@@ -18,6 +18,7 @@
             <converters:ImageUrlConverter x:Key="ImageUrlConverter"/>
             <converters:CategoriesConverter x:Key="CategoriesConverter"/>
             <converters:AlcoholContentConverter x:Key="AlcoholContentConverter"/>
+            <converters:ReviewScoreConverter x:Key="ReviewContentConverter"/>
             
         </ResourceDictionary>
     </Application.Resources>

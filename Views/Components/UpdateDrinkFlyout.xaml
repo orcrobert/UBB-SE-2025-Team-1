@@ -18,6 +18,12 @@
         <StackPanel x:Name="LayoutPanel" Spacing="10">
             <TextBlock Text="Update Drink Info" FontSize="18" FontWeight="Bold"/>
 
+            <TextBlock Text="Drink Name:"/>
+            <TextBox x:Name="NameBox" PlaceholderText="Enter drink name..." />
+
+            <TextBlock Text="Image URL:"/>
+            <TextBox x:Name="ImageUrlBox" PlaceholderText="Enter image URL..." />
+
             <TextBlock Text="Categories:"/>
             <TextBox x:Name="SearchBox" PlaceholderText="Search categories..." />
             <ListView x:Name="CategoryList"
@@ -30,10 +36,10 @@
             <TextBlock Text="Alcohol Content (%):"/>
             <TextBox x:Name="AlcoholBox" PlaceholderText="Alcohol %" />
 
-            <Button Content="Save"
+            <Button x:Name="SaveButton"
+                    Content="Save"
                     HorizontalAlignment="Right"
-                    Click="SaveButton_Click"
-                    x:Name="SaveButton"/>
+                    Click="SaveButton_Click"/>
         </StackPanel>
     </Border>
 </UserControl>

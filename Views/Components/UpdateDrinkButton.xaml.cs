@@ -20,7 +20,7 @@ namespace WinUIApp.Views.Components
 
         private void UpdateDrinkButton_Click(object sender, RoutedEventArgs e)
         {
-            /*
+            
             var testDrink = new Drink(
                 id: 1,
                 drinkName: "Ursugi",
@@ -44,7 +44,7 @@ namespace WinUIApp.Views.Components
                 }
             };
 
-            flyout.ShowAt(UpdateButton);*/
+            flyout.ShowAt(UpdateButton);
         }
     }
 }

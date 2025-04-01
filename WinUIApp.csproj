@@ -57,6 +57,9 @@
     <None Update="Styles\GlobalStyles.xaml">
       <Generator>MSBuild:Compile</Generator>
     </None>
+    <Page Update="Views\Pages\DrinkDetailsPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Update="Views\DrinkModelCrudTest.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -69,7 +72,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\Windows\" />
-    <Folder Include="Views\Pages\" />
   </ItemGroup>
 
   <!--

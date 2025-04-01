@@ -24,6 +24,9 @@
 
         <TextBlock x:Name="testModelsTextBlock"></TextBlock>
 
+        <Button Content="Open Drink Details" Click="OpenDrinkDetails_Click" />
+
+
         <components:DrinkListComponent />
     </StackPanel>
 </Window>

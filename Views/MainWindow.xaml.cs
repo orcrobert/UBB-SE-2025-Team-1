@@ -130,5 +130,18 @@ namespace WinUIApp.Views
             testModelsTextBlock.Text = sb.ToString();
         }
 
+
+        private void OpenDrinkDetails_Click(object sender, RoutedEventArgs e)
+        {
+            // Create a new Frame
+            var frame = new Microsoft.UI.Xaml.Controls.Frame();
+
+            // Navigate the Frame to your DrinkDetailsPage
+            frame.Navigate(typeof(WinUIApp.Views.Pages.DrinkDetailsPage));
+
+            // Set the Window's content to the Frame
+            this.Content = frame;
+        }
+
     }
 }

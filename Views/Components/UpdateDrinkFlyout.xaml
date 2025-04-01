@@ -32,7 +32,8 @@
 
             <Button Content="Save"
                     HorizontalAlignment="Right"
-                    Click="SaveButton_Click"/>
+                    Click="SaveButton_Click"
+                    x:Name="SaveButton"/>
         </StackPanel>
     </Border>
 </UserControl>

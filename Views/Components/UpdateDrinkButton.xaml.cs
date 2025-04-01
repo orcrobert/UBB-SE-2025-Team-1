@@ -30,11 +30,13 @@ namespace WinUIApp.Views.Components
                 alcoholContent: 5.5f
             );
 
+            var userService = new WinUIApp.Services.DummyServies.UserService();
             var flyout = new Flyout
             {
                 Content = new UpdateDrinkFlyout
                 {
-                    DrinkToUpdate = testDrink
+                    DrinkToUpdate = testDrink,
+                    UserId = userService.GetCurrentUserID()
                 }
             };
 

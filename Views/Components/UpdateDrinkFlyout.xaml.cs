@@ -13,6 +13,7 @@ namespace WinUIApp.Views.Components
     public sealed partial class UpdateDrinkFlyout : UserControl
     {
         public Drink DrinkToUpdate { get; set; }
+        public int UserId { get; set; }
 
         private readonly List<string> _allCategories = new()
         {
@@ -70,6 +71,12 @@ namespace WinUIApp.Views.Components
 
         private void UpdateDrinkFlyout_Loaded(object sender, RoutedEventArgs e)
         {
+            var adminService = new WinUIApp.Services.DummyServies.AdminService();
+            bool isAdmin = adminService.IsAdmin(UserId);
+
+            SaveButton.Content = isAdmin ? "Save" : "Send Request to Admin";
+
+
             if (DrinkToUpdate != null)
             {
                 BrandBox.Text = DrinkToUpdate.Brand?.Name ?? "";
@@ -91,13 +98,24 @@ namespace WinUIApp.Views.Components
             }
         }
 
+        private Brand ResolveBrand(string brandName)
+        {
+            var service = new DrinkService();
+            var existingBrands = service.getDrinkBrands();
+
+            var match = existingBrands
+                .FirstOrDefault(b => b.Name.Equals(brandName, StringComparison.OrdinalIgnoreCase));
+
+            return match ?? new Brand(-1, brandName); // -1 indicates a new brand to be inserted later
+        }
+
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
             if (DrinkToUpdate != null)
             {
                 try
                 {
-                    DrinkToUpdate.Brand = new Brand(1, BrandBox.Text);
+                    DrinkToUpdate.Brand = ResolveBrand(BrandBox.Text);
 
                     if (float.TryParse(AlcoholBox.Text, out var alc))
                         DrinkToUpdate.AlcoholContent = alc;
@@ -109,6 +127,12 @@ namespace WinUIApp.Views.Components
                     var service = new DrinkService();
                     service.updateDrink(DrinkToUpdate);
 
+                    var adminService = new WinUIApp.Services.DummyServies.AdminService();
+                    bool isAdmin = adminService.IsAdmin(UserId);
+                    if(isAdmin)
+                    {
+
+                    }
                     var dialog = new ContentDialog
                     {
                         Title = "Success",

@@ -14,6 +14,7 @@
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Views\Components\VerticalDrinkList.xaml" />
+    <None Remove="Views\Components\UpdateDrinkFlyout.xaml" />
     <None Remove="Views\DrinkModelCrudTest.xaml" />
     <None Remove="Views\Components\DrinkComponent.xaml" />
     <None Remove="Views\Components\DrinkListComponent.xaml" />
@@ -63,6 +64,12 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Update="Views\Components\VerticalDrinkList.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Views\Components\UpdateDrinkFlyout.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Views\Components\UpdateDrinkButton.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Update="Views\DrinkModelCrudTest.xaml">

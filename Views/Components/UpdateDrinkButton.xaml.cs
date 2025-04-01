@@ -23,6 +23,8 @@ namespace WinUIApp.Views.Components
             /*
             var testDrink = new Drink(
                 id: 1,
+                drinkName: "Ursugi",
+                drinkURL: "https://static.mega-image.ro/medias/sys_master/h03/h71/9295712026654.jpg",
                 categories: new List<Category>
                 {
                     new Category(101, "Beer"),

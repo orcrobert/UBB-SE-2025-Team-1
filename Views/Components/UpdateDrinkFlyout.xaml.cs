@@ -81,6 +81,8 @@ namespace WinUIApp.Views.Components
             {
                 BrandBox.Text = DrinkToUpdate.Brand?.Name ?? "";
                 AlcoholBox.Text = DrinkToUpdate.AlcoholContent.ToString();
+                NameBox.Text = DrinkToUpdate.DrinkName;
+                ImageUrlBox.Text = DrinkToUpdate.DrinkURL;
 
                 var selectedNames = DrinkToUpdate.Categories.Select(c => c.Name).ToList();
                 foreach (var name in selectedNames)
@@ -116,6 +118,8 @@ namespace WinUIApp.Views.Components
                 try
                 {
                     DrinkToUpdate.Brand = ResolveBrand(BrandBox.Text);
+                    DrinkToUpdate.DrinkName = NameBox.Text;
+                    DrinkToUpdate.DrinkURL = ImageUrlBox.Text;
 
                     if (float.TryParse(AlcoholBox.Text, out var alc))
                         DrinkToUpdate.AlcoholContent = alc;
@@ -124,19 +128,31 @@ namespace WinUIApp.Views.Components
                         .Select(name => new Category(1, name))
                         .ToList();
 
-                    var service = new DrinkService();
-                    service.updateDrink(DrinkToUpdate);
-
                     var adminService = new WinUIApp.Services.DummyServies.AdminService();
                     bool isAdmin = adminService.IsAdmin(UserId);
-                    if(isAdmin)
-                    {
 
+                    string message;
+
+                    if (isAdmin)
+                    {
+                        var service = new DrinkService();
+                        //service.updateDrink(DrinkToUpdate);
+                        message = "Drink updated successfully.";
                     }
+                    else
+                    {
+                        message = "A request was sent to the admin.";
+                        adminService.SendNotification(
+                            senderUserID: UserId,
+                            title: "Drink Update Request",
+                            description: $"User requested to update drink: {DrinkToUpdate.DrinkName}"
+                        );
+                    }
+
                     var dialog = new ContentDialog
                     {
                         Title = "Success",
-                        Content = "Drink updated successfully.",
+                        Content = message,
                         CloseButtonText = "OK",
                         XamlRoot = this.XamlRoot
                     };
@@ -155,5 +171,6 @@ namespace WinUIApp.Views.Components
                 }
             }
         }
+
     }
 }

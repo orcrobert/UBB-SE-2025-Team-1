@@ -10,11 +10,11 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <Grid Background="LightGray">
-        <TextBlock Text="Welcome to the Home Page!" 
-                HorizontalAlignment="Center" 
-                VerticalAlignment="Center" 
-                FontSize="24"/>
+    <StackPanel Background="LightGray">
+        <component:SortSelectorComponent x:Name="SortSelectorControl" 
+                                         SortByChanged="SortByDropdownControl_SortByChanged"
+                                         SortOrderChanged="SortSelectorControl_SortOrderChanged" 
+                                         HorizontalAlignment="Right"/>
         <component:VerticalDrinkListComponent x:Name="VerticalDrinkListControl"/>
-    </Grid>
+    </StackPanel>
 </Page>

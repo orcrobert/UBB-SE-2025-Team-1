@@ -19,6 +19,8 @@ namespace WinUIApp.Views.ModelViews
         private bool _isAscending = true;
         private string _sortByField = "Name";
 
+        private List<string> _categoryFilter;
+
         public bool IsAscending
         {
             get => _isAscending;
@@ -71,7 +73,7 @@ namespace WinUIApp.Views.ModelViews
                 List<Drink> drinks = _drinkService.getDrinks(
                     searchedTerm: null,
                     brandNameFilter: null,
-                    categoryFilter: null,
+                    categoryFilter: _categoryFilter,
                     minAlcohol: null,
                     maxAlcohol: null,
                     orderBy: orderBy
@@ -90,7 +92,7 @@ namespace WinUIApp.Views.ModelViews
                 List<Drink> drinks = _drinkService.getDrinks(
                     searchedTerm: null,
                     brandNameFilter: null,
-                    categoryFilter: null,
+                    categoryFilter: _categoryFilter,
                     minAlcohol: null,
                     maxAlcohol: null,
                     orderBy: null
@@ -108,8 +110,25 @@ namespace WinUIApp.Views.ModelViews
                     : displayItems.OrderByDescending(item => item.AverageReviewScore).ToList();
 
             }
+            /*
+            if (_categoryFilter != null)
+            {
+                if (_categoryFilter.Count >= 1)
+                {
+                    Debug.WriteLine(_categoryFilter[0]);
+                }
+            }
+            Debug.WriteLine("DrinkList:");
 
+            Debug.WriteLine("len" + displayItems.Count);
+            Debug.WriteLine("xxx");
+            */
             return displayItems;
+        }
+
+        public IEnumerable<Category> GetCategories()
+        {
+            return _drinkService.getDrinkCategories();
         }
 
         public void SetSortByField(string sortByField)
@@ -120,6 +139,11 @@ namespace WinUIApp.Views.ModelViews
         public void SetSortOrder(bool isAscending)
         {
             _isAscending = isAscending;
+        }
+
+        public void SetCategoryFilter(List<string> categoryFilter)
+        {
+            _categoryFilter = categoryFilter;
         }
 
     }

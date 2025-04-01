@@ -1,19 +1,14 @@
-﻿using Microsoft.UI.Xaml.Controls;
-using MySql.Data.MySqlClient;
+﻿using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using WinUIApp.Services;
-using static Org.BouncyCastle.Asn1.Cmp.Challenge;
 
 namespace WinUIApp.Models
 {
     class DrinkModel
     {
-        public List<Drink> getDrinks(string? searchedTerm, List<string>? brandNameFilter, List<string>? categoryFilter, float? minAlcohol, float? maxAlcohol, Dictionary<string, bool>? orderBy)
+        /*public List<Drink> getDrinks(string? searchedTerm, List<string>? brandNameFilter, List<string>? categoryFilter, float? minAlcohol, float? maxAlcohol, Dictionary<string, bool>? orderBy)
         {
             var dbService = DatabaseService.Instance;
             List<Drink> drinks = [];
@@ -93,6 +88,124 @@ namespace WinUIApp.Models
                 }
 
                 var drinkQueryResult = dbService.ExecuteSelect(string.Join(" ", queryParts), queryParameters);
+
+                foreach (var row in drinkQueryResult)
+                {
+                    int drinkId = Convert.ToInt32(row["DrinkId"]);
+                    float alcoholContent = Convert.ToSingle(row["AlcoholContent"]);
+                    string drinkName = row["DrinkName"].ToString();
+                    string drinkURL = row["DrinkURL"].ToString();
+
+                    int brandId = Convert.ToInt32(row["BrandId"]);
+                    string brandName = row["BrandName"].ToString();
+                    Brand brand = new Brand(brandId, brandName);
+
+                    List<Category> categories = [];
+
+                    if (row["CategoryIds"] != DBNull.Value && row["CategoryNames"] != DBNull.Value)
+                    {
+                        string[] categoryIds = row["CategoryIds"].ToString().Split(',');
+                        string[] categoryNames = row["CategoryNames"].ToString().Split(',');
+
+                        for (int i = 0; i < categoryIds.Length; i++)
+                        {
+                            int categoryId = Convert.ToInt32(categoryIds[i]);
+                            string categoryName = categoryNames[i];
+                            categories.Add(new Category(categoryId, categoryName));
+                        }
+                    }
+
+                    Drink drink = new Drink(drinkId, drinkName, drinkURL, categories, brand, alcoholContent);
+                    drinks.Add(drink);
+                }
+
+                return drinks;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Database error occurred", ex);
+            }
+        }*/
+
+        public List<Drink> getDrinks(string? searchedTerm, List<string>? brandNameFilter, List<string>? categoryFilter, float? minAlcohol, float? maxAlcohol, Dictionary<string, bool>? orderBy)
+        {
+            var dbService = DatabaseService.Instance;
+            List<Drink> drinks = [];
+
+            try
+            {
+                string getDrinksQuery = @" SELECT D.DrinkId, D.AlcoholContent, D.DrinkName, D.DrinkURL,
+                                  B.BrandId, B.BrandName, 
+                                  GROUP_CONCAT(DISTINCT C.CategoryId ORDER BY C.CategoryId) AS CategoryIds, 
+                                  GROUP_CONCAT(DISTINCT C.CategoryName ORDER BY C.CategoryId) AS CategoryNames
+                                  FROM Drink AS D
+                                  INNER JOIN Brand AS B ON D.BrandId = B.BrandId
+                                  LEFT JOIN DrinkCategory AS DC ON D.DrinkId = DC.DrinkId
+                                  LEFT JOIN Category AS C ON DC.CategoryId = C.CategoryId ";
+
+                List<string> queryConditions = [];
+                List<MySqlParameter> queryParameters = [];
+
+                if (!string.IsNullOrEmpty(searchedTerm))
+                {
+                    List<string> searchTerms = searchedTerm.Split(' ').ToList();
+
+                    for (int i = 0; i < searchTerms.Count; i++)
+                    {
+                        string parameterName = $"@SearchTerm{i}";
+                        queryConditions.Add($"(B.BrandName LIKE {parameterName} OR D.DrinkName LIKE {parameterName})");
+
+                        queryParameters.Add(new MySqlParameter(parameterName, MySqlDbType.VarChar) { Value = "%" + searchTerms[i] + "%" });
+                    }
+                }
+
+                if (brandNameFilter != null && brandNameFilter.Count > 0)
+                {
+                    var brandParams = brandNameFilter.Select((b, i) => $"@Brand{i}").ToList();
+                    queryConditions.Add($"B.BrandName IN ({string.Join(", ", brandParams)})");
+
+                    for (int i = 0; i < brandNameFilter.Count; i++)
+                    {
+                        queryParameters.Add(new MySqlParameter($"@Brand{i}", MySqlDbType.VarChar) { Value = brandNameFilter[i] });
+                    }
+                }
+
+                if (minAlcohol.HasValue)
+                {
+                    queryConditions.Add("D.AlcoholContent >= @MinAlcohol");
+                    queryParameters.Add(new MySqlParameter("@MinAlcohol", MySqlDbType.Float) { Value = minAlcohol.Value });
+                }
+
+                if (maxAlcohol.HasValue)
+                {
+                    queryConditions.Add("D.AlcoholContent <= @MaxAlcohol");
+                    queryParameters.Add(new MySqlParameter("@MaxAlcohol", MySqlDbType.Float) { Value = maxAlcohol.Value });
+                }
+
+                // Ensure filtering on categories happens after GROUP_CONCAT
+                string havingCondition = "";
+                if (categoryFilter != null && categoryFilter.Count > 0)
+                {
+                    var categoryParams = categoryFilter.Select((c, i) => $"@Category{i}").ToList();
+                    havingCondition = $"HAVING FIND_IN_SET({string.Join(", ", categoryParams)}, CategoryNames) > 0";
+
+                    for (int i = 0; i < categoryFilter.Count; i++)
+                    {
+                        queryParameters.Add(new MySqlParameter($"@Category{i}", MySqlDbType.VarChar) { Value = categoryFilter[i] });
+                    }
+                }
+
+                string groupBy = "GROUP BY D.DrinkId, B.BrandId";
+                string orderByClause = "";
+
+                if (orderBy != null && orderBy.Count > 0)
+                {
+                    var orderClauses = orderBy.Select(o => $"{o.Key} {(o.Value ? "ASC" : "DESC")}");
+                    orderByClause = "ORDER BY " + string.Join(", ", orderClauses);
+                }
+
+                string finalQuery = $"{getDrinksQuery} {groupBy} {havingCondition} {orderByClause}";
+                var drinkQueryResult = dbService.ExecuteSelect(finalQuery, queryParameters);
 
                 foreach (var row in drinkQueryResult)
                 {

@@ -1,6 +1,8 @@
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using System.Collections.Generic;
+using WinUIApp.Models;
 using WinUIApp.Views.Components.SearchPageComponents;
 using WinUIApp.Views.ModelViews;
 
@@ -24,8 +26,17 @@ namespace WinUIApp.Views.Pages
                 VerticalDrinkListControl.DrinkClicked += VerticalDrinkListControl_DrinkClicked;
                 SortSelectorControl.SetSortOrder(_searchPageViewModel.IsAscending);
                 LoadDrinks();
+                LoadCategoriesFilter();
             }
         }
+
+        //Filter Button
+        private void FilterButtonClick(object sender, RoutedEventArgs e)
+        {
+            LoadDrinks();
+        }
+
+        //DrinkList
 
         private void VerticalDrinkListControl_DrinkClicked(object sender, int drinkId)
         {
@@ -39,6 +50,8 @@ namespace WinUIApp.Views.Pages
             VerticalDrinkListControl.SetDrinks(drinks);
         }
 
+        //Sort
+
         private void SortByDropdownControl_SortByChanged(object sender, string sortField)
         {
             _searchPageViewModel.SetSortByField(sortField);
@@ -49,6 +62,18 @@ namespace WinUIApp.Views.Pages
         {
             _searchPageViewModel.SetSortOrder(isAscending);
             LoadDrinks();
+        }
+
+        /// Category filter
+        private void LoadCategoriesFilter()
+        {
+            IEnumerable<Category> categories = _searchPageViewModel.GetCategories();
+            CategoryFilterControl.SetCategoriesFilter(categories);
+        }
+
+        private void CategoryFilterControl_CategoryChanged(object sender, List<string> categories)
+        {
+            _searchPageViewModel.SetCategoryFilter(categories);
         }
     }
 }

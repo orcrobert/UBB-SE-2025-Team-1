@@ -13,6 +13,7 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Views\Components\SearchPageComponents\CategoryFilterComponent.xaml" />
     <None Remove="Views\Components\SearchPageComponents\SortSelectorComponent.xaml" />
     <None Remove="Views\Components\VerticalDrinkList.xaml" />
     <None Remove="Views\Components\UpdateDrinkFlyout.xaml" />
@@ -61,6 +62,9 @@
     <None Update="Styles\GlobalStyles.xaml">
       <Generator>MSBuild:Compile</Generator>
     </None>
+    <Page Update="Views\Components\SearchPageComponents\CategoryFilterComponent.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Update="Views\Components\SearchPageComponents\SortSelectorComponent.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>

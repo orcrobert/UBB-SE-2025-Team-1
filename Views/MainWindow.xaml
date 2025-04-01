@@ -11,6 +11,7 @@
     Title="WinUIApp">
 
     <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="10">
+        <components:UpdateDrinkButton />
         <Button x:Name="myButton" Click="myButton_Click" Style="{StaticResource DefaultButton}">Click Me</Button>
         <TextBlock x:Name="myTextBlock">Mars ma de acici</TextBlock>
         <TextBlock x:Name="myTextBlock2" Text="Query result here..." FontWeight="Bold"/>

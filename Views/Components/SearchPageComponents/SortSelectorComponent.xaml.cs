@@ -1,19 +1,44 @@
 using Microsoft.UI.Xaml.Controls;
 using System;
 
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
 
 namespace WinUIApp.Views.Components.SearchPageComponents
 {
     public sealed partial class SortSelectorComponent : UserControl
     {
+
+        public event EventHandler<bool> SortOrderChanged;
+        public event EventHandler<string> SortByChanged;
+
         public SortSelectorComponent()
         {
             this.InitializeComponent();
         }
-        public event EventHandler<bool> SortOrderChanged;
 
+        private void SortByComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (SortByComboBox.SelectedItem is ComboBoxItem selectedItem)
+            {
+                string sortField = selectedItem.Content.ToString();
+                SortByChanged?.Invoke(this, sortField);
+            }
+        }
+
+        public void SetSortBy(string sortField)
+        {
+            switch (sortField)
+            {
+                case "Name":
+                    SortByComboBox.SelectedIndex = 0;
+                    break;
+                case "Alcohol Content":
+                    SortByComboBox.SelectedIndex = 1;
+                    break;
+                case "Average Review Score":
+                    SortByComboBox.SelectedIndex = 2;
+                    break;
+            }
+        }
 
         private void SortOrderComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {

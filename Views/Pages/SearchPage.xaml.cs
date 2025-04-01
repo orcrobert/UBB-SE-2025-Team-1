@@ -39,10 +39,16 @@ namespace WinUIApp.Views.Pages
             VerticalDrinkListControl.SetDrinks(drinks);
         }
 
+        private void SortByDropdownControl_SortByChanged(object sender, string sortField)
+        {
+            _searchPageViewModel.SetSortByField(sortField);
+            LoadDrinks();
+        }
+
         private void SortSelectorControl_SortOrderChanged(object sender, bool isAscending)
         {
             _searchPageViewModel.SetSortOrder(isAscending);
-            LoadDrinks(); // Refresh the list with new sort order
+            LoadDrinks();
         }
     }
 }

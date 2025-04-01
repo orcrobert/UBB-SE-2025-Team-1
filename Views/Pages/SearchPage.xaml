@@ -11,7 +11,10 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <StackPanel Background="LightGray">
-        <component:SortSelectorComponent x:Name="SortSelectorControl" SortOrderChanged="SortSelectorControl_SortOrderChanged" HorizontalAlignment="Right"/>
+        <component:SortSelectorComponent x:Name="SortSelectorControl" 
+                                         SortByChanged="SortByDropdownControl_SortByChanged"
+                                         SortOrderChanged="SortSelectorControl_SortOrderChanged" 
+                                         HorizontalAlignment="Right"/>
         <component:VerticalDrinkListComponent x:Name="VerticalDrinkListControl"/>
     </StackPanel>
 </Page>

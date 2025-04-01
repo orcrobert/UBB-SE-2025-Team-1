@@ -8,12 +8,26 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Grid>
+    <StackPanel Orientation="Horizontal" Padding="20">
+        <TextBlock FontSize="18" 
+                   Text="Sort by" 
+                   VerticalAlignment="Center" 
+                   HorizontalAlignment="Center" 
+                   Width="Auto" 
+                   Margin="10 0"
+                    />
+        <ComboBox x:Name="SortByComboBox" 
+              SelectionChanged="SortByComboBox_SelectionChanged"
+              Width="120">
+            <ComboBoxItem Content="Name" IsSelected="True"/>
+            <ComboBoxItem Content="Alcohol Content"/>
+            <ComboBoxItem Content="Average Review Score"/>
+        </ComboBox>
         <ComboBox x:Name="SortOrderComboBox" 
               SelectionChanged="SortOrderComboBox_SelectionChanged"
-              Width="200">
+              Width="120">
             <ComboBoxItem Content="Ascending" IsSelected="True"/>
             <ComboBoxItem Content="Descending"/>
         </ComboBox>
-    </Grid>
+    </StackPanel>
 </UserControl>

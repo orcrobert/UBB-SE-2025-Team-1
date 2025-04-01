@@ -1,6 +1,6 @@
 ﻿using Microsoft.UI.Xaml.Controls;
 using System.Collections.Generic;
-using System.Diagnostics;
+using System.Linq;
 using WinUIApp.Models;
 using WinUIApp.Services;
 using WinUIApp.Services.DummyServies;
@@ -17,15 +17,22 @@ namespace WinUIApp.Views.ModelViews
         private ReviewService _reviewService = reviewService;
 
         private bool _isAscending = true;
+        private string _sortByField = "Name";
 
         public bool IsAscending
         {
-            get { return _isAscending; }
-            set { _isAscending = value; }
+            get => _isAscending;
+            set => _isAscending = value;
         }
+
+        public string SortByField
+        {
+            get => _sortByField;
+            set => _sortByField = value;
+        }
+
         /*
          * TO DO
-         * add Drink Service field
          * implement methods
         */
 
@@ -47,41 +54,72 @@ namespace WinUIApp.Views.ModelViews
 
         public void RefreshDrinkList()
         {
-
+            //
         }
 
         public IEnumerable<DrinkDisplayItem> GetDrinks()
         {
-            var orderBy = new Dictionary<string, bool>
-            {
-                { "D.DrinkName", _isAscending } // true = ASC, false = DESC
-            };
-
-            List<Drink> drinks = _drinkService.getDrinks(
-                searchedTerm: null,        // Add search term if needed
-                brandNameFilter: null,     // Add filters if needed
-                categoryFilter: null,      // Add filters if needed
-                minAlcohol: null,          // Add min alcohol if needed
-                maxAlcohol: null,          // Add max alcohol if needed
-                orderBy: orderBy           // Pass sorting parameter
-            );
             List<DrinkDisplayItem> displayItems = new List<DrinkDisplayItem>();
 
-            foreach (Drink drink in drinks)
+            if (_sortByField == "Name" || _sortByField == "Alcohol Content")
             {
-                float averageScore = _reviewService.GetReviewAverageByID(drink.Id);
-                DrinkDisplayItem item = new DrinkDisplayItem(drink, averageScore);
-                displayItems.Add(item);
+                var orderBy = new Dictionary<string, bool>
+                {
+                    { _sortByField == "Name" ? "D.DrinkName" : "D.AlcoholContent", _isAscending }
+                };
+
+                List<Drink> drinks = _drinkService.getDrinks(
+                    searchedTerm: null,
+                    brandNameFilter: null,
+                    categoryFilter: null,
+                    minAlcohol: null,
+                    maxAlcohol: null,
+                    orderBy: orderBy
+                );
+
+                displayItems = new List<DrinkDisplayItem>();
+                foreach (Drink drink in drinks)
+                {
+                    float averageScore = _reviewService.GetReviewAverageByID(drink.Id);
+                    displayItems.Add(new DrinkDisplayItem(drink, averageScore));
+                }
+
             }
-            Debug.WriteLine($"Fetched {displayItems.Count} drinks, sorted {(_isAscending ? "ascending" : "descending")} by name");
+            else
+            {
+                List<Drink> drinks = _drinkService.getDrinks(
+                    searchedTerm: null,
+                    brandNameFilter: null,
+                    categoryFilter: null,
+                    minAlcohol: null,
+                    maxAlcohol: null,
+                    orderBy: null
+                );
+
+                displayItems = new List<DrinkDisplayItem>();
+                foreach (Drink drink in drinks)
+                {
+                    float averageScore = _reviewService.GetReviewAverageByID(drink.Id);
+                    displayItems.Add(new DrinkDisplayItem(drink, averageScore));
+                }
+
+                displayItems = _isAscending
+                    ? displayItems.OrderBy(item => item.AverageReviewScore).ToList()
+                    : displayItems.OrderByDescending(item => item.AverageReviewScore).ToList();
+
+            }
 
             return displayItems;
+        }
+
+        public void SetSortByField(string sortByField)
+        {
+            _sortByField = sortByField;
         }
 
         public void SetSortOrder(bool isAscending)
         {
             _isAscending = isAscending;
-            Debug.WriteLine($"Sort order set to: {(_isAscending ? "Ascending" : "Descending")}");
         }
 
     }

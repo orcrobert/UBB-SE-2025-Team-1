@@ -52,5 +52,10 @@ namespace WinUIApp.Models
                 _alcoholContent = value;
             }
         }
+
+        public string FormattedAlcoholContent
+        {
+            get { return $"{AlcoholContent:F1}%"; }
+        }
     }
 }

@@ -23,10 +23,9 @@ namespace WinUIApp.Views.Components
 
         private void LoadDrinks()
         {
-            var drinkModel = new DrinkModel();
             var currentUserId = _userService.GetCurrentUserID();
             Debug.WriteLine(currentUserId);
-            var drinks = drinkModel.getPersonalDrinkList(currentUserId, 5);
+            var drinks = _drinkService.getPersonalDrinkList(currentUserId, 5);
 
             Debug.WriteLine($"Retrieved {drinks.Count} drinks from the database.");
             DrinksList.Clear();

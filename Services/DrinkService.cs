@@ -133,5 +133,29 @@ namespace WinUIApp.Services
                 throw new Exception("Error deleting drink from personal list:", e);
             }
         }
+
+        public void voteDrinkOfTheDay(int drinkId, int userId)
+        {
+            try
+            {
+                drinkModel.voteDrinkOfTheDay(drinkId, userId);
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Error voting drink:", e);
+            }
+        }
+
+        public Drink getDrinkOfTheDay()
+        {
+            try
+            {
+                return drinkModel.getDrinkOfTheDay();
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Error getting drink of the day:", e);
+            }
+        }
     }
 }

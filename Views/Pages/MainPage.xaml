@@ -14,12 +14,19 @@
         <viewModels:MainPageViewModel/>
     </Page.DataContext>
 
-    <StackPanel x:Name="mainPanel" Orientation="Vertical" Spacing="30">
-        <local:DrinkOfTheDayComponent/>
-        <TextBlock Text="Your Favorite Drinks" 
-                   Style="{StaticResource HeaderTextBlockStyle}"
-                   Margin="20,0,0,0"/>
+    <ScrollViewer VerticalScrollBarVisibility="Auto"
+                  VerticalScrollMode="Enabled"
+                  HorizontalScrollBarVisibility="Disabled"
+                  HorizontalScrollMode="Disabled"
+                  ZoomMode="Disabled">
+        <StackPanel x:Name="mainPanel" Orientation="Vertical" Spacing="30">
+            <local:DrinkOfTheDayComponent/>
+            <TextBlock Text="Your Favorite Drinks" 
+                       Style="{StaticResource HeaderTextBlockStyle}"
+                       Margin="20,0,0,0"/>
 
-        <local:DrinkListComponent Drinks="{Binding PersonalDrinks}"/>
-    </StackPanel>
+            <local:DrinkListComponent Drinks="{Binding PersonalDrinks}"/>
+        </StackPanel>
+
+    </ScrollViewer>
 </Page>

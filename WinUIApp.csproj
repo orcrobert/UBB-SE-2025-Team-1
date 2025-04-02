@@ -82,7 +82,7 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Update="Views\Components\SearchPageComponents\SortSelectorComponent.xaml">
-      Generator>MSBuild:Compile</Generator>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Update="Views\Components\HeaderComponents\Header.xaml">
       <Generator>MSBuild:Compile</Generator>

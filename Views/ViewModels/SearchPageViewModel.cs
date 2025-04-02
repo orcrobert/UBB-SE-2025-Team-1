@@ -20,8 +20,8 @@ namespace WinUIApp.Views.ModelViews
         private bool _isAscending = true;
         private string _sortByField = "Name";
 
-        private List<string> _categoryFilter;
-        private List<string> _brandFilter;
+        private List<string>? _categoryFilter;
+        private List<string>? _brandFilter;
 
         public bool IsAscending
         {
@@ -53,7 +53,9 @@ namespace WinUIApp.Views.ModelViews
 
         public void ClearFilters()
         {
-            //
+            _categoryFilter = null;
+            _brandFilter = null;
+            //add all filters
         }
 
         public void RefreshDrinkList()

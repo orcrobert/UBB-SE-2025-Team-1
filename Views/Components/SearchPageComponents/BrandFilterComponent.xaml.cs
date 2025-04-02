@@ -34,5 +34,10 @@ namespace WinUIApp.Views.Components.SearchPageComponents
             Brands = brands;
             BrandComboBox.ItemsSource = Brands;
         }
+
+        public void ClearSelection()
+        {
+            BrandComboBox.SelectedItem = null;
+        }
     }
 }

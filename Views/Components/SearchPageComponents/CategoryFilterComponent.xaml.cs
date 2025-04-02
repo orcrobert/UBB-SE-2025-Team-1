@@ -34,5 +34,10 @@ namespace WinUIApp.Views.Components.SearchPageComponents
             Categories = categories;
             CategoryComboBox.ItemsSource = Categories;
         }
+
+        public void ClearSelection()
+        {
+            CategoryComboBox.SelectedItem = null;
+        }
     }
 }

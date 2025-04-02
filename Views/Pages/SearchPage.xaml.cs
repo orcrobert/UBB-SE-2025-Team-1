@@ -37,6 +37,14 @@ namespace WinUIApp.Views.Pages
             LoadDrinks();
         }
 
+        private void ClearFiltersClick(object sender, RoutedEventArgs e)
+        {
+            _searchPageViewModel.ClearFilters();
+            CategoryFilterControl.ClearSelection();
+            BrandFilterControl.ClearSelection();
+            LoadDrinks();
+        }
+
         //DrinkList
 
         private void VerticalDrinkListControl_DrinkClicked(object sender, int drinkId)

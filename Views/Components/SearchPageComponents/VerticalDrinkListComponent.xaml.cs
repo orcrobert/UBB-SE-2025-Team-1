@@ -1,7 +1,6 @@
 using Microsoft.UI.Xaml.Controls;
 using System;
 using System.Collections.Generic;
-using WinUIApp.Models;
 
 namespace WinUIApp.Views.Components.SearchPageComponents
 {
@@ -17,9 +16,9 @@ namespace WinUIApp.Views.Components.SearchPageComponents
 
         private void DrinkList_ItemClick(object sender, ItemClickEventArgs e)
         {
-            if (e.ClickedItem is Drink selectedDrink)
+            if (e.ClickedItem is DrinkDisplayItem selectedDrink)
             {
-                DrinkClicked?.Invoke(this, selectedDrink.Id);
+                DrinkClicked?.Invoke(this, selectedDrink.Drink.Id);
             }
         }
 

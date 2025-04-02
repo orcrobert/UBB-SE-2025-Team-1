@@ -1,0 +1,45 @@
+<UserControl
+    x:Class="WinUIApp.Views.Components.AddDrinkFlyout"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:WinUIApp.Views.Components"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Width="300">
+
+    <Border
+        Background="White"
+        CornerRadius="8"
+        BorderBrush="Gray"
+        BorderThickness="1"
+        Padding="16">
+
+        <StackPanel x:Name="LayoutPanel" Spacing="10">
+            <TextBlock Text="Add New Drink" FontSize="18" FontWeight="Bold"/>
+
+            <TextBlock Text="Drink Name:"/>
+            <TextBox x:Name="NameBox" PlaceholderText="Enter drink name..." />
+
+            <TextBlock Text="Image URL:"/>
+            <TextBox x:Name="ImageUrlBox" PlaceholderText="Enter image URL..." />
+
+            <TextBlock Text="Categories:"/>
+            <TextBox x:Name="SearchBox" PlaceholderText="Search categories..." />
+            <ListView x:Name="CategoryList"
+                      Height="120"
+                      SelectionMode="Multiple"/>
+
+            <TextBlock Text="Brand:"/>
+            <TextBox x:Name="BrandBox" PlaceholderText="Brand" />
+
+            <TextBlock Text="Alcohol Content (%):"/>
+            <TextBox x:Name="AlcoholBox" PlaceholderText="Alcohol %" />
+
+            <Button x:Name="SaveButton"
+                    Content="Add Drink"
+                    HorizontalAlignment="Right"
+                    Click="SaveButton_Click"/>
+        </StackPanel>
+    </Border>
+</UserControl> 

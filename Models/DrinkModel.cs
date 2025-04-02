@@ -427,8 +427,8 @@ namespace WinUIApp.Models
                 LEFT JOIN Category c ON dc.CategoryId = c.CategoryId
                 WHERE ud.UserId = @UserId
                 GROUP BY d.DrinkId, b.BrandId
-                ORDER BY d.DrinkId
-                LIMIT @NumberOfDrinks;";
+                ORDER BY d.DrinkId";
+                //LIMIT @NumberOfDrinks;";
 
             var parameters = new List<MySqlParameter>
             {

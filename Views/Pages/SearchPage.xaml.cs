@@ -1,8 +1,8 @@
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using System.Collections.Generic;
+using WinUIApp.ViewModels;
 using WinUIApp.Views.Components.SearchPageComponents;
-using WinUIApp.Views.ModelViews;
 
 namespace WinUIApp.Views.Pages
 {

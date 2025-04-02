@@ -7,34 +7,34 @@
 
     <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="10">
 
-        <ItemsRepeater x:Name="DrinksRepeater" ItemsSource="{x:Bind DrinksList, Mode=OneWay}">
+        <ItemsRepeater x:Name="DrinksRepeater" ItemsSource="{x:Bind ViewModel.PersonalDrinks, Mode=OneWay}">
             <ItemsRepeater.Layout>
                 <UniformGridLayout MinItemWidth="200" MinItemHeight="250" MinRowSpacing="20" MinColumnSpacing="20"/>
             </ItemsRepeater.Layout>
             <ItemsRepeater.ItemTemplate>
                 <DataTemplate x:DataType="models:Drink">
-                    <Border Background="White" 
-                                    CornerRadius="10" 
-                                    Padding="15"
-                                    BorderBrush="Yellow"
-                                    BorderThickness="2">
+                    <Border Background="White"
+                            CornerRadius="10"
+                            Padding="15"
+                            BorderBrush="Yellow"
+                            BorderThickness="2">
                         <StackPanel Spacing="10">
-                            <Border Background="Gray" 
-                                            Height="150" 
-                                            CornerRadius="5">
-                                <Image Source="{x:Bind DrinkURL}" 
-                                               Stretch="UniformToFill"/>
+                            <Border Background="Gray"
+                                    Height="150"
+                                    CornerRadius="5">
+                                <Image Source="{x:Bind DrinkURL}"
+                                       Stretch="UniformToFill"/>
                             </Border>
-                            <TextBlock Text="{x:Bind DrinkName}" 
-                                             FontSize="18" 
-                                             FontWeight="Bold"
-                                             Foreground="Black"/>
-                            <TextBlock Text="{x:Bind Brand.Name}" 
-                                             FontSize="14"
-                                             Foreground="Black"/>
-                            <TextBlock Text="{x:Bind AlcoholContent}" 
-                                             FontSize="12"
-                                             Foreground="Black"/>
+                            <TextBlock Text="{x:Bind DrinkName}"
+                                       FontSize="18"
+                                       FontWeight="Bold"
+                                       Foreground="Black"/>
+                            <TextBlock Text="{x:Bind Brand.Name}"
+                                       FontSize="14"
+                                       Foreground="Black"/>
+                            <TextBlock Text="{x:Bind AlcoholContent}"
+                                       FontSize="12"
+                                       Foreground="Black"/>
                         </StackPanel>
                     </Border>
                 </DataTemplate>

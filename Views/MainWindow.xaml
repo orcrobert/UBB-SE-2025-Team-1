@@ -7,11 +7,16 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:headerComponents="using:WinUIApp.Views.Components.HeaderComponents"
-    xmlns:components="using:WinUIApp.Views.Components"
     mc:Ignorable="d"
     Title="WinUIApp">
-    <StackPanel>
-        <headerComponents:Header/>
-        <Frame x:Name="MainFrame"/>
-    </StackPanel>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <headerComponents:Header Grid.Row="0"/>
+        <Frame x:Name="MainFrame" Grid.Row="1"/>
+    </Grid>
 </Window>

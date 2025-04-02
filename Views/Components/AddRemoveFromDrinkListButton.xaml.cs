@@ -1,6 +1,6 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using WinUIApp.Views.ViewModels;
+using WinUIApp.ViewModels;
 using System.Diagnostics;
 
 namespace WinUIApp.Views.Components

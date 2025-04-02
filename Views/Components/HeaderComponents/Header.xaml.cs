@@ -19,8 +19,7 @@ namespace WinUIApp.Views.Components.HeaderComponents
 
         private void Logo_Click(object sender, RoutedEventArgs e)
         {
-            //naviagation to main page
-            //MainWindow.AppMainFrame.Navigate();
+            MainWindow.AppMainFrame.Navigate(typeof(MainPage));
         }
 
         private void SearchDrinksButton_Click(object sender, RoutedEventArgs e)

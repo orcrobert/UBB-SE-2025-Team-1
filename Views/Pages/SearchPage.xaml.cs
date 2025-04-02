@@ -4,8 +4,9 @@ using Microsoft.UI.Xaml.Navigation;
 using System.Collections.Generic;
 using WinUIApp.Models;
 using WinUIApp.Utils.NavigationParameters;
+using WinUIApp.Utils;
+using WinUIApp.ViewModels;
 using WinUIApp.Views.Components.SearchPageComponents;
-using WinUIApp.Views.ModelViews;
 
 namespace WinUIApp.Views.Pages
 {

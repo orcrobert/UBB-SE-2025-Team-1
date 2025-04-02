@@ -12,6 +12,7 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
+using WinUIApp.Views.Pages;
 
 
 namespace WinUIApp.Views.Components
@@ -59,5 +60,7 @@ namespace WinUIApp.Views.Components
             this.InitializeComponent();
             this.DataContext = this;
         }
+
+
     }
 }

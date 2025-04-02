@@ -9,7 +9,7 @@ using WinUIApp.Models;
 using WinUIApp.Services;
 using WinUIApp.Services.DummyServies;
 
-namespace WinUIApp.Views.ViewModels
+namespace WinUIApp.ViewModels
 {
     public class UpdateDrinkMenuViewModel : INotifyPropertyChanged
     {

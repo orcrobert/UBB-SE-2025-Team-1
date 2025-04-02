@@ -3,10 +3,11 @@ using System.Linq;
 using WinUIApp.Models;
 using WinUIApp.Services;
 using WinUIApp.Services.DummyServies;
+using WinUIApp.Views;
 using WinUIApp.Views.Components.SearchPageComponents;
 using WinUIApp.Views.Pages;
 
-namespace WinUIApp.Views.ModelViews
+namespace WinUIApp.ViewModels
 {
     public class SearchPageViewModel(DrinkService drinkService, ReviewService reviewService)
     {

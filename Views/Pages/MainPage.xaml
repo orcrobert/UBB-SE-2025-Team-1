@@ -14,19 +14,27 @@
         <viewModels:MainPageViewModel/>
     </Page.DataContext>
 
+    <!-- Make ScrollViewer the root content container -->
     <ScrollViewer VerticalScrollBarVisibility="Auto"
                   VerticalScrollMode="Enabled"
                   HorizontalScrollBarVisibility="Disabled"
                   HorizontalScrollMode="Disabled"
-                  ZoomMode="Disabled">
-        <StackPanel x:Name="mainPanel" Orientation="Vertical" Spacing="30">
-            <local:DrinkOfTheDayComponent/>
-            <TextBlock Text="Your Favorite Drinks" 
-                       Style="{StaticResource HeaderTextBlockStyle}"
-                       Margin="20,0,0,0"/>
+                  ZoomMode="Disabled"
+                  Padding="0,0,0,20">
+        <!-- Add bottom padding -->
 
-            <local:DrinkListComponent Drinks="{Binding PersonalDrinks}"/>
-        </StackPanel>
+        <!-- Main content container -->
+        <ScrollViewer VerticalScrollBarVisibility="Auto"
+                  VerticalScrollMode="Enabled">
+            <StackPanel Orientation="Vertical" Spacing="30">
+                <local:DrinkOfTheDayComponent/>
+                <TextBlock Text="Your Favorite Drinks" 
+                       Style="{StaticResource HeaderTextBlockStyle}"/>
+                <local:DrinkListComponent Drinks="{Binding PersonalDrinks}"/>
 
+                <!-- Test element (remove after verification) -->
+                <Border Height="1500" Background="Transparent"/>
+            </StackPanel>
+        </ScrollViewer>
     </ScrollViewer>
 </Page>

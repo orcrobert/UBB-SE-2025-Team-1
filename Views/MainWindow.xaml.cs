@@ -18,8 +18,6 @@ namespace WinUIApp.Views
             this.InitializeComponent();
             SetFixedSize(1440, 900);
             AppMainFrame = MainFrame;
-
-            //navigation to main page
             
             DrinkService drinkService = new DrinkService();
             ReviewService reviewService = new ReviewService();
@@ -27,7 +25,6 @@ namespace WinUIApp.Views
             MainPageViewModel mainPageViewModel = new MainPageViewModel();
             MainPage mainPage = new MainPage();
 
-            // With this line
             MainFrame.Navigate(typeof(MainPage));
         }
 
@@ -40,14 +37,5 @@ namespace WinUIApp.Views
             appWindow.Resize(new Windows.Graphics.SizeInt32(width, height));
         }
 
-        // You can keep or remove the SetFixedSize and other commented-out code as needed
-        // private void SetFixedSize(int width, int height)
-        // {
-        //     IntPtr hWnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
-        //     var windowId = Win32Interop.GetWindowIdFromWindow(hWnd);
-        //     var appWindow = AppWindow.GetFromWindowId(windowId);
-        //
-        //     appWindow.Resize(new Windows.Graphics.SizeInt32(width, height));
-        // }
     }
 }

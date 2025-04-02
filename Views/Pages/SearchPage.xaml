@@ -24,10 +24,12 @@
                 <component:CategoryFilterComponent 
                     x:Name="CategoryFilterControl"
                     CategoryChanged="CategoryFilterControl_CategoryChanged"/>
+                <component:BrandFilterComponent
+                    x:Name="BrandFilterControl"
+                    BrandChanged="BrandFilterControl_BrandChanged"/>
                 <Button 
                     Content="Filter"
-                    Click="FilterButtonClick"
-                       />
+                    Click="FilterButtonClick"/>
             </StackPanel>
             <component:VerticalDrinkListComponent x:Name="VerticalDrinkListControl"/>
         </StackPanel>

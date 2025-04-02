@@ -1,5 +1,6 @@
 ﻿using Microsoft.UI.Xaml.Controls;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using WinUIApp.Models;
 using WinUIApp.Services;
@@ -20,6 +21,7 @@ namespace WinUIApp.Views.ModelViews
         private string _sortByField = "Name";
 
         private List<string> _categoryFilter;
+        private List<string> _brandFilter;
 
         public bool IsAscending
         {
@@ -72,7 +74,7 @@ namespace WinUIApp.Views.ModelViews
 
                 List<Drink> drinks = _drinkService.getDrinks(
                     searchedTerm: null,
-                    brandNameFilter: null,
+                    brandNameFilter: _brandFilter,
                     categoryFilter: _categoryFilter,
                     minAlcohol: null,
                     maxAlcohol: null,
@@ -91,7 +93,7 @@ namespace WinUIApp.Views.ModelViews
             {
                 List<Drink> drinks = _drinkService.getDrinks(
                     searchedTerm: null,
-                    brandNameFilter: null,
+                    brandNameFilter: _brandFilter,
                     categoryFilter: _categoryFilter,
                     minAlcohol: null,
                     maxAlcohol: null,
@@ -110,25 +112,28 @@ namespace WinUIApp.Views.ModelViews
                     : displayItems.OrderByDescending(item => item.AverageReviewScore).ToList();
 
             }
-            /*
-            if (_categoryFilter != null)
+            if (_brandFilter != null)
             {
-                if (_categoryFilter.Count >= 1)
+                if (_brandFilter.Count >= 1)
                 {
-                    Debug.WriteLine(_categoryFilter[0]);
+                    Debug.WriteLine(_brandFilter[0]);
                 }
             }
             Debug.WriteLine("DrinkList:");
-
             Debug.WriteLine("len" + displayItems.Count);
             Debug.WriteLine("xxx");
-            */
+
             return displayItems;
         }
 
         public IEnumerable<Category> GetCategories()
         {
             return _drinkService.getDrinkCategories();
+        }
+
+        public IEnumerable<Brand> GetBrands()
+        {
+            return _drinkService.getDrinkBrands();
         }
 
         public void SetSortByField(string sortByField)
@@ -144,6 +149,11 @@ namespace WinUIApp.Views.ModelViews
         public void SetCategoryFilter(List<string> categoryFilter)
         {
             _categoryFilter = categoryFilter;
+        }
+
+        public void SetBrandFilter(List<string> brandFilter)
+        {
+            _brandFilter = brandFilter;
         }
 
     }

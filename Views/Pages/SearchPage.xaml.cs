@@ -27,6 +27,7 @@ namespace WinUIApp.Views.Pages
                 SortSelectorControl.SetSortOrder(_searchPageViewModel.IsAscending);
                 LoadDrinks();
                 LoadCategoriesFilter();
+                LoadBrandsFilter();
             }
         }
 
@@ -64,7 +65,7 @@ namespace WinUIApp.Views.Pages
             LoadDrinks();
         }
 
-        /// Category filter
+        // Category filter
         private void LoadCategoriesFilter()
         {
             IEnumerable<Category> categories = _searchPageViewModel.GetCategories();
@@ -74,6 +75,19 @@ namespace WinUIApp.Views.Pages
         private void CategoryFilterControl_CategoryChanged(object sender, List<string> categories)
         {
             _searchPageViewModel.SetCategoryFilter(categories);
+        }
+
+        // Brand filter
+
+        private void LoadBrandsFilter()
+        {
+            IEnumerable<Brand> brands = _searchPageViewModel.GetBrands();
+            BrandFilterControl.SetBrandFilter(brands);
+        }
+
+        private void BrandFilterControl_BrandChanged(object sender, List<string> brands)
+        {
+            _searchPageViewModel.SetBrandFilter(brands);
         }
     }
 }

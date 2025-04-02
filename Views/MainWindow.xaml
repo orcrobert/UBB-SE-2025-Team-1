@@ -6,28 +6,12 @@
     xmlns:local="using:WinUIApp"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:components="using:WinUIApp.Views.Components"
+    xmlns:headerComponents="using:WinUIApp.Views.Components.HeaderComponents"
     mc:Ignorable="d"
     Title="WinUIApp">
-    <!--
-    <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="10">
-        <components:UpdateDrinkButton />
-        <Button x:Name="myButton" Click="myButton_Click" Style="{StaticResource DefaultButton}">Click Me</Button>
-        <TextBlock x:Name="myTextBlock">Mars ma de acici</TextBlock>
-        <TextBlock x:Name="myTextBlock2" Text="Query result here..." FontWeight="Bold"/>
 
-        <TextBox x:Name="brandTextBox" Width="200" Height="30" PlaceholderText="Enter a brand"/>
-        <Button x:Name="insertButton" Click="insertButton_Click" Style="{StaticResource DefaultButton}">Insert</Button>
-
-        <Button x:Name="testButton" Click="testButton_Click" Style="{StaticResource DefaultButton}">Test model and services</Button>
-        <TextBlock x:Name="currentUserTextBlock" Text="Current user will be displayed here"></TextBlock>
-        <TextBlock x:Name="reviewTextBlock" Text="Review for drink with ID = 1"></TextBlock>
-
-        <TextBlock x:Name="testModelsTextBlock"></TextBlock>
-    </StackPanel>-->
-    <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="10">
-        <TextBlock>TETSTSETESTSETSTSETSETSETSETSETSETSETSET</TextBlock>
-        <components:AddRemoveFromDrinkListButton DrinkId="1" />
-        <components:DrinkListComponent ViewModel="{x:Bind ViewModel}" />
+    <StackPanel>
+        <headerComponents:Header/>
+        <Frame x:Name="MainFrame"/>
     </StackPanel>
 </Window>

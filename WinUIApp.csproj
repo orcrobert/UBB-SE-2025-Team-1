@@ -13,6 +13,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Views\Components\HeaderComponents\Header.xaml" />
+    <None Remove="Views\Components\SharedComponents\CategorySelectionMenu.xaml" />
     <None Remove="Views\Components\AddRemoveFromDrinkListButton.xaml" />
     <None Remove="Views\Components\VerticalDrinkList.xaml" />
     <None Remove="Views\Components\UpdateDrinkFlyout.xaml" />
@@ -61,6 +63,12 @@
     <None Update="Styles\GlobalStyles.xaml">
       <Generator>MSBuild:Compile</Generator>
     </None>
+    <Page Update="Views\Components\HeaderComponents\Header.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Views\Components\SharedComponents\CategorySelectionMenu.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Update="Views\Components\AddRemoveFromDrinkListButton.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -87,6 +95,7 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Views\Components\SharedComponents\" />
     <Folder Include="Views\Windows\" />
   </ItemGroup>
 

@@ -474,7 +474,8 @@ namespace WinUIApp.Models
 
                 if (drinkQueryResult.Count == 0)
                 {
-                    throw new Exception("No drink of the day found");
+                    resetDrinkOfTheDay();
+                    drinkQueryResult = dbService.ExecuteSelect(getDrinkOfTheDayQuery);
                 }
 
                 int drinkId = Convert.ToInt32(drinkQueryResult[0]["DrinkId"]);
@@ -546,12 +547,14 @@ namespace WinUIApp.Models
             var dbService = DatabaseService.Instance;
             try
             {
-                string topVoteCountQuery = "SELECT DrinkId, COUNT(*) AS VoteCount " +
-                    "                   FROM Vote " +
-                    "                   WHERE CAST(VoteTime AS DATE) >= @VoteTime" +
-                    "                   GROUP BY DrinkId" +
-                    "                   ORDER BY VoteCount Desc" +
-                    "                   LIMIT 1;";
+                Console.WriteLine(DateTime.UtcNow.Date.AddDays(-1).ToString("yyyy-MM-dd HH:mm:ss"));
+                string topVoteCountQuery = @"
+                                            SELECT DrinkId, COUNT(*) AS VoteCount 
+                                            FROM Vote 
+                                            WHERE DATE(VoteTime) = DATE(@VoteTime)
+                                            GROUP BY DrinkId
+                                            ORDER BY VoteCount DESC
+                                            LIMIT 1;";
                 List<MySqlParameter> voteDayParameter =
                 [
                     new MySqlParameter("@VoteTime", MySqlDbType.DateTime) { Value = DateTime.UtcNow.Date.AddDays(-1) }

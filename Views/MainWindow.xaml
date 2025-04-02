@@ -9,10 +9,13 @@
     xmlns:headerComponents="using:WinUIApp.Views.Components.HeaderComponents"
     mc:Ignorable="d"
     Title="WinUIApp">
-
-
     <StackPanel>
         <headerComponents:Header/>
         <Frame x:Name="MainFrame"/>
+<<<<<<< feat/Add-Drink-Button-ARISSSS
+        <components:AddDrinkButton HorizontalAlignment="Center" VerticalAlignment="Center"/>
+    </Grid>
+=======
     </StackPanel>
+>>>>>>> main
 </Window>

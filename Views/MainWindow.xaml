@@ -10,8 +10,8 @@
     mc:Ignorable="d"
     Title="WinUIApp">
 
-    <Grid>
+    <StackPanel>
         <headerComponents:Header/>
         <Frame x:Name="MainFrame"/>
-    </Grid>
+    </StackPanel>
 </Window>

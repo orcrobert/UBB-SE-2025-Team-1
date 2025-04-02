@@ -23,6 +23,7 @@ namespace WinUIApp.Views.Components.HeaderComponents
         private List<Category> _originalCategories = new List<Category>();
         private HashSet<Category> _selectedCategories = new HashSet<Category>();
         public ObservableCollection<Category> CurrentCategories { get; set; } = new ObservableCollection<Category>();
+        public HashSet<Category> SelectedCategories => _selectedCategories;
 
         public CategorySelectionMenu()
         {

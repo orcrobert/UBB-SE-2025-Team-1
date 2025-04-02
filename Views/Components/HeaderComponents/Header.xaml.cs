@@ -13,9 +13,8 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using WinUIApp.Views.ViewModels;
-
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
+using WinUIApp.Utils.NavigationParameters;
+using WinUIApp.Views.Pages;
 
 namespace WinUIApp.Views.Components.HeaderComponents
 {
@@ -37,8 +36,12 @@ namespace WinUIApp.Views.Components.HeaderComponents
 
         private void SearchDrinksButton_Click(object sender, RoutedEventArgs e)
         {
-
-
+            SearchPageNavigationParameters parameters = new SearchPageNavigationParameters
+            {
+                InitialCategories = CategoryMenu.SelectedCategories.ToList(),
+                SearchedTerms = DrinkSearchBox.Text
+            };
+            MainWindow.AppMainFrame.Navigate(typeof(SearchPage), parameters);
         }
     }
 }

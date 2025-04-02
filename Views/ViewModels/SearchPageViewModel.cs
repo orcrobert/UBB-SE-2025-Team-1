@@ -1,6 +1,5 @@
 ﻿using Microsoft.UI.Xaml.Controls;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using WinUIApp.Models;
 using WinUIApp.Services;
@@ -113,7 +112,7 @@ namespace WinUIApp.Views.ModelViews
                     ? displayItems.OrderBy(item => item.AverageReviewScore).ToList()
                     : displayItems.OrderByDescending(item => item.AverageReviewScore).ToList();
 
-            }
+            }/*
             if (_brandFilter != null)
             {
                 if (_brandFilter.Count >= 1)
@@ -123,7 +122,7 @@ namespace WinUIApp.Views.ModelViews
             }
             Debug.WriteLine("DrinkList:");
             Debug.WriteLine("len" + displayItems.Count);
-            Debug.WriteLine("xxx");
+            Debug.WriteLine("xxx");*/
 
             return displayItems;
         }

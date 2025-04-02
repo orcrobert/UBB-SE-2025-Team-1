@@ -8,7 +8,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:models="using:WinUIApp.Models"
     mc:Ignorable="d">
 
-    <ComboBox x:Name="BrandComboBox"
+    <!--<ComboBox x:Name="BrandComboBox"
       Header="Brand"
       Width="200"
       ItemsSource="{x:Bind Brands, Mode=OneWay}"
@@ -20,4 +20,27 @@
             </DataTemplate>
         </ComboBox.ItemTemplate>
     </ComboBox>
+    -->
+    <StackPanel x:Name="LayoutPanel" Spacing="10">
+        <TextBlock 
+            Text="Brands:"
+            Foreground="Black"/>
+        <TextBox 
+        x:Name="SearchBox" 
+        PlaceholderText="Search brands..."
+        TextChanged="SearchBox_TextChanged"/>
+        <ListView 
+            x:Name="BrandList"
+            Height="120"
+            SelectionMode="Multiple"
+            ItemsSource="{x:Bind Brands, Mode=OneWay}"
+            SelectionChanged="BrandListView_SelectionChanged">
+            <ListView.ItemTemplate>
+                <DataTemplate x:DataType="models:Brand">
+                    <TextBlock Text="{x:Bind Name}"/>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+
+        </ListView>
+    </StackPanel>
 </UserControl>

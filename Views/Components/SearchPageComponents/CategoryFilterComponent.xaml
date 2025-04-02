@@ -8,7 +8,7 @@
     xmlns:models="using:WinUIApp.Models"
     mc:Ignorable="d">
 
-    <ComboBox x:Name="CategoryComboBox"
+    <!--<ComboBox x:Name="CategoryComboBox"
           Header="Category"
           Width="200"
           ItemsSource="{x:Bind Categories, Mode=OneWay}"
@@ -20,4 +20,27 @@
             </DataTemplate>
         </ComboBox.ItemTemplate>
     </ComboBox>
+    -->
+    <StackPanel x:Name="LayoutPanel" Spacing="10">
+        <TextBlock 
+            Text="Categories:"
+            Foreground="Black"/>
+        <TextBox 
+            x:Name="SearchBox" 
+            PlaceholderText="Search categories..."
+            TextChanged="SearchBox_TextChanged"/>
+            <ListView 
+                x:Name="CategoryList"
+                Height="120"
+                SelectionMode="Multiple"
+                ItemsSource="{x:Bind Categories, Mode=OneWay}"
+                SelectionChanged="CategoryListView_SelectionChanged">
+                <ListView.ItemTemplate>
+                    <DataTemplate x:DataType="models:Category">
+                        <TextBlock Text="{x:Bind Name}"/>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+
+            </ListView>
+    </StackPanel>
 </UserControl>

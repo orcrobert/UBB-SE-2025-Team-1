@@ -13,10 +13,13 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Views\Components\AddRemoveFromDrinkListButton.xaml" />
+    <None Remove="Views\Components\VerticalDrinkList.xaml" />
     <None Remove="Views\Components\UpdateDrinkFlyout.xaml" />
     <None Remove="Views\DrinkModelCrudTest.xaml" />
     <None Remove="Views\Components\DrinkComponent.xaml" />
     <None Remove="Views\Components\DrinkListComponent.xaml" />
+    <None Remove="Views\Pages\DrinkDetailPage.xaml" />
   </ItemGroup>
   <ItemGroup>
     <Page Remove="GlobalStyles.xaml" />
@@ -58,6 +61,15 @@
     <None Update="Styles\GlobalStyles.xaml">
       <Generator>MSBuild:Compile</Generator>
     </None>
+    <Page Update="Views\Components\AddRemoveFromDrinkListButton.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Views\Pages\DrinkDetailPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Views\Components\VerticalDrinkList.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Update="Views\Components\UpdateDrinkFlyout.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -76,7 +88,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\Windows\" />
-    <Folder Include="Views\Pages\" />
   </ItemGroup>
 
   <!--
@@ -94,5 +105,6 @@
     <PublishReadyToRun Condition="'$(Configuration)' != 'Debug'">True</PublishReadyToRun>
     <PublishTrimmed Condition="'$(Configuration)' == 'Debug'">False</PublishTrimmed>
     <PublishTrimmed Condition="'$(Configuration)' != 'Debug'">True</PublishTrimmed>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 </Project>

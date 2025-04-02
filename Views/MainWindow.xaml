@@ -9,7 +9,7 @@
     xmlns:components="using:WinUIApp.Views.Components"
     mc:Ignorable="d"
     Title="WinUIApp">
-
+    <!--
     <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="10">
         <components:UpdateDrinkButton />
         <Button x:Name="myButton" Click="myButton_Click" Style="{StaticResource DefaultButton}">Click Me</Button>
@@ -24,7 +24,9 @@
         <TextBlock x:Name="reviewTextBlock" Text="Review for drink with ID = 1"></TextBlock>
 
         <TextBlock x:Name="testModelsTextBlock"></TextBlock>
-
-        <components:DrinkListComponent />
-    </StackPanel>
+    </StackPanel>-->
+    <Grid>
+        <components:AddRemoveFromDrinkListButton DrinkId="1" />
+        <components:DrinkListComponent ViewModel="{x:Bind ViewModel}" />
+    </Grid>
 </Window>

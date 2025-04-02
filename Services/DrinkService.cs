@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using WinUIApp.Models;
 
 
 namespace WinUIApp.Services
 {
-    class DrinkService
+    public class DrinkService
     {
         private DrinkModel drinkModel;
         public DrinkService()
@@ -86,6 +83,78 @@ namespace WinUIApp.Services
             catch (Exception e)
             {
                 throw new Exception("Error happened while getting drink brands:", e);
+            }
+        }
+
+        public List<Drink> getPersonalDrinkList(int userId, int numberOfDrinks = 1)
+        {
+            try
+            {
+                return drinkModel.getPersonalDrinkList(userId, numberOfDrinks);
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Error getting personal drink list:", e);
+            }
+        }
+
+        public bool isDrinkInPersonalList(int userId, int drinkId)
+        {
+            try
+            {
+                return drinkModel.isDrinkInPersonalList(userId, drinkId);
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Error adding drink to personal list:", e);
+            }
+        }
+
+        public bool addToPersonalDrinkList(int userId, int drinkId)
+        {
+            try
+            {
+                return drinkModel.addToPersonalDrinkList(userId, drinkId);
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Error adding drink to personal list:", e);
+            }
+        }
+
+        public bool deleteFromPersonalDrinkList(int userId, int drinkId)
+        {
+            try
+            {
+                return drinkModel.deleteFromPersonalDrinkList(userId, drinkId);
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Error deleting drink from personal list:", e);
+            }
+        }
+
+        public void voteDrinkOfTheDay(int drinkId, int userId)
+        {
+            try
+            {
+                drinkModel.voteDrinkOfTheDay(drinkId, userId);
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Error voting drink:", e);
+            }
+        }
+
+        public Drink getDrinkOfTheDay()
+        {
+            try
+            {
+                return drinkModel.getDrinkOfTheDay();
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Error getting drink of the day:", e);
             }
         }
     }

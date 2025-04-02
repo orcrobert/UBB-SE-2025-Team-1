@@ -20,13 +20,13 @@ namespace WinUIApp.Views.Components.HeaderComponents
     public sealed partial class CategorySelectionMenu : UserControl
     {
 
-        private List<Category> _originalCategories;
-        public ObservableCollection<Category> CurrentCategories { get; set; }
+        private List<Category> _originalCategories=new List<Category>();
+        public ObservableCollection<Category> CurrentCategories { get; set; } = new ObservableCollection<Category>();
 
         public CategorySelectionMenu()
         {
             this.InitializeComponent();
-            PopulateCategories(new List<Category> {new Category(1, "abc"), new Category(1, "def"), new Category(1, "abc"), new Category(1, "ABc") });
+            //PopulateCategories(new List<Category> {new Category(1, "abc"), new Category(1, "def"), new Category(1, "abc"), new Category(1, "ABc") });
         }
 
         public void PopulateCategories(List<Category> categories)

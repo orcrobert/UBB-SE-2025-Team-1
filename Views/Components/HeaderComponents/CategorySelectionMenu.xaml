@@ -9,7 +9,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <StackPanel Margin="10 0 10 0">
+    <StackPanel>
         <TextBox x:Name="CategorySearchBox" PlaceholderText="Search categories..." TextChanged="CategorySearchBox_TextChanged"/>
         <ListView x:Name="CategoryList"
                   SelectionMode="Multiple"

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UserControl
+    x:Class="WinUIApp.Views.Components.HeaderComponents.Header"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:WinUIApp.Views.Components.HeaderComponents"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:components="using:WinUIApp.Views.Components.HeaderComponents"
+    mc:Ignorable="d">
+
+    <Grid Height="60">
+        <TextBlock x:Name="Logo"
+                   Text="DrinkMDb"
+                   Margin="30 0 0 0"
+                   VerticalAlignment="Center"
+                   HorizontalAlignment="Left"/>
+        <StackPanel Orientation="Horizontal"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Center">
+            <Button x:Name="OpenCategorySelectionMenuButton">
+                <Button.Flyout >
+                    <Flyout Placement="Bottom">
+                        <components:CategorySelectionMenu/>
+                    </Flyout>
+                </Button.Flyout>
+                <Grid Width="120">
+                    <TextBlock Text="Categories"
+                               VerticalAlignment="Center"
+                               HorizontalAlignment="Left"/>
+                    <FontIcon VerticalAlignment="Center"
+                              HorizontalAlignment="Right"
+                              Glyph="&#xE70D;" 
+                              FontFamily="Segoe MDL2 Assets"/>
+                </Grid>
+            </Button>
+            <TextBox x:Name="DrinkSearchBox" 
+                     PlaceholderText="Search drinks..."
+                     Width="300"/>
+            <Button x:Name="SearchDrinksButton">
+                <SymbolIcon Symbol="Find"/>
+            </Button>
+        </StackPanel>
+    </Grid>
+</UserControl>

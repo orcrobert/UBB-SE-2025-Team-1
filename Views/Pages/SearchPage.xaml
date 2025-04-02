@@ -57,7 +57,9 @@
                 </StackPanel>
                 
             </StackPanel>
-            <component:VerticalDrinkListComponent x:Name="VerticalDrinkListControl"/>
+            <component:VerticalDrinkListComponent 
+                x:Name="VerticalDrinkListControl"
+                DrinkClicked="VerticalDrinkListControl_DrinkClicked"/>
         </StackPanel>
         
     </StackPanel>

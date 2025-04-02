@@ -20,15 +20,20 @@ namespace WinUIApp.Views.Pages
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            if (e.Parameter is SearchPageViewModel viewModel)
+            _searchPageViewModel = new SearchPageViewModel(new Services.DrinkService(), new Services.DummyServies.ReviewService());
+            SortSelectorControl.SetSortOrder(_searchPageViewModel.IsAscending);
+            /// trebuie facuta clasa wrapper
+            if (e.Parameter is List<string> initialCategories)
             {
-                _searchPageViewModel = viewModel;
-                VerticalDrinkListControl.DrinkClicked += VerticalDrinkListControl_DrinkClicked;
-                SortSelectorControl.SetSortOrder(_searchPageViewModel.IsAscending);
-                LoadDrinks();
-                LoadCategoriesFilter();
-                LoadBrandsFilter();
+                _searchPageViewModel.SetCategoryFilter(initialCategories);
             }
+            if (e.Parameter is string searchedTerm)
+            {
+                _searchPageViewModel.SetSearchedTerm(searchedTerm);
+            }
+            LoadDrinks();
+            LoadCategoriesFilter();
+            LoadBrandsFilter();
         }
 
         //Filter Button
@@ -44,6 +49,7 @@ namespace WinUIApp.Views.Pages
             BrandFilterControl.ClearSelection();
             AlcoholContentFilterControl.ResetSliders();
             RatingFilterControl.ClearSelection();
+            //Clear searched term
             LoadDrinks();
         }
 

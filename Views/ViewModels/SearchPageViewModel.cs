@@ -1,5 +1,4 @@
-﻿using Microsoft.UI.Xaml.Controls;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using WinUIApp.Models;
@@ -10,9 +9,8 @@ using WinUIApp.Views.Pages;
 
 namespace WinUIApp.Views.ModelViews
 {
-    public class SearchPageViewModel(Frame frame, DrinkService drinkService, ReviewService reviewService)
+    public class SearchPageViewModel(DrinkService drinkService, ReviewService reviewService)
     {
-        private readonly Frame _frame = frame;
 
         private readonly DrinkService _drinkService = drinkService;
         private ReviewService _reviewService = reviewService;
@@ -25,6 +23,7 @@ namespace WinUIApp.Views.ModelViews
         private float? _minAlcoholFilter;
         private float? _maxAlcoholFilter;
         private float? _minRating;
+        private string? _searchedTerm;
 
         public bool IsAscending
         {
@@ -46,7 +45,7 @@ namespace WinUIApp.Views.ModelViews
 
         public void OpenDrinkDetailPage(int id)
         {
-            _frame.Navigate(typeof(DrinkDetailPage), id);
+            MainWindow.AppMainFrame.Navigate(typeof(DrinkDetailPage), id);
         }
 
         public void ClearFilters()
@@ -56,7 +55,7 @@ namespace WinUIApp.Views.ModelViews
             _minAlcoholFilter = null;
             _maxAlcoholFilter = null;
             _minRating = null;
-            //add all filters
+            _searchedTerm = null;
         }
 
 
@@ -72,7 +71,7 @@ namespace WinUIApp.Views.ModelViews
                 };
 
                 List<Drink> drinks = _drinkService.getDrinks(
-                    searchedTerm: null,
+                    searchedTerm: _searchedTerm,
                     brandNameFilter: _brandFilter,
                     categoryFilter: _categoryFilter,
                     minAlcohol: _minAlcoholFilter,
@@ -101,7 +100,7 @@ namespace WinUIApp.Views.ModelViews
             else
             {
                 List<Drink> drinks = _drinkService.getDrinks(
-                    searchedTerm: null,
+                    searchedTerm: _searchedTerm,
                     brandNameFilter: _brandFilter,
                     categoryFilter: _categoryFilter,
                     minAlcohol: _minAlcoholFilter,
@@ -189,6 +188,11 @@ namespace WinUIApp.Views.ModelViews
         {
             _minRating = minRatingFilter;
             Debug.WriteLine(_minRating);
+        }
+
+        public void SetSearchedTerm(string searchedTerm)
+        {
+            _searchedTerm = searchedTerm;
         }
 
     }

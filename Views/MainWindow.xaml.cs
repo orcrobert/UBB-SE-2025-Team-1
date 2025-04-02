@@ -1,24 +1,22 @@
 using Microsoft.UI;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 using System;
-using WinUIApp.Services;
-using WinUIApp.Services.DummyServies;
-using WinUIApp.Views.ModelViews;
 using WinUIApp.Views.Pages;
 
 namespace WinUIApp.Views
 {
     public sealed partial class MainWindow : Window
     {
+        public static Frame AppMainFrame { get; private set; }
+
         public MainWindow()
         {
             this.InitializeComponent();
             SetFixedSize(1440, 900);
-            DrinkService drinkService = new DrinkService();
-            ReviewService reviewService = new ReviewService();
-            SearchPageViewModel searchPageViewModel = new SearchPageViewModel(MainFrame, drinkService, reviewService);
-            MainFrame.Navigate(typeof(SearchPage), searchPageViewModel);
+            AppMainFrame = MainFrame;
+            MainFrame.Navigate(typeof(SearchPage));
         }
 
         private void SetFixedSize(int width, int height)

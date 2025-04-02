@@ -5,12 +5,11 @@
     xmlns:local="using:WinUIApp.Views.Components"
     xmlns:models="using:WinUIApp.Models">
 
-    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="10">
-
-            <ItemsRepeater x:Name="DrinksRepeater" ItemsSource="{x:Bind ViewModel.PersonalDrinks, Mode=OneWay}">
+    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" Padding="0 0 0 15">
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top" Spacing="20">
+            <ItemsRepeater x:Name="DrinksRepeater" ItemsSource="{x:Bind ViewModel.PersonalDrinks, Mode=OneWay}" Margin="0 0 0 10">
                 <ItemsRepeater.Layout>
-                    <UniformGridLayout Orientation="Horizontal" MinItemWidth="200" MinItemHeight="250" MinRowSpacing="20" MinColumnSpacing="20"/>
+                    <StackLayout Orientation="Horizontal" Spacing="20"/>
                 </ItemsRepeater.Layout>
                 <ItemsRepeater.ItemTemplate>
                     <DataTemplate x:DataType="models:Drink">
@@ -18,15 +17,18 @@
                                 CornerRadius="10"
                                 Padding="15"
                                 BorderBrush="Yellow"
-                                BorderThickness="2">
+                                BorderThickness="2"
+                                Width="200"
+                                Height="250">
                             <StackPanel Spacing="10" Width="200">
                                 <Border Background="Gray"
                                         Height="150"
                                         CornerRadius="5">
                                     <Image Source="{x:Bind DrinkURL}"
                                            Stretch="UniformToFill"
-                                           Width="170"
-                                           HorizontalAlignment="Center"/>
+                                           Width="200"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Center"/>
                                 </Border>
                                 <TextBlock Text="{x:Bind DrinkName}"
                                            FontSize="18"

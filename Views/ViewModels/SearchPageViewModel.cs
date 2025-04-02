@@ -23,7 +23,7 @@ namespace WinUIApp.Views.ModelViews
         private float? _minAlcoholFilter;
         private float? _maxAlcoholFilter;
         private float? _minRating;
-        private string? _searchedTerm;
+        private string? _searchedTerms;
 
         public bool IsAscending
         {
@@ -55,7 +55,7 @@ namespace WinUIApp.Views.ModelViews
             _minAlcoholFilter = null;
             _maxAlcoholFilter = null;
             _minRating = null;
-            _searchedTerm = null;
+            _searchedTerms = null;
         }
 
 
@@ -71,7 +71,7 @@ namespace WinUIApp.Views.ModelViews
                 };
 
                 List<Drink> drinks = _drinkService.getDrinks(
-                    searchedTerm: _searchedTerm,
+                    searchedTerm: _searchedTerms,
                     brandNameFilter: _brandFilter,
                     categoryFilter: _categoryFilter,
                     minAlcohol: _minAlcoholFilter,
@@ -100,7 +100,7 @@ namespace WinUIApp.Views.ModelViews
             else
             {
                 List<Drink> drinks = _drinkService.getDrinks(
-                    searchedTerm: _searchedTerm,
+                    searchedTerm: _searchedTerms,
                     brandNameFilter: _brandFilter,
                     categoryFilter: _categoryFilter,
                     minAlcohol: _minAlcoholFilter,
@@ -129,17 +129,7 @@ namespace WinUIApp.Views.ModelViews
                     ? displayItems.OrderBy(item => item.AverageReviewScore).ToList()
                     : displayItems.OrderByDescending(item => item.AverageReviewScore).ToList();
 
-            }/*
-            if (_brandFilter != null)
-            {
-                if (_brandFilter.Count >= 1)
-                {
-                    Debug.WriteLine(_brandFilter[0]);
-                }
             }
-            Debug.WriteLine("DrinkList:");
-            Debug.WriteLine("len" + displayItems.Count);
-            Debug.WriteLine("xxx");*/
 
             return displayItems;
         }
@@ -190,9 +180,9 @@ namespace WinUIApp.Views.ModelViews
             Debug.WriteLine(_minRating);
         }
 
-        public void SetSearchedTerm(string searchedTerm)
+        public void SetSearchedTerms(string searchedTerms)
         {
-            _searchedTerm = searchedTerm;
+            _searchedTerms = searchedTerms;
         }
 
     }

@@ -3,6 +3,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using System.Collections.Generic;
 using WinUIApp.Models;
+using WinUIApp.Utils;
 using WinUIApp.Views.Components.SearchPageComponents;
 using WinUIApp.Views.ModelViews;
 
@@ -23,13 +24,16 @@ namespace WinUIApp.Views.Pages
             _searchPageViewModel = new SearchPageViewModel(new Services.DrinkService(), new Services.DummyServies.ReviewService());
             SortSelectorControl.SetSortOrder(_searchPageViewModel.IsAscending);
             /// trebuie facuta clasa wrapper
-            if (e.Parameter is List<string> initialCategories)
+            if (e.Parameter is SearchPageNavigationParameters parameters)
             {
-                _searchPageViewModel.SetCategoryFilter(initialCategories);
-            }
-            if (e.Parameter is string searchedTerm)
-            {
-                _searchPageViewModel.SetSearchedTerm(searchedTerm);
+                if (parameters.InitialCategories != null)
+                {
+                    _searchPageViewModel.SetCategoryFilter(parameters.InitialCategories);
+                }
+                if (parameters.SearchedTerm != null)
+                {
+                    _searchPageViewModel.SetSearchedTerms(parameters.SearchedTerm);
+                }
             }
             LoadDrinks();
             LoadCategoriesFilter();
@@ -54,7 +58,6 @@ namespace WinUIApp.Views.Pages
         }
 
         //DrinkList
-
         private void VerticalDrinkListControl_DrinkClicked(object sender, int drinkId)
         {
             _searchPageViewModel.OpenDrinkDetailPage(drinkId);

@@ -6,11 +6,13 @@
     xmlns:local="using:WinUIApp"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:components="using:WinUIApp.Views.Components"
+    xmlns:headerComponents="using:WinUIApp.Views.Components.HeaderComponents"
     mc:Ignorable="d"
     Title="WinUIApp">
 
-    <Grid>
+
+    <StackPanel>
+        <headerComponents:Header/>
         <Frame x:Name="MainFrame"/>
-    </Grid>
+    </StackPanel>
 </Window>

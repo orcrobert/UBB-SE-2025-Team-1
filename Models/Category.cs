@@ -33,5 +33,18 @@ namespace WinUIApp.Models
                 _name = value;
             }
         }
+
+        public override bool Equals(object? obj)
+        {
+            if (obj == null || GetType() != obj.GetType())
+                return false;
+            Category category = (Category)obj;
+            return _id == category.Id;
+        }
+
+        public override int GetHashCode()
+        {
+            return Id.GetHashCode();
+        }
     }
 }

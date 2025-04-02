@@ -20,7 +20,6 @@ namespace WinUIApp.Views
         public MainWindow()
         {
             this.InitializeComponent();
-
         }
 
         // You can keep or remove the SetFixedSize and other commented-out code as needed

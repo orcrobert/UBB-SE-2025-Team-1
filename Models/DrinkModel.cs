@@ -20,24 +20,30 @@ namespace WinUIApp.Models
             try
             {
                 string getDrinkQuery = @" SELECT D.DrinkId, D.AlcoholContent, D.DrinkName, D.DrinkURL,
-                                  B.BrandId, B.BrandName, 
-                                  GROUP_CONCAT(C.CategoryId ORDER BY C.CategoryId) AS CategoryIds, 
-                                  GROUP_CONCAT(C.CategoryName ORDER BY C.CategoryId) AS CategoryNames
-                                  FROM Drink AS D
-                                  LEFT JOIN Brand AS B ON D.BrandId = B.BrandId
-                                  LEFT JOIN DrinkCategory AS DC ON D.DrinkId = DC.DrinkId
-                                  LEFT JOIN Category AS C ON DC.CategoryId = C.CategoryId
-                                  WHERE D.DrinkId = @DrinkId
-                                  GROUP BY D.DrinkId, B.BrandId;";
+                                                 B.BrandId, B.BrandName, 
+                                                 GROUP_CONCAT(C.CategoryId ORDER BY C.CategoryId) AS CategoryIds, 
+                                                 GROUP_CONCAT(C.CategoryName ORDER BY C.CategoryId) AS CategoryNames
+                                                 FROM Drink AS D
+                                                 LEFT JOIN Brand AS B ON D.BrandId = B.BrandId
+                                                 LEFT JOIN DrinkCategory AS DC ON D.DrinkId = DC.DrinkId
+                                                 LEFT JOIN Category AS C ON DC.CategoryId = C.CategoryId
+                                                 WHERE D.DrinkId = @DrinkId
+                                                 GROUP BY D.DrinkId, B.BrandId;";
 
                 List<MySqlParameter> queryParameters = new List<MySqlParameter>
                 {
                     new MySqlParameter("@DrinkId", MySqlDbType.Int32) { Value = drinkId }
                 };
 
+                System.Diagnostics.Debug.WriteLine($"Executing query: {getDrinkQuery}");
+                foreach (var param in queryParameters)
+                {
+                    System.Diagnostics.Debug.WriteLine($"Parameter: {param.ParameterName} = {param.Value}");
+                }
+
                 var drinkQueryResult = dbService.ExecuteSelect(getDrinkQuery, queryParameters);
 
-                if (drinkQueryResult.Count > 0)
+                if (drinkQueryResult != null && drinkQueryResult.Count > 0)
                 {
                     var row = drinkQueryResult[0];
                     int fetchedDrinkId = Convert.ToInt32(row["DrinkId"]);
@@ -57,9 +63,15 @@ namespace WinUIApp.Models
 
                         for (int i = 0; i < categoryIds.Length; i++)
                         {
-                            int categoryId = Convert.ToInt32(categoryIds[i]);
-                            string categoryName = categoryNames[i];
-                            categories.Add(new Category(categoryId, categoryName));
+                            if (int.TryParse(categoryIds[i], out int categoryId))
+                            {
+                                string categoryName = categoryNames[i];
+                                categories.Add(new Category(categoryId, categoryName));
+                            }
+                            else
+                            {
+                                System.Diagnostics.Debug.WriteLine($"Warning: Could not parse CategoryId: {categoryIds[i]}");
+                            }
                         }
                     }
 
@@ -73,7 +85,12 @@ namespace WinUIApp.Models
             }
             catch (Exception ex)
             {
-                throw new Exception("Database error occurred", ex);
+                System.Diagnostics.Debug.WriteLine($"Error in getDrinkById: {ex.Message}");
+                if (ex.InnerException != null)
+                {
+                    System.Diagnostics.Debug.WriteLine($"Inner Exception: {ex.InnerException.Message}");
+                }
+                throw new Exception("Database error occurred while getting drink by ID", ex);
             }
         }
 

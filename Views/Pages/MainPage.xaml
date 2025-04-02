@@ -10,9 +10,9 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <Page.DataContext>
+    <!-- <Page.DataContext>
         <viewModels:MainPageViewModel/>
-    </Page.DataContext>
+    </Page.DataContext>-->
 
     <!-- Make ScrollViewer the root content container -->
     <ScrollViewer VerticalScrollBarVisibility="Auto"
@@ -23,7 +23,6 @@
                   Padding="0,0,0,20">
         <!-- Add bottom padding -->
 
-        <!-- Main content container -->
         <ScrollViewer VerticalScrollBarVisibility="Auto"
                   VerticalScrollMode="Enabled">
             <StackPanel Orientation="Vertical" Spacing="30">
@@ -32,8 +31,6 @@
                        Style="{StaticResource HeaderTextBlockStyle}"/>
                 <local:DrinkListComponent Drinks="{Binding PersonalDrinks}"/>
 
-                <!-- Test element (remove after verification) -->
-                <Border Height="1500" Background="Transparent"/>
             </StackPanel>
         </ScrollViewer>
     </ScrollViewer>

@@ -61,6 +61,9 @@
     <None Update="Styles\GlobalStyles.xaml">
       <Generator>MSBuild:Compile</Generator>
     </None>
+    <Page Update="Views\Components\VoteDrinkOfTheDayButton.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Update="Views\Components\AddRemoveFromDrinkListButton.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>

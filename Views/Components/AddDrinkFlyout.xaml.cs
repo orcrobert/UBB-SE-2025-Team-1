@@ -57,6 +57,7 @@ namespace WinUIApp.Views.Components
             };
         }
 
+        //Asta e metoda care se apeleaza cand se schimba selectia de categorii
         private void CategoryList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             foreach (var removed in e.RemovedItems.Cast<string>())
@@ -66,6 +67,7 @@ namespace WinUIApp.Views.Components
                 _selectedCategoryNames.Add(added);
         }
 
+        //Asta e metoda care verifica daca brand-ul exista deja in baza de date
         private Brand ResolveBrand(string brandName)
         {
             var service = new DrinkService();
@@ -73,12 +75,18 @@ namespace WinUIApp.Views.Components
 
             var match = existingBrands
                 .FirstOrDefault(b => b.Name.Equals(brandName, StringComparison.OrdinalIgnoreCase));
-
-            return match ?? new Brand(-1, brandName); // -1 indicates a new brand to be inserted later
+            
+            ///Daca nu exista brand-ul, dam eroare. Brandul trebuie sa existe.
+            if (match == null)
+            {
+                throw new ArgumentException("The brand you tried to add was not found.");
+            }
+            return match;
         }
 
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
+            //Ceva mici validari. Catalin this is just for refference, you can get rid of it daca vrei sa faci tu validarea
             try
             {
                 if (string.IsNullOrWhiteSpace(NameBox.Text))
@@ -100,6 +108,7 @@ namespace WinUIApp.Views.Components
                 {
                     throw new ArgumentException("At least one category must be selected");
                 }
+                
 
                 var brand = ResolveBrand(BrandBox.Text);
                 var categories = _selectedCategoryNames
@@ -108,7 +117,7 @@ namespace WinUIApp.Views.Components
 
                 var adminService = new WinUIApp.Services.DummyServies.AdminService();
                 bool isAdmin = adminService.IsAdmin(UserId);
-                isAdmin = true; // Doar testez aici daca merge add-u, comentati linia asta si va merge normal
+                //isAdmin = true; // Doar testez aici daca merge add-u, comentati linia asta si va merge normal
                 string message;
                 if (isAdmin)
                 {
@@ -148,6 +157,22 @@ namespace WinUIApp.Views.Components
                 AlcoholBox.Text = string.Empty;
                 _selectedCategoryNames.Clear();
                 CategoryList.SelectedItems.Clear();
+            }
+            catch (Exception ex) when (ex.Message.Contains("The brand you tried to add was not found."))
+            {
+                // Specific pt eroarea de brand. Informam user-ul ce brnduri sunt valabile, ca sa stie pe data viitoare
+                var service = new DrinkService();
+                var availableBrands = service.getDrinkBrands();
+                var brandList = string.Join(", ", availableBrands.Select(b => b.Name));
+
+                var dialog = new ContentDialog
+                {
+                    Title = "Error",
+                    Content = $"Brand does not exist. Available brands are: {brandList}",
+                    CloseButtonText = "OK",
+                    XamlRoot = this.XamlRoot
+                };
+                _ = dialog.ShowAsync();
             }
             catch (Exception ex)
             {

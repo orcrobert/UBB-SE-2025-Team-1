@@ -27,5 +27,7 @@
     </StackPanel>-->
     <Grid>
         <Frame x:Name="MainFrame"/>
+        <components:AddDrinkButton HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        <!-- Other components -->
     </Grid>
 </Window>

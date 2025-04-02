@@ -19,7 +19,7 @@
             <StackPanel Orientation="Vertical">
                 <TextBlock Text="Search Filters"
                    Foreground="Black"
-                   FontSize="16"
+                   FontSize="20"
                    FontWeight="Bold"
                    Margin="0,0,0,8"/>
                 <component:CategoryFilterComponent 

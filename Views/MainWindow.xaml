@@ -26,7 +26,8 @@
         <TextBlock x:Name="testModelsTextBlock"></TextBlock>
     </StackPanel>-->
     <Grid>
-        <components:AddRemoveFromDrinkListButton DrinkId="1" />
-        <components:DrinkListComponent ViewModel="{x:Bind ViewModel}" />
+       <!-- <components:AddRemoveFromDrinkListButton DrinkId="1" /> -->
+        <components:UpdateDrinkButton />
+       <!-- <components:DrinkListComponent ViewModel="{x:Bind ViewModel}" /> -->
     </Grid>
 </Window>

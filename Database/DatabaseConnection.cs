@@ -19,8 +19,17 @@ namespace WinUIApp.Database
 
         private DatabaseConnection()
         {
-            _connection = new MySqlConnection(_connectionString);
+            try
+            {
+                _connection = new MySqlConnection(_connectionString);
+                Debug.WriteLine("DatabaseConnection constructor: Connection created.");
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"DatabaseConnection constructor error: {ex.Message}");
+            }
         }
+
 
         public static DatabaseConnection Instance
         {
@@ -28,9 +37,12 @@ namespace WinUIApp.Database
             {
                 lock (_lock)
                 {
-                    if (_instance == null)
-                    {
-                        _instance = new DatabaseConnection();
+                    if (_instance == null) 
+                    {   
+                        lock(_lock)
+                        {
+                            _instance = new DatabaseConnection();
+                        }
                     }
                     return _instance;
                 }
@@ -39,16 +51,24 @@ namespace WinUIApp.Database
 
         public MySqlConnection GetConnection()
         {
+            if (_connection == null)
+            {
+                _connection = new MySqlConnection(_connectionString);
+            }
+
             return _connection;
         }
+
 
         public void OpenConnection()
         {
             try
             {
-                if (_connection.State == System.Data.ConnectionState.Closed)
+                var connection = GetConnection();
+
+                if (connection.State == System.Data.ConnectionState.Closed)
                 {
-                    _connection.Open();
+                    connection.Open();
                 }
             }
             catch (Exception ex)
@@ -57,13 +77,16 @@ namespace WinUIApp.Database
             }
         }
 
+
         public void CloseConnection()
         {
             try
             {
-                if (_connection.State == System.Data.ConnectionState.Open)
+                var connection = GetConnection();
+
+                if (connection.State == System.Data.ConnectionState.Open)
                 {
-                    _connection.Close();
+                    connection.Close();
                 }
             }
             catch (Exception ex)
@@ -71,5 +94,6 @@ namespace WinUIApp.Database
                 Debug.WriteLine($"Error closing connection: {ex.Message}");
             }
         }
+
     }
 }

@@ -7,7 +7,7 @@ using System.Diagnostics;
 
 namespace WinUIApp.Services.DummyServies
 {
-    class AdminService
+    public class AdminService
     {
         private HashSet<int> adminUserIds = new HashSet<int> { 1, 42, 30, 10 };
 

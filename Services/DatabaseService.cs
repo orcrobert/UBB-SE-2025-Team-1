@@ -25,8 +25,11 @@ namespace WinUIApp.Services
                     lock (_lock)
                     {
                         if (_instance == null)
-                        {
-                            _instance = new DatabaseService();
+                        {   
+                            lock(_lock)
+                            {
+                                _instance = new DatabaseService();
+                            }
                         }
                     }
                 }

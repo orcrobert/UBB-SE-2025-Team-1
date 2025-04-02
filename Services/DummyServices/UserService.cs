@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace WinUIApp.Services.DummyServies
 {
-    class UserService
+    public class UserService
     {
         private int currentUserID = 1;
 

@@ -26,9 +26,9 @@
             Text="Brands:"
             Foreground="Black"/>
         <TextBox 
-        x:Name="SearchBox" 
-        PlaceholderText="Search brands..."
-        TextChanged="SearchBox_TextChanged"/>
+            x:Name="SearchBox" 
+            PlaceholderText="Search brands..."
+            TextChanged="SearchBox_TextChanged"/>
         <ListView 
             x:Name="BrandList"
             Height="120"

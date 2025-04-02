@@ -43,6 +43,7 @@ namespace WinUIApp.Views.Pages
             CategoryFilterControl.ClearSelection();
             BrandFilterControl.ClearSelection();
             AlcoholContentFilterControl.ResetSliders();
+            RatingFilterControl.ClearSelection();
             LoadDrinks();
         }
 
@@ -111,6 +112,12 @@ namespace WinUIApp.Views.Pages
         {
             float maxAlcoholContent = (float)maximumAlcoholContent;
             _searchPageViewModel.SetMaxAlcoholFilter(maxAlcoholContent);
+        }
+
+        // Rating Filter
+        private void RatingFilterControl_RatingChanged(object sender, float rating)
+        {
+            _searchPageViewModel.SetMinRatingFilter(rating);
         }
     }
 }

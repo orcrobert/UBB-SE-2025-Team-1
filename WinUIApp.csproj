@@ -16,6 +16,7 @@
     <None Remove="Views\Components\SearchPageComponents\AlcoholContentFilterComponent.xaml" />
     <None Remove="Views\Components\SearchPageComponents\BrandFilterComponent.xaml" />
     <None Remove="Views\Components\SearchPageComponents\CategoryFilterComponent.xaml" />
+    <None Remove="Views\Components\SearchPageComponents\RatingFilterComponent.xaml" />
     <None Remove="Views\Components\SearchPageComponents\SortSelectorComponent.xaml" />
     <None Remove="Views\Components\VerticalDrinkList.xaml" />
     <None Remove="Views\Components\UpdateDrinkFlyout.xaml" />
@@ -65,6 +66,9 @@
     <None Update="Styles\GlobalStyles.xaml">
       <Generator>MSBuild:Compile</Generator>
     </None>
+    <Page Update="Views\Components\SearchPageComponents\RatingFilterComponent.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Update="Views\Components\SearchPageComponents\AlcoholContentFilterComponent.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>

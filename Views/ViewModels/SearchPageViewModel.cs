@@ -1,5 +1,6 @@
 ﻿using Microsoft.UI.Xaml.Controls;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using WinUIApp.Models;
 using WinUIApp.Services;
@@ -23,6 +24,7 @@ namespace WinUIApp.Views.ModelViews
         private List<string>? _brandFilter;
         private float? _minAlcoholFilter;
         private float? _maxAlcoholFilter;
+        private float? _minRating;
 
         public bool IsAscending
         {
@@ -53,13 +55,10 @@ namespace WinUIApp.Views.ModelViews
             _brandFilter = null;
             _minAlcoholFilter = null;
             _maxAlcoholFilter = null;
+            _minRating = null;
             //add all filters
         }
 
-        public void RefreshDrinkList()
-        {
-            //
-        }
 
         public IEnumerable<DrinkDisplayItem> GetDrinks()
         {
@@ -85,7 +84,17 @@ namespace WinUIApp.Views.ModelViews
                 foreach (Drink drink in drinks)
                 {
                     float averageScore = _reviewService.GetReviewAverageByID(drink.Id);
-                    displayItems.Add(new DrinkDisplayItem(drink, averageScore));
+                    if (_minRating == null)
+                    {
+                        displayItems.Add(new DrinkDisplayItem(drink, averageScore));
+                    }
+                    else
+                    {
+                        if (averageScore >= _minRating)
+                        {
+                            displayItems.Add(new DrinkDisplayItem(drink, averageScore));
+                        }
+                    }
                 }
 
             }
@@ -104,7 +113,17 @@ namespace WinUIApp.Views.ModelViews
                 foreach (Drink drink in drinks)
                 {
                     float averageScore = _reviewService.GetReviewAverageByID(drink.Id);
-                    displayItems.Add(new DrinkDisplayItem(drink, averageScore));
+                    if (_minRating == null)
+                    {
+                        displayItems.Add(new DrinkDisplayItem(drink, averageScore));
+                    }
+                    else
+                    {
+                        if (averageScore >= _minRating)
+                        {
+                            displayItems.Add(new DrinkDisplayItem(drink, averageScore));
+                        }
+                    }
                 }
 
                 displayItems = _isAscending
@@ -164,6 +183,12 @@ namespace WinUIApp.Views.ModelViews
         public void SetMaxAlcoholFilter(float maxAlcoholFilter)
         {
             _maxAlcoholFilter = maxAlcoholFilter;
+        }
+
+        public void SetMinRatingFilter(float minRatingFilter)
+        {
+            _minRating = minRatingFilter;
+            Debug.WriteLine(_minRating);
         }
 
     }

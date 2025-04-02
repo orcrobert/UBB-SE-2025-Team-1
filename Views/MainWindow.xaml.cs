@@ -26,6 +26,7 @@ namespace WinUIApp.Views
             this.InitializeComponent();
             SetFixedSize(1440, 900);
             AppMainFrame = MainFrame;
+
             //navigation to main page
             //MainFrame.Navigate();
         }

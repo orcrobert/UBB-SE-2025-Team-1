@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UserControl
+    x:Class="WinUIApp.Views.Components.SearchPageComponents.SortSelectorComponent"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:WinUIApp.Views.Components.SearchPageComponents"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <StackPanel Orientation="Horizontal" Padding="20">
+        <TextBlock FontSize="16" 
+                   Foreground="Black"
+                   Text="Sort by" 
+                   VerticalAlignment="Center" 
+                   HorizontalAlignment="Center" 
+                   Width="Auto" 
+                   Margin="10 0"
+                    />
+        <ComboBox x:Name="SortByComboBox" 
+              SelectionChanged="SortByComboBox_SelectionChanged"
+              Width="120">
+            <ComboBoxItem Content="Name" IsSelected="True"/>
+            <ComboBoxItem Content="Alcohol Content"/>
+            <ComboBoxItem Content="Average Review Score"/>
+        </ComboBox>
+        <ComboBox x:Name="SortOrderComboBox" 
+              SelectionChanged="SortOrderComboBox_SelectionChanged"
+              Width="120">
+            <ComboBoxItem Content="Ascending" IsSelected="True"/>
+            <ComboBoxItem Content="Descending"/>
+        </ComboBox>
+    </StackPanel>
+</UserControl>

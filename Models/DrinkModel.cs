@@ -336,36 +336,36 @@ namespace WinUIApp.Models
         {
             var dbService = DatabaseService.Instance;
 
+            string query = @"
+                SELECT d.DrinkId, d.AlcoholContent, d.DrinkName, d.DrinkURL,
+                       b.BrandId, b.BrandName,
+                       GROUP_CONCAT(c.CategoryId ORDER BY c.CategoryId) AS CategoryIds,
+                       GROUP_CONCAT(c.CategoryName ORDER BY c.CategoryId) AS CategoryNames
+                FROM UserDrink ud
+                JOIN Drink d ON ud.DrinkId = d.DrinkId
+                JOIN Brand b ON d.BrandId = b.BrandId
+                LEFT JOIN DrinkCategory dc ON d.DrinkId = dc.DrinkId
+                LEFT JOIN Category c ON dc.CategoryId = c.CategoryId
+                WHERE ud.UserId = @UserId
+                GROUP BY d.DrinkId, b.BrandId
+                ORDER BY d.DrinkId
+                LIMIT @NumberOfDrinks;";
+
+            var parameters = new List<MySqlParameter>
+            {
+                new("@UserId", MySqlDbType.Int32) { Value = userId },
+                new("@NumberOfDrinks", MySqlDbType.Int32) { Value = numberOfDrinks }
+            };
+
             try
             {
-                string getPersonalDrinkList = "SELECT d.DrinkId, d.AlcoholContent, " +
-                            "b.BrandId, b.BrandName, " +
-                            "GROUP_CONCAT(c.CategoryId ORDER BY c.CategoryId) AS CategoryIds, " +
-                            "GROUP_CONCAT(c.CategoryName ORDER BY c.CategoryId) AS CategoryNames " +
-                            "FROM UserDrink ud " +
-                            "JOIN Drink d ON ud.DrinkId = d.DrinkId " +
-                            "JOIN Brand b ON d.BrandId = b.BrandId " +
-                            "LEFT JOIN DrinkCategory dc ON d.DrinkId = dc.DrinkId " +
-                            "LEFT JOIN Category c ON dc.CategoryId = c.CategoryId " +
-                            "WHERE ud.UserId = @UserId " +
-                            "GROUP BY d.DrinkId, b.BrandId " +
-                            "ORDER BY d.DrinkId " +
-                            "LIMIT @NumbersOfDrinks;";
-
-
-                List<MySqlParameter> parameters =
-                [
-                    new MySqlParameter("@UserId", MySqlDbType.Int32) { Value = userId },
-                    new MySqlParameter("@NumbersOfDrinks", MySqlDbType.Int32) { Value = numberOfDrinks },
-                ];
-
-                var selectResult = dbService.ExecuteSelect(getPersonalDrinkList, parameters);
-                List<Drink> drinks = [];
+                var selectResult = dbService.ExecuteSelect(query, parameters);
+                var drinks = new List<Drink>();
 
                 foreach (var row in selectResult)
                 {
                     int drinkId = Convert.ToInt32(row["DrinkId"]);
-                    float alcoholContent = (float)(row["AlcoholContent"]);
+                    float alcoholContent = (float)(decimal)(row["AlcoholContent"]);
                     string drinkName = row["DrinkName"].ToString();
                     string drinkURL = row["DrinkURL"].ToString();
 

@@ -85,5 +85,41 @@ namespace WinUIApp.Services
                 throw new Exception("Error happened while getting drink brands:", e);
             }
         }
+
+        public List<Drink> getPersonalDrinkList(int userId, int numberOfDrinks = 1)
+        {
+            try
+            {
+                return drinkModel.getPersonalDrinkList(userId, numberOfDrinks);
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Error getting personal drink list:", e);
+            }
+        }
+
+        public bool addToPersonalDrinkList(int userId, int drinkId)
+        {
+            try
+            {
+                return drinkModel.addToPersonalDrinkList(userId, drinkId);
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Error adding drink to personal list:", e);
+            }
+        }
+
+        public bool deleteFromPersonalDrinkList(int userId, int drinkId)
+        {
+            try
+            {
+                return drinkModel.deleteFromPersonalDrinkList(userId, drinkId);
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Error deleting drink from personal list:", e);
+            }
+        }
     }
 }

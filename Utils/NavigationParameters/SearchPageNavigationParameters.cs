@@ -9,7 +9,7 @@ namespace WinUIApp.Utils.NavigationParameters
 {
     public class SearchPageNavigationParameters
     {
-        public List<Category>? InitialCategories { get; set; }
+        public List<string>? InitialCategories { get; set; }
         public string? SearchedTerms { get; set; }
     }
 }

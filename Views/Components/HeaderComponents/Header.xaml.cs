@@ -38,7 +38,7 @@ namespace WinUIApp.Views.Components.HeaderComponents
         {
             SearchPageNavigationParameters parameters = new SearchPageNavigationParameters
             {
-                InitialCategories = CategoryMenu.SelectedCategories.ToList(),
+                InitialCategories = CategoryMenu.SelectedCategories.Select(category=>category.Name).ToList(),
                 SearchedTerms = DrinkSearchBox.Text
             };
             MainWindow.AppMainFrame.Navigate(typeof(SearchPage), parameters);

@@ -25,11 +25,6 @@ namespace WinUIApp.Views.Components
             var service = new WinUIApp.Services.DrinkService();
             var testDrink = service.getDrinks(null, null, null, null, null, null)[0];
 
-            Debug.WriteLine($"Name: {testDrink.DrinkName}");
-            Debug.WriteLine($"Brand: {testDrink.Brand}");
-            Debug.WriteLine($"Alcohol: {testDrink.AlcoholContent}%");
-            Debug.WriteLine("Categories: " + string.Join(", ", testDrink.Categories.Select(c => c.Name)));
-
             var userService = new WinUIApp.Services.DummyServies.UserService();
             var flyout = new Flyout
             {
@@ -41,7 +36,6 @@ namespace WinUIApp.Views.Components
             };
 
             flyout.ShowAt(UpdateButton);
-
 
         }
     }

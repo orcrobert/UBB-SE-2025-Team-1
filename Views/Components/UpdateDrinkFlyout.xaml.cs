@@ -20,6 +20,9 @@ namespace WinUIApp.Views.Components
 
         private readonly HashSet<string> _selectedCategoryNames = new();
 
+        private List<Category> _allCategoryObjects = new(); // For ID lookups
+
+
         public UpdateDrinkFlyout()
         {
             this.InitializeComponent();
@@ -73,6 +76,8 @@ namespace WinUIApp.Views.Components
             var service = new WinUIApp.Services.DrinkService();
             bool isAdmin = adminService.IsAdmin(UserId);
             _allCategories = _allCategories = service.getDrinkCategories().Select(c => c.Name).ToList();
+            _allCategoryObjects = service.getDrinkCategories();
+
 
             SaveButton.Content = isAdmin ? "Save" : "Send Request to Admin";
 
@@ -117,85 +122,78 @@ namespace WinUIApp.Views.Components
 
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
-            if (DrinkToUpdate != null)
+            if (DrinkToUpdate == null)
+                return;
+
+            try
             {
-                try
+                //validation
+                if (string.IsNullOrWhiteSpace(NameBox.Text))
+                    throw new ArgumentException("Drink name is required");
+
+                if (string.IsNullOrWhiteSpace(BrandBox.Text))
+                    throw new ArgumentException("Brand is required");
+
+                if (!float.TryParse(AlcoholBox.Text, out var alcoholContent) || alcoholContent < 0 || alcoholContent > 100)
+                    throw new ArgumentException("Valid alcohol content (0-100%) is required");
+
+                if (_selectedCategoryNames.Count == 0)
+                    throw new ArgumentException("At least one category must be selected");
+
+                // Set drink fields
+                DrinkToUpdate.Brand = ResolveBrand(BrandBox.Text);
+                DrinkToUpdate.DrinkName = NameBox.Text;
+                DrinkToUpdate.DrinkURL = ImageUrlBox.Text;
+                DrinkToUpdate.AlcoholContent = alcoholContent;
+
+                // Map selected category names to Category objects
+                DrinkToUpdate.Categories = _selectedCategoryNames
+                    .Select(name => _allCategoryObjects.First(c => c.Name == name))
+                    .ToList();
+
+                var adminService = new WinUIApp.Services.DummyServies.AdminService();
+                bool isAdmin = adminService.IsAdmin(UserId);
+
+                string message;
+
+                if (isAdmin)
                 {
-                    if (string.IsNullOrWhiteSpace(NameBox.Text))
-                    {
-                        throw new ArgumentException("Drink name is required");
-                    }
-
-                    if (string.IsNullOrWhiteSpace(BrandBox.Text))
-                    {
-                        throw new ArgumentException("Brand is required");
-                    }
-
-                    if (!float.TryParse(AlcoholBox.Text, out var alcoholContent) || alcoholContent < 0 || alcoholContent > 100)
-                    {
-                        throw new ArgumentException("Valid alcohol content (0-100%) is required");
-                    }
-
-                    if (_selectedCategoryNames.Count == 0)
-                    {
-                        throw new ArgumentException("At least one category must be selected");
-                    }
-
-                    DrinkToUpdate.Brand = ResolveBrand(BrandBox.Text);
-                    DrinkToUpdate.DrinkName = NameBox.Text;
-                    DrinkToUpdate.DrinkURL = ImageUrlBox.Text;
-
-                    if (float.TryParse(AlcoholBox.Text, out var alc))
-                        DrinkToUpdate.AlcoholContent = alc;
-
-                    DrinkToUpdate.Categories = _selectedCategoryNames
-                        .Select(name => new Category(1, name))
-                        .ToList();
-
-                    var adminService = new WinUIApp.Services.DummyServies.AdminService();
-                    bool isAdmin = adminService.IsAdmin(UserId);
-
-                    string message;
-
-                    if (isAdmin)
-                    {
-                        var service = new DrinkService();
-                        Debug.WriteLine("IMPORTANT Categories: " + string.Join(", ", DrinkToUpdate.Categories.Select(c => c.Name)));
-                        service.updateDrink(DrinkToUpdate);
-                        var testDrink = service.getDrinks(null, null, null, null, null, null)[0];
-                        Debug.WriteLine("IMPORTANT Categories: " + string.Join(", ", DrinkToUpdate.Categories.Select(c => c.Name)));
-                        message = "Drink updated successfully.";
-                    }
-                    else
-                    {
-                        message = "A request was sent to the admin.";
-                        adminService.SendNotification(
-                            senderUserID: UserId,
-                            title: "Drink Update Request",
-                            description: $"User requested to update drink: {DrinkToUpdate.DrinkName}"
-                        );
-                    }
-
-                    var dialog = new ContentDialog
-                    {
-                        Title = "Success",
-                        Content = message,
-                        CloseButtonText = "OK",
-                        XamlRoot = this.XamlRoot
-                    };
-                    _ = dialog.ShowAsync();
+                    var service = new DrinkService();
+                    service.updateDrink(DrinkToUpdate);
+                    var testDrink = service.getDrinks(null, null, null, null, null, null)[0];
+                    message = "Drink updated successfully.";
                 }
-                catch (Exception ex)
+                else
                 {
-                    var dialog = new ContentDialog
-                    {
-                        Title = "Error",
-                        Content = ex.Message,
-                        CloseButtonText = "OK",
-                        XamlRoot = this.XamlRoot
-                    };
-                    _ = dialog.ShowAsync();
+                    message = "A request was sent to the admin.";
+                    adminService.SendNotification(
+                        senderUserID: UserId,
+                        title: "Drink Update Request",
+                        description: $"User requested to update drink: {DrinkToUpdate.DrinkName}"
+                    );
                 }
+
+                // Success dialog
+                var dialog = new ContentDialog
+                {
+                    Title = "Success",
+                    Content = message,
+                    CloseButtonText = "OK",
+                    XamlRoot = this.XamlRoot
+                };
+                _ = dialog.ShowAsync();
+            }
+            catch (Exception ex)
+            {
+                // Error dialog
+                var dialog = new ContentDialog
+                {
+                    Title = "Error",
+                    Content = ex.Message,
+                    CloseButtonText = "OK",
+                    XamlRoot = this.XamlRoot
+                };
+                _ = dialog.ShowAsync();
             }
         }
 

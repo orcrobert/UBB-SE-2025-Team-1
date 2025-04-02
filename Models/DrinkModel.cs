@@ -216,7 +216,7 @@ namespace WinUIApp.Models
         public void updateDrink(Drink drink)
         {
             var dbService = DatabaseService.Instance;
-
+         
             try
             {
                 string brandIdQuery = @"SELECT BrandId FROM Brand 

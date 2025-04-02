@@ -14,16 +14,16 @@ namespace WinUIApp.Views.Components
     {
         public int UserId { get; set; }
 
-        private readonly List<string> _allCategories = new()
-        {
-            "Beer", "Wine", "Whiskey", "Vodka", "Cocktail", "Juice", "Cider", "Soft Drink"
-        };
+        private readonly List<string> _allCategories = new();
+        
 
         private readonly HashSet<string> _selectedCategoryNames = new();
 
         public AddDrinkFlyout()
         {
             this.InitializeComponent();
+            var service = new DrinkService();
+            _allCategories = service.getDrinkCategories().Select(c => c.Name).ToList();
 
             CategoryList.ItemsSource = new List<string>(_allCategories);
             CategoryList.SelectionMode = ListViewSelectionMode.Multiple;

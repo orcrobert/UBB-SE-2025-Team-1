@@ -98,6 +98,18 @@ namespace WinUIApp.Services
             }
         }
 
+        public bool isDrinkInPersonalList(int userId, int drinkId)
+        {
+            try
+            {
+                return drinkModel.isDrinkInPersonalList(userId, drinkId);
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Error adding drink to personal list:", e);
+            }
+        }
+
         public bool addToPersonalDrinkList(int userId, int drinkId)
         {
             try

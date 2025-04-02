@@ -396,6 +396,35 @@ namespace WinUIApp.Models
             }
         }
 
+        public bool isDrinkInPersonalList(int userId, int drinkId)
+        {
+            var dbService = DatabaseService.Instance;
+
+            try
+            {
+                string checkQuery = "SELECT COUNT(*) FROM UserDrink WHERE UserId = @UserId AND DrinkId = @DrinkId;";
+
+                List<MySqlParameter> parameters = new List<MySqlParameter>
+                {
+                    new MySqlParameter("@UserId", MySqlDbType.Int32) { Value = userId },
+                    new MySqlParameter("@DrinkId", MySqlDbType.Int32) { Value = drinkId }
+                };
+
+                var result = dbService.ExecuteSelect(checkQuery, parameters);
+
+                if (result != null && Convert.ToInt64(result) > 0)
+                {
+                    return true;
+                }
+                return false;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Database error checking if drink is in personal list: {ex.Message}");
+                return false;
+            }
+        }
+
         public bool addToPersonalDrinkList(int userId, int drinkId)
         {
             var dbService = DatabaseService.Instance;

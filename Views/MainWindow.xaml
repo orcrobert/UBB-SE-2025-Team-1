@@ -26,6 +26,7 @@
         <TextBlock x:Name="testModelsTextBlock"></TextBlock>
     </StackPanel>-->
     <Grid>
-        <Frame x:Name="MainFrame"/>
+        <components:AddRemoveFromDrinkListButton UserId="1" DrinkId="1" />
+        <!--<Frame x:Name="MainFrame"/>-->
     </Grid>
 </Window>

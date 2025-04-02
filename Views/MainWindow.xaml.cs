@@ -4,7 +4,7 @@ using Microsoft.UI.Xaml;
 using System;
 using WinUIApp.Services;
 using WinUIApp.Services.DummyServies;
-using WinUIApp.Views.ModelViews;
+using WinUIApp.ViewModels;
 using WinUIApp.Views.Pages;
 
 namespace WinUIApp.Views
@@ -17,8 +17,10 @@ namespace WinUIApp.Views
             SetFixedSize(1440, 900);
             DrinkService drinkService = new DrinkService();
             ReviewService reviewService = new ReviewService();
-            SearchPageViewModel searchPageViewModel = new SearchPageViewModel(MainFrame, drinkService, reviewService);
-            MainFrame.Navigate(typeof(SearchPage), searchPageViewModel);
+            UserService userService = new UserService();
+            MainPageViewModel mainPageViewModel = new MainPageViewModel();
+            MainPage mainPage = new MainPage();
+            this.Content = mainPage;
         }
 
         private void SetFixedSize(int width, int height)

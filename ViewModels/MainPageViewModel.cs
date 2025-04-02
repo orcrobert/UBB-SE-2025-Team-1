@@ -13,12 +13,15 @@ namespace WinUIApp.ViewModels
 {
     class MainPageViewModel 
     {
-        private DrinkService _drinkService = new DrinkService();
-        private UserService _userService = new UserService();
+        private DrinkService _drinkService;
+        private UserService _userService;
 
         public MainPageViewModel()
         {
-            LoadDrinkData();
+            _drinkService = new DrinkService();
+            _userService = new UserService();
+            LoadDrinkOfTheDayData();
+            LoadPersonalDrinkListData();
         }
 
         private string _imageSource;
@@ -70,7 +73,7 @@ namespace WinUIApp.ViewModels
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        public void LoadDrinkData()
+        public void LoadDrinkOfTheDayData()
         {
             var drink =  _drinkService.getDrinkOfTheDay();
 
@@ -84,6 +87,14 @@ namespace WinUIApp.ViewModels
         public int getFrinkOfTheDayId()
         {
             return _drinkService.getDrinkOfTheDay().Id;
+        }
+
+        public List<Drink> PersonalDrinks { get; set; } = new List<Drink>();
+
+        private void LoadPersonalDrinkListData()
+        {
+            int userId = _userService.GetCurrentUserID();
+            PersonalDrinks = _drinkService.getPersonalDrinkList(userId, 5);
         }
 
     }

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="WinUIApp.Views.Pages.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:WinUIApp.Views.Components"
+    xmlns:viewModels="using:WinUIApp.ViewModels"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Page.DataContext>
+        <viewModels:MainPageViewModel/>
+    </Page.DataContext>
+
+    <StackPanel x:Name="mainPanel" Orientation="Vertical" Spacing="30">
+        <local:DrinkOfTheDayComponent/>
+        <TextBlock Text="Your Favorite Drinks" 
+                   Style="{StaticResource HeaderTextBlockStyle}"
+                   Margin="20,0,0,0"/>
+
+        <local:DrinkListComponent Drinks="{Binding PersonalDrinks}"/>
+    </StackPanel>
+</Page>

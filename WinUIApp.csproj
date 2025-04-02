@@ -20,6 +20,7 @@
     <None Remove="Views\Components\DrinkComponent.xaml" />
     <None Remove="Views\Components\DrinkListComponent.xaml" />
     <None Remove="Views\Pages\DrinkDetailPage.xaml" />
+    <None Remove="Views\Pages\DrinkListTestPage.xaml" />
   </ItemGroup>
   <ItemGroup>
     <Page Remove="GlobalStyles.xaml" />
@@ -61,6 +62,9 @@
     <None Update="Styles\GlobalStyles.xaml">
       <Generator>MSBuild:Compile</Generator>
     </None>
+    <Page Update="Views\Pages\DrinkListTestPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Update="Views\Components\AddRemoveFromDrinkListButton.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>

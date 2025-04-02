@@ -26,7 +26,16 @@
         <TextBlock x:Name="testModelsTextBlock"></TextBlock>
     </StackPanel>-->
     <Grid>
-        <components:AddRemoveFromDrinkListButton DrinkId="1" />
-        <components:DrinkListComponent ViewModel="{x:Bind ViewModel}" />
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Orientation="Horizontal" Spacing="10" Padding="10">
+            <Button Content="Go to Drink List Test" Click="GoToDrinkListTest_Click"/>
+            <components:AddRemoveFromDrinkListButton DrinkId="1" />
+        </StackPanel>
+
+        <Frame x:Name="MainFrame" Grid.Row="1"/>
     </Grid>
 </Window>

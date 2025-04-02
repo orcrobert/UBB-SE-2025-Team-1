@@ -25,7 +25,8 @@
 
         <TextBlock x:Name="testModelsTextBlock"></TextBlock>
     </StackPanel>-->
-    <Grid>
-        <Frame x:Name="MainFrame"/>
-    </Grid>
+    <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="10">
+        <components:DrinkListComponent></components:DrinkListComponent>
+        <!--<Frame x:Name="MainFrame"/>-->
+    </StackPanel>
 </Window>

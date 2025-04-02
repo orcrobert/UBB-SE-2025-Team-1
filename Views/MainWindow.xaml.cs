@@ -14,21 +14,20 @@ namespace WinUIApp.Views
         public MainWindow()
         {
             this.InitializeComponent();
-            SetFixedSize(1440, 900);
-            DrinkService drinkService = new DrinkService();
-            ReviewService reviewService = new ReviewService();
-            SearchPageViewModel searchPageViewModel = new SearchPageViewModel(MainFrame, drinkService, reviewService);
-            MainFrame.Navigate(typeof(SearchPage), searchPageViewModel);
+            //SetFixedSize(1440, 900);
+            //DrinkService drinkService = new DrinkService();
+            //ReviewService reviewService = new ReviewService();
+            ////SearchPageViewModel searchPageViewModel = new SearchPageViewModel(MainFrame, drinkService, reviewService);
+            ////MainFrame.Navigate(typeof(SearchPage), searchPageViewModel);
         }
 
-        private void SetFixedSize(int width, int height)
-        {
-            IntPtr hWnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
-            var windowId = Win32Interop.GetWindowIdFromWindow(hWnd);
-            var appWindow = AppWindow.GetFromWindowId(windowId);
+        //private void SetFixedSize(int width, int height)
+        //{
+        //    IntPtr hWnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
+        //    var windowId = Win32Interop.GetWindowIdFromWindow(hWnd);
+        //    var appWindow = AppWindow.GetFromWindowId(windowId);
 
-            appWindow.Resize(new Windows.Graphics.SizeInt32(width, height));
-        }
-
+        //    appWindow.Resize(new Windows.Graphics.SizeInt32(width, height));
+        //}
     }
 }

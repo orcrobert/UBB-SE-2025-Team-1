@@ -13,6 +13,17 @@ namespace WinUIApp.Services
             drinkModel = new DrinkModel();
         }
 
+        public Drink? getDrinkById(int drinkId)
+        {
+            try
+            {
+                return drinkModel.getDrinkById(drinkId);
+            }
+            catch (Exception e)
+            {
+                throw new Exception($"Error happened while getting drink with ID {drinkId}:", e);
+            }
+        }
         public List<Drink> getDrinks(string? searchedTerm, List<string>? brandNameFilter, List<string>? categoryFilter, float? minAlcohol, float? maxAlcohol, Dictionary<string, bool>? orderBy)
         {
             try

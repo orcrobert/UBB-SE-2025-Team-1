@@ -27,6 +27,6 @@
     </StackPanel>-->
     <Grid>
         <components:AddRemoveFromDrinkListButton DrinkId="1" />
-        <!--<Frame x:Name="MainFrame"/>-->
+        <components:DrinkListComponent ViewModel="{x:Bind ViewModel}" />
     </Grid>
 </Window>

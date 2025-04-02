@@ -7,15 +7,11 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:headerComponents="using:WinUIApp.Views.Components.HeaderComponents"
+    xmlns:components="using:WinUIApp.Views.Components"
     mc:Ignorable="d"
     Title="WinUIApp">
     <StackPanel>
         <headerComponents:Header/>
         <Frame x:Name="MainFrame"/>
-<<<<<<< feat/Add-Drink-Button-ARISSSS
-        <components:AddDrinkButton HorizontalAlignment="Center" VerticalAlignment="Center"/>
-    </Grid>
-=======
     </StackPanel>
->>>>>>> main
 </Window>

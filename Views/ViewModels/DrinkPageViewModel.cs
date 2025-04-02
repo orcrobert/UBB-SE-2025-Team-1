@@ -116,7 +116,6 @@ namespace WinUIApp.Views.ViewModels
             catch (Exception ex)
             {
                 Debug.WriteLine($"DrinkPageViewModel: Error checking drink list: {ex.Message}");
-                // Optionally handle the error (e.g., set a default button state)
             }
         }
 
@@ -144,7 +143,6 @@ namespace WinUIApp.Views.ViewModels
                     else
                     {
                         Debug.WriteLine($"DrinkPageViewModel: Failed to remove Drink {DrinkId}");
-                        // Optionally handle failure
                     }
                 }
                 else
@@ -159,7 +157,6 @@ namespace WinUIApp.Views.ViewModels
                     else
                     {
                         Debug.WriteLine($"DrinkPageViewModel: Failed to add Drink {DrinkId}");
-                        // Optionally handle failure
                     }
                 }
                 UpdateButtonText();
@@ -167,7 +164,6 @@ namespace WinUIApp.Views.ViewModels
             catch (Exception ex)
             {
                 Debug.WriteLine($"DrinkPageViewModel: Error updating drink list: {ex.Message}");
-                // Optionally handle the error
             }
         }
 

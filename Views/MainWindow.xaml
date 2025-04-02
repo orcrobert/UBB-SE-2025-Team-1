@@ -25,8 +25,9 @@
 
         <TextBlock x:Name="testModelsTextBlock"></TextBlock>
     </StackPanel>-->
-    <Grid>
+    <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="10">
+        <TextBlock>TETSTSETESTSETSTSETSETSETSETSETSETSETSET</TextBlock>
         <components:AddRemoveFromDrinkListButton DrinkId="1" />
         <components:DrinkListComponent ViewModel="{x:Bind ViewModel}" />
-    </Grid>
+    </StackPanel>
 </Window>

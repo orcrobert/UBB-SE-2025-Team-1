@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using WinUIApp.Models;
 using WinUIApp.Services;
@@ -25,6 +24,9 @@ namespace WinUIApp.ViewModels
         private float? _maxAlcoholFilter;
         private float? _minRating;
         private string? _searchedTerms;
+
+        public List<Category> InitialCategories { get; set; }
+
 
         public bool IsAscending
         {
@@ -160,6 +162,17 @@ namespace WinUIApp.ViewModels
             _categoryFilter = categoryFilter;
         }
 
+        public void SetInitialCategoryFilter(List<Category> initialCategoties)
+        {
+            InitialCategories = initialCategoties;
+            List<string> categories = new List<string>();
+            foreach (Category category in InitialCategories)
+            {
+                categories.Add(category.Name);
+            }
+            SetCategoryFilter(categories);
+        }
+
         public void SetBrandFilter(List<string> brandFilter)
         {
             _brandFilter = brandFilter;
@@ -178,7 +191,6 @@ namespace WinUIApp.ViewModels
         public void SetMinRatingFilter(float minRatingFilter)
         {
             _minRating = minRatingFilter;
-            Debug.WriteLine(_minRating);
         }
 
         public void SetSearchedTerms(string searchedTerms)

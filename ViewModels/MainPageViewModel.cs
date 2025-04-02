@@ -16,10 +16,10 @@ namespace WinUIApp.ViewModels
         private DrinkService _drinkService;
         private UserService _userService;
 
-        public MainPageViewModel()
+        public MainPageViewModel(DrinkService drinkService, UserService userService)
         {
-            _drinkService = new DrinkService();
-            _userService = new UserService();
+            _drinkService = drinkService;
+            _userService = userService;
             LoadDrinkOfTheDayData();
             LoadPersonalDrinkListData();
         }

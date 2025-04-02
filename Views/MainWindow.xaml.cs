@@ -22,7 +22,6 @@ namespace WinUIApp.Views
             DrinkService drinkService = new DrinkService();
             ReviewService reviewService = new ReviewService();
             UserService userService = new UserService();
-            MainPageViewModel mainPageViewModel = new MainPageViewModel();
             MainPage mainPage = new MainPage();
 
             MainFrame.Navigate(typeof(MainPage));

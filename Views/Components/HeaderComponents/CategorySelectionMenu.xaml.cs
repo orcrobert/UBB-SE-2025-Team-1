@@ -13,22 +13,35 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using WinUIApp.Models;
+using System.Collections.ObjectModel;
 
 namespace WinUIApp.Views.Components.HeaderComponents
 {
     public sealed partial class CategorySelectionMenu : UserControl
     {
-        public List<Category> Categories { get; set; }
+
+        private List<Category> _originalCategories;
+        public ObservableCollection<Category> CurrentCategories { get; set; }
 
         public CategorySelectionMenu()
         {
             this.InitializeComponent();
-            populateCategories();
+            PopulateCategories(new List<Category> {new Category(1, "abc"), new Category(1, "def"), new Category(1, "abc"), new Category(1, "ABc") });
         }
 
-        private void populateCategories()
+        public void PopulateCategories(List<Category> categories)
         {
-            Categories = new List<Category> { new Category (1, "abc") };
+            _originalCategories = categories;
+            CurrentCategories = new ObservableCollection<Category>(categories);
+        }
+
+        private void CategorySearchBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            string query = CategorySearchBox.Text.ToLower();
+            List<Category> filteredCategories = _originalCategories.Where(category => category.Name.ToLower().Contains(query)).ToList();
+            CurrentCategories.Clear();
+            foreach (Category category in filteredCategories)
+                CurrentCategories.Add(category);
         }
     }
 }

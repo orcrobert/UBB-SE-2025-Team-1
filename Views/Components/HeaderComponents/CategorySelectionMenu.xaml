@@ -10,10 +10,10 @@
     mc:Ignorable="d">
 
     <StackPanel Margin="10 0 10 0">
-        <TextBox x:Name="CategorySearchBox" PlaceholderText="Search categories..." />
+        <TextBox x:Name="CategorySearchBox" PlaceholderText="Search categories..." TextChanged="CategorySearchBox_TextChanged"/>
         <ListView x:Name="CategoryList"
                   SelectionMode="Multiple"
-                  ItemsSource="{x:Bind Categories}"
+                  ItemsSource="{x:Bind CurrentCategories}"
                   Height="120">
             <ListView.ItemTemplate>
                 <DataTemplate x:DataType="models:Category">

@@ -14,7 +14,7 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using WinUIApp.Models;
 
-namespace WinUIApp.Views.Components.SharedComponents
+namespace WinUIApp.Views.Components.HeaderComponents
 {
     public sealed partial class CategorySelectionMenu : UserControl
     {

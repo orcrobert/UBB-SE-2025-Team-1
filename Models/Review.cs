@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace WinUIApp.Models
 {
-    class Review
+    public class Review
     {
         private int _drinkID;
         private float _score;

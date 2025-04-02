@@ -3,7 +3,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using System.Collections.Generic;
 using WinUIApp.Models;
-using WinUIApp.Utils;
+using WinUIApp.Utils.NavigationParameters;
 using WinUIApp.Views.Components.SearchPageComponents;
 using WinUIApp.Views.ModelViews;
 
@@ -23,16 +23,15 @@ namespace WinUIApp.Views.Pages
             base.OnNavigatedTo(e);
             _searchPageViewModel = new SearchPageViewModel(new Services.DrinkService(), new Services.DummyServies.ReviewService());
             SortSelectorControl.SetSortOrder(_searchPageViewModel.IsAscending);
-            /// trebuie facuta clasa wrapper
             if (e.Parameter is SearchPageNavigationParameters parameters)
             {
                 if (parameters.InitialCategories != null)
                 {
-                    _searchPageViewModel.SetCategoryFilter(parameters.InitialCategories);
+                    _searchPageViewModel.SetInitialCategoryFilter(parameters.InitialCategories);
                 }
-                if (parameters.SearchedTerm != null)
+                if (parameters.SearchedTerms != null)
                 {
-                    _searchPageViewModel.SetSearchedTerms(parameters.SearchedTerm);
+                    _searchPageViewModel.SetSearchedTerms(parameters.SearchedTerms);
                 }
             }
             LoadDrinks();
@@ -88,12 +87,18 @@ namespace WinUIApp.Views.Pages
         private void LoadCategoriesFilter()
         {
             IEnumerable<Category> categories = _searchPageViewModel.GetCategories();
-            CategoryFilterControl.SetCategoriesFilter(categories);
+            IEnumerable<Category> initialCategories = getInitialCategories();
+            CategoryFilterControl.SetCategoriesFilter(categories, initialCategories);
         }
 
         private void CategoryFilterControl_CategoryChanged(object sender, List<string> categories)
         {
             _searchPageViewModel.SetCategoryFilter(categories);
+        }
+
+        private List<Category> getInitialCategories()
+        {
+            return _searchPageViewModel.InitialCategories;
         }
 
         // Brand filter

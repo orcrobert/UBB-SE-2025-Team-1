@@ -10,6 +10,7 @@
     mc:Ignorable="d"
     Title="WinUIApp">
 
+
     <StackPanel>
         <headerComponents:Header/>
         <Frame x:Name="MainFrame"/>

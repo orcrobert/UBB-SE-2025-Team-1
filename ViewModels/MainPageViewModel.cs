@@ -81,6 +81,11 @@ namespace WinUIApp.ViewModels
             AlcoholContent = drink.AlcoholContent;
         }
 
+        public int getFrinkOfTheDayId()
+        {
+            return _drinkService.getDrinkOfTheDay().Id;
+        }
+
     }
     
     

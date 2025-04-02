@@ -3,7 +3,10 @@ using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System;
-
+using WinUIApp.Services;
+using WinUIApp.ViewModels;
+using WinUIApp.Views.Pages;
+using WinUIApp.Services.DummyServies;
 namespace WinUIApp.Views
 {
     public sealed partial class MainWindow : Window
@@ -17,13 +20,15 @@ namespace WinUIApp.Views
             AppMainFrame = MainFrame;
 
             //navigation to main page
-            //MainFrame.Navigate();
+            
             DrinkService drinkService = new DrinkService();
             ReviewService reviewService = new ReviewService();
             UserService userService = new UserService();
             MainPageViewModel mainPageViewModel = new MainPageViewModel();
             MainPage mainPage = new MainPage();
-            this.Content = mainPage;
+
+            // With this line
+            MainFrame.Navigate(typeof(MainPage));
         }
 
         private void SetFixedSize(int width, int height)

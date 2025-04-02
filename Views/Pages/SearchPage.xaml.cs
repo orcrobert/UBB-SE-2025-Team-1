@@ -42,6 +42,7 @@ namespace WinUIApp.Views.Pages
             _searchPageViewModel.ClearFilters();
             CategoryFilterControl.ClearSelection();
             BrandFilterControl.ClearSelection();
+            AlcoholContentFilterControl.ResetSliders();
             LoadDrinks();
         }
 
@@ -96,6 +97,20 @@ namespace WinUIApp.Views.Pages
         private void BrandFilterControl_BrandChanged(object sender, List<string> brands)
         {
             _searchPageViewModel.SetBrandFilter(brands);
+        }
+
+        // Alcohol filter
+
+        private void AlcoholContentFilterControl_MinimumAlcoholContentChanged(object sender, double minimumAlcoholContent)
+        {
+            float minAlcoholContent = (float)minimumAlcoholContent;
+            _searchPageViewModel.SetMinAlcoholFilter(minAlcoholContent);
+        }
+
+        private void AlcoholContentFilterControl_MaximumAlcoholContentChanged(object sender, double maximumAlcoholContent)
+        {
+            float maxAlcoholContent = (float)maximumAlcoholContent;
+            _searchPageViewModel.SetMaxAlcoholFilter(maxAlcoholContent);
         }
     }
 }

@@ -21,6 +21,8 @@ namespace WinUIApp.Views.ModelViews
 
         private List<string>? _categoryFilter;
         private List<string>? _brandFilter;
+        private float? _minAlcoholFilter;
+        private float? _maxAlcoholFilter;
 
         public bool IsAscending
         {
@@ -33,11 +35,6 @@ namespace WinUIApp.Views.ModelViews
             get => _sortByField;
             set => _sortByField = value;
         }
-
-        /*
-         * TO DO
-         * implement methods
-        */
 
         public ReviewService ReviewService
         {
@@ -54,6 +51,8 @@ namespace WinUIApp.Views.ModelViews
         {
             _categoryFilter = null;
             _brandFilter = null;
+            _minAlcoholFilter = null;
+            _maxAlcoholFilter = null;
             //add all filters
         }
 
@@ -77,8 +76,8 @@ namespace WinUIApp.Views.ModelViews
                     searchedTerm: null,
                     brandNameFilter: _brandFilter,
                     categoryFilter: _categoryFilter,
-                    minAlcohol: null,
-                    maxAlcohol: null,
+                    minAlcohol: _minAlcoholFilter,
+                    maxAlcohol: _maxAlcoholFilter,
                     orderBy: orderBy
                 );
 
@@ -96,8 +95,8 @@ namespace WinUIApp.Views.ModelViews
                     searchedTerm: null,
                     brandNameFilter: _brandFilter,
                     categoryFilter: _categoryFilter,
-                    minAlcohol: null,
-                    maxAlcohol: null,
+                    minAlcohol: _minAlcoholFilter,
+                    maxAlcohol: _maxAlcoholFilter,
                     orderBy: null
                 );
 
@@ -155,6 +154,16 @@ namespace WinUIApp.Views.ModelViews
         public void SetBrandFilter(List<string> brandFilter)
         {
             _brandFilter = brandFilter;
+        }
+
+        public void SetMinAlcoholFilter(float minAlcoholFilter)
+        {
+            _minAlcoholFilter = minAlcoholFilter;
+        }
+
+        public void SetMaxAlcoholFilter(float maxAlcoholFilter)
+        {
+            _maxAlcoholFilter = maxAlcoholFilter;
         }
 
     }

@@ -38,7 +38,7 @@ namespace WinUIApp.Views.ViewModels
             _selectedCategoryNames = new HashSet<string>();
             ButtonText = "Add Drink";
             LoadCategories();
-            SaveDrinkCommand = new RelayCommand(async () => await SaveDrinkAsync());
+            //SaveDrinkCommand = new RelayCommand(async () => await SaveDrinkAsync()); ignore this shi
         }
 
         public int UserId

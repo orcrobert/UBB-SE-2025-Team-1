@@ -84,7 +84,7 @@ namespace WinUIApp.ViewModels
             AlcoholContent = drink.AlcoholContent;
         }
 
-        public int getFrinkOfTheDayId()
+        public int getDrinkOfTheDayId()
         {
             return _drinkService.getDrinkOfTheDay().Id;
         }
@@ -96,6 +96,8 @@ namespace WinUIApp.ViewModels
             int userId = _userService.GetCurrentUserID();
             PersonalDrinks = _drinkService.getPersonalDrinkList(userId, 5);
         }
+
+
 
     }
     

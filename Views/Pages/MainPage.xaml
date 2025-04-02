@@ -27,7 +27,7 @@
         <ScrollViewer VerticalScrollBarVisibility="Auto"
                   VerticalScrollMode="Enabled">
             <StackPanel Orientation="Vertical" Spacing="30">
-                <local:DrinkOfTheDayComponent/>
+                <local:DrinkOfTheDayComponent Tapped="DrinkOfTheDayComponent_Tapped"/>
                 <TextBlock Text="Your Favorite Drinks" 
                        Style="{StaticResource HeaderTextBlockStyle}"/>
                 <local:DrinkListComponent Drinks="{Binding PersonalDrinks}"/>

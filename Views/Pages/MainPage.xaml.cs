@@ -8,10 +8,20 @@ namespace WinUIApp.Views.Pages
 {
     public sealed partial class MainPage : Page
     {
+        MainPageViewModel _viewModel;
         public MainPage()
         {
             this.InitializeComponent();
+            _viewModel = new MainPageViewModel();
+        
         }
+
+        private void DrinkOfTheDayComponent_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            MainWindow.AppMainFrame.Navigate(typeof(DrinkDetailPage), _viewModel.getDrinkOfTheDayId());
+        }
+
+
 
     }
 }

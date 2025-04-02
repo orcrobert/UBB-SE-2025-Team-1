@@ -10,14 +10,14 @@
     xmlns:converters="using:WinUIApp.Utils.Converters"
     >
 
-    <Grid CornerRadius="12" Padding="12" Background="{StaticResource MediumDarkGray}" Width="800" Height="600">
+    <Grid CornerRadius="12" Padding="12" Background="{StaticResource MediumDarkGray}" Width="800" Height="600" Margin="25,0,0,0">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
         <!--Title-->
-        <TextBlock Text="Drink of the Day" Foreground="White" FontWeight="Bold" Grid.Row="0" FontSize="22" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        <TextBlock Text="Drink of the Day" Foreground="White" FontWeight="Bold" Grid.Row="0" FontSize="26" HorizontalAlignment="Left" VerticalAlignment="Center"/>
 
         <!-- Image container with overlay -->
         <Grid Grid.Row="1" CornerRadius="12">

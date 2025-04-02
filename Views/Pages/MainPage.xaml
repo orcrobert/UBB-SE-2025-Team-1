@@ -10,28 +10,35 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <!-- <Page.DataContext>
-        <viewModels:MainPageViewModel/>
-    </Page.DataContext>-->
-
-    <!-- Make ScrollViewer the root content container -->
+    <!-- Single ScrollViewer as root container -->
     <ScrollViewer VerticalScrollBarVisibility="Auto"
                   VerticalScrollMode="Enabled"
                   HorizontalScrollBarVisibility="Disabled"
-                  HorizontalScrollMode="Disabled"
-                  ZoomMode="Disabled"
-                  Padding="0,0,0,20">
-        <!-- Add bottom padding -->
+                  Padding="0,0,0,20"
+                  ZoomMode="Disabled">
 
-        <ScrollViewer VerticalScrollBarVisibility="Auto"
-                  VerticalScrollMode="Enabled">
-            <StackPanel Orientation="Vertical" Spacing="30">
+        <!-- Main content container -->
+        <StackPanel Orientation="Vertical" Spacing="30" Margin="20,0">
+
+            <!-- Drink of the Day Section -->
+            <Border CornerRadius="8" Padding="0,0,0,10">
                 <local:DrinkOfTheDayComponent Tapped="DrinkOfTheDayComponent_Tapped"/>
-                <TextBlock Text="Your Favorite Drinks" 
-                       Style="{StaticResource HeaderTextBlockStyle}"/>
-                <local:DrinkListComponent Drinks="{Binding PersonalDrinks}"/>
+            </Border>
 
-            </StackPanel>
-        </ScrollViewer>
+            <!-- Favorite Drinks Header -->
+            <TextBlock Text="Your Favorite Drinks" 
+                       Style="{StaticResource HeaderTextBlockStyle}"
+                       Margin="0,10,0,15"/>
+
+            <!-- Drink List Component -->
+            <Border CornerRadius="8" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                    Padding="15" BorderThickness="1"
+                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}">
+                <local:DrinkListComponent Drinks="{Binding PersonalDrinks}"/>
+            </Border>
+
+            <!-- Optional: Add some bottom spacing -->
+            <Border Height="20"/>
+        </StackPanel>
     </ScrollViewer>
 </Page>

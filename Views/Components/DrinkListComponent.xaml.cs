@@ -5,35 +5,28 @@ using Microsoft.UI.Xaml.Controls;
 using WinUIApp.Models;
 using WinUIApp.Services;
 using WinUIApp.Services.DummyServies;
+using WinUIApp.Views.ViewModels;
 
 namespace WinUIApp.Views.Components
 {
     public sealed partial class DrinkListComponent : UserControl
     {
-        public ObservableCollection<Drink> DrinksList { get; set; } = new ObservableCollection<Drink>();
+        public static readonly DependencyProperty ViewModelProperty =
+            DependencyProperty.Register(
+                "ViewModel",
+                typeof(MainPageViewModel),
+                typeof(DrinkListComponent),
+                new PropertyMetadata(null));
 
-        private readonly DrinkService _drinkService = new DrinkService();
-        private readonly UserService _userService = new UserService();
+        public MainPageViewModel ViewModel
+        {
+            get => (MainPageViewModel)GetValue(ViewModelProperty);
+            set => SetValue(ViewModelProperty, value);
+        }
 
         public DrinkListComponent()
         {
             this.InitializeComponent();
-            LoadDrinks();
-        }
-
-        private void LoadDrinks()
-        {
-            var currentUserId = _userService.GetCurrentUserID();
-            Debug.WriteLine(currentUserId);
-            var drinks = _drinkService.getPersonalDrinkList(currentUserId, 5);
-
-            Debug.WriteLine($"Retrieved {drinks.Count} drinks from the database.");
-            DrinksList.Clear();
-            foreach (var drink in drinks)
-            {
-                Debug.WriteLine($"Adding drink: {drink.DrinkName}");
-                DrinksList.Add(drink);
-            }
         }
     }
 }

@@ -1,11 +1,13 @@
-﻿DROP TABLE Brand;
-DROP TABLE Category;
-DROP TABLE Drink;
-DROP TABLE DrinkCategory;
-DROP TABLE User;
-DROP TABLE Vote;
-DROP TABLE DrinkOfTheDay;
-DROP TABLE UserDrink;
+﻿SET SQL_SAFE_UPDATES = 0;
+
+DROP TABLE IF EXISTS DrinkOfTheDay;
+DROP TABLE IF EXISTS Vote;
+DROP TABLE IF EXISTS UserDrink;
+DROP TABLE IF EXISTS DrinkCategory;
+DROP TABLE IF EXISTS Drink;
+DROP TABLE IF EXISTS Category;
+DROP TABLE IF EXISTS Brand;
+DROP TABLE IF EXISTS User;
 
 CREATE TABLE Brand (
     BrandId INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
@@ -19,6 +21,8 @@ CREATE TABLE Category (
 
 CREATE TABLE Drink (
     DrinkId INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    DrinkURL VARCHAR(455),
+    DrinkName VARCHAR(255) NOT NULL,
     BrandId INT,
     AlcoholContent DECIMAL(5, 2) NOT NULL,
     FOREIGN KEY (BrandId) REFERENCES Brand(BrandId) ON DELETE SET NULL
@@ -47,7 +51,7 @@ CREATE TABLE Vote (
 
 CREATE TABLE DrinkOfTheDay (
     DrinkId INT PRIMARY KEY,
-    FOREIGN KEY (DrinkId) REFERENCES Drink(DrinkId),
+    FOREIGN KEY (DrinkId) REFERENCES Drink(DrinkId) ON DELETE CASCADE,
     DrinkTime DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -58,6 +62,8 @@ CREATE TABLE UserDrink (
     FOREIGN KEY (DrinkId) REFERENCES Drink(DrinkId) ON DELETE CASCADE
 );
 
+SELECT * FROM UserDrink;
+
 INSERT INTO Brand (BrandName) VALUES ("Ursugi");
 INSERT INTO Brand (BrandName) VALUES ("Bergenbir");
 INSERT INTO Brand (BrandName) VALUES ("Duvel");
@@ -67,9 +73,10 @@ INSERT INTO Category (CategoryName) VALUES ("IPA");
 INSERT INTO Category (CategoryName) VALUES ("Stout");
 INSERT INTO Category (CategoryName) VALUES ("Pilsner");
 
-INSERT INTO Drink (BrandId, AlcoholContent) VALUES (1, 5.0);
-INSERT INTO Drink (BrandId, AlcoholContent) VALUES (2, 7.2);
-INSERT INTO Drink (BrandId, AlcoholContent) VALUES (3, 8.5);
+INSERT INTO Drink (DrinkName, DrinkURL, BrandId, AlcoholContent) VALUES 
+("Ursugi IPA", "https://floradionline.ro/wp-content/uploads/2023/07/Bere-Ursus-IPA-0.33L-1000x1000-1.jpg", 1, 5.0),
+("Bergenbir Lager", "https://magazin.dorsanimpex.ro/userfiles/944eb0c7-a695-44f0-8596-1da751d9458e/products/66412365_big.jpg", 2, 7.2),
+("Duvel Belgian Strong", "https://vinulbun.ro/custom/imagini/produse/275036008_thb_1_5715_706096_bere-duvel-belgian-strong-blonde-0-33l.JPG", 3, 8.5);
 
 INSERT INTO DrinkCategory (DrinkId, CategoryId) VALUES (1, 1);
 INSERT INTO DrinkCategory (DrinkId, CategoryId) VALUES (2, 2);

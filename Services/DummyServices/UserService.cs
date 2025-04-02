@@ -8,7 +8,7 @@ namespace WinUIApp.Services.DummyServies
 {
     class UserService
     {
-        private int currentUserID = 1;
+        private int currentUserID = 1000;
 
         public int GetCurrentUserID()
         {

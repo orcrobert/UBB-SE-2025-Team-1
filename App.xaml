@@ -3,16 +3,23 @@
     x:Class="WinUIApp.App"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:WinUIApp">
+    xmlns:local="using:WinUIApp"
+    xmlns:converters="using:WinUIApp.Utils.Converters"
+    >
+
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls" />
                 <ResourceDictionary Source="Styles/GlobalStyles.xaml"/>
-                
                 <!-- Other merged dictionaries here -->
             </ResourceDictionary.MergedDictionaries>
             <!-- Other app resources here -->
+            <converters:ImageUrlConverter x:Key="ImageUrlConverter"/>
+            <converters:CategoriesConverter x:Key="CategoriesConverter"/>
+            <converters:AlcoholContentConverter x:Key="AlcoholContentConverter"/>
+            <converters:ReviewScoreConverter x:Key="ReviewContentConverter"/>
+            
         </ResourceDictionary>
     </Application.Resources>
 </Application>

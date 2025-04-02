@@ -10,18 +10,22 @@
     mc:Ignorable="d">
 
     <Grid Height="60">
-        <TextBlock x:Name="Logo"
-                   Text="DrinkMDb"
-                   Margin="30 0 0 0"
-                   VerticalAlignment="Center"
-                   HorizontalAlignment="Left"/>
+        <Button x:Name="Logo"
+                Content="DrinkMDb"
+                Click="Logo_Click"
+                Background="Transparent"
+                BorderThickness="0"
+                Padding="0"
+                Margin="30 0 0 0"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center"/>
         <StackPanel Orientation="Horizontal"
                     VerticalAlignment="Center"
                     HorizontalAlignment="Center">
             <Button x:Name="OpenCategorySelectionMenuButton">
                 <Button.Flyout >
                     <Flyout Placement="Bottom">
-                        <components:CategorySelectionMenu/>
+                        <components:CategorySelectionMenu x:Name="CategoryMenu"/>
                     </Flyout>
                 </Button.Flyout>
                 <Grid Width="120">
@@ -37,7 +41,8 @@
             <TextBox x:Name="DrinkSearchBox" 
                      PlaceholderText="Search drinks..."
                      Width="300"/>
-            <Button x:Name="SearchDrinksButton">
+            <Button x:Name="SearchDrinksButton"
+                    Click="SearchDrinksButton_Click">
                 <SymbolIcon Symbol="Find"/>
             </Button>
         </StackPanel>

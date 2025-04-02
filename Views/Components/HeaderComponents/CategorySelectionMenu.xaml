@@ -13,6 +13,7 @@
         <TextBox x:Name="CategorySearchBox" PlaceholderText="Search categories..." TextChanged="CategorySearchBox_TextChanged"/>
         <ListView x:Name="CategoryList"
                   SelectionMode="Multiple"
+                  SelectionChanged="CategoryList_SelectionChanged"
                   ItemsSource="{x:Bind CurrentCategories}"
                   Height="120">
             <ListView.ItemTemplate>

@@ -20,13 +20,13 @@ namespace WinUIApp.Views.Components.HeaderComponents
     public sealed partial class CategorySelectionMenu : UserControl
     {
 
-        private List<Category> _originalCategories=new List<Category>();
+        private List<Category> _originalCategories = new List<Category>();
+        private HashSet<Category> _selectedCategories = new HashSet<Category>();
         public ObservableCollection<Category> CurrentCategories { get; set; } = new ObservableCollection<Category>();
 
         public CategorySelectionMenu()
         {
             this.InitializeComponent();
-            //PopulateCategories(new List<Category> {new Category(1, "abc"), new Category(1, "def"), new Category(1, "abc"), new Category(1, "ABc") });
         }
 
         public void PopulateCategories(List<Category> categories)
@@ -35,13 +35,29 @@ namespace WinUIApp.Views.Components.HeaderComponents
             CurrentCategories = new ObservableCollection<Category>(categories);
         }
 
+        private void CategoryList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            foreach (Category removedCategory in e.RemovedItems)
+                _selectedCategories.Remove(removedCategory);
+            foreach (Category addedCategory in e.AddedItems)
+                _selectedCategories.Add(addedCategory);
+        }
+
         private void CategorySearchBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             string query = CategorySearchBox.Text.ToLower();
             List<Category> filteredCategories = _originalCategories.Where(category => category.Name.ToLower().Contains(query)).ToList();
+            CategoryList.SelectionChanged -= CategoryList_SelectionChanged;
             CurrentCategories.Clear();
             foreach (Category category in filteredCategories)
                 CurrentCategories.Add(category);
+            CategoryList.SelectedItems.Clear();
+            foreach (Category category in filteredCategories)
+            {
+                if (_selectedCategories.Contains(category))
+                    CategoryList.SelectedItems.Add(category);
+            }
+            CategoryList.SelectionChanged += CategoryList_SelectionChanged;
         }
     }
 }

@@ -12,6 +12,7 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
+using WinUIApp.Views.ViewModels;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -20,9 +21,24 @@ namespace WinUIApp.Views.Components.HeaderComponents
 {
     public sealed partial class Header : UserControl
     {
+        private HeaderViewModel _viewModel;
         public Header()
         {
             this.InitializeComponent();
+            _viewModel = new HeaderViewModel(new Services.DrinkService());
+            CategoryMenu.PopulateCategories(_viewModel.GetCategories());
+        }
+
+        private void Logo_Click(object sender, RoutedEventArgs e)
+        {
+            //naviagation to main page
+            //MainWindow.AppMainFrame.Navigate();
+        }
+
+        private void SearchDrinksButton_Click(object sender, RoutedEventArgs e)
+        {
+
+
         }
     }
 }

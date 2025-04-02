@@ -12,6 +12,8 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
+using WinUIApp.Utils.Converters;
+using WinUIApp.Models;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -26,20 +28,19 @@ namespace WinUIApp.Views.Components.DrinkOfTheDayComponents
         public DrinkOfTheDayComponent()
         {
             this.InitializeComponent();
-            this.DataContext = this;
         }
 
-        public static readonly DependencyProperty NameProperty =
+        public static readonly DependencyProperty DrinkNameProperty =
             DependencyProperty.Register("DrinkName", typeof(string), typeof(DrinkOfTheDayComponent), new PropertyMetadata(string.Empty));
 
         public static readonly DependencyProperty BrandProperty =
             DependencyProperty.Register("DrinkBrand", typeof(string), typeof(DrinkOfTheDayComponent), new PropertyMetadata(string.Empty));
 
         public static readonly DependencyProperty CategoryProperty =
-            DependencyProperty.Register("DrinkCategory", typeof(string), typeof(DrinkOfTheDayComponent), new PropertyMetadata(string.Empty));
+            DependencyProperty.Register("DrinkCategory", typeof(List<Category>), typeof(DrinkOfTheDayComponent), new PropertyMetadata(string.Empty));
 
         public static readonly DependencyProperty AlcoholProperty =
-            DependencyProperty.Register("AlcoholContent", typeof(string), typeof(DrinkOfTheDayComponent), new PropertyMetadata(string.Empty));
+            DependencyProperty.Register("AlcoholContent", typeof(float), typeof(DrinkOfTheDayComponent), new PropertyMetadata(0.0));
 
         public static readonly DependencyProperty ImageSourceProperty =
             DependencyProperty.Register("ImageSource", typeof(string), typeof(DrinkOfTheDayComponent), new PropertyMetadata(string.Empty));
@@ -55,15 +56,15 @@ namespace WinUIApp.Views.Components.DrinkOfTheDayComponents
             set { SetValue(BrandProperty, value); }
         }
 
-        public string DrinkCategory
+        public List<Category> DrinkCategory
         {
-            get { return (string)GetValue(CategoryProperty); }
+            get { return (List<Category>)GetValue(CategoryProperty); }
             set { SetValue(CategoryProperty, value); }
         }
 
-        public string AlcoholContent
+        public float AlcoholContent
         {
-            get { return (string)GetValue(AlcoholProperty); }
+            get { return (float)GetValue(AlcoholProperty); }
             set { SetValue(AlcoholProperty, value); }
         }
 
@@ -72,6 +73,7 @@ namespace WinUIApp.Views.Components.DrinkOfTheDayComponents
             get { return (string)GetValue(ImageSourceProperty); }
             set { SetValue(ImageSourceProperty, value); }
         }
+
 
     }
 }

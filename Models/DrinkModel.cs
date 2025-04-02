@@ -503,8 +503,7 @@ namespace WinUIApp.Models
                 int brandId = Convert.ToInt32(drinkQueryResult[0]["BrandId"]);
                 string drinkName = drinkQueryResult[0]["DrinkName"].ToString();
                 string drinkURL = drinkQueryResult[0]["DrinkURL"].ToString();
-                float alcoholContent = Convert.ToSingle(drinkQueryResult[0]["AlcoholContent"]);
-
+                float alcoholContent = (float)Convert.ToDouble(drinkQueryResult[0]["AlcoholContent"]);
                 string getCategoriesQuery = "SELECT C.CategoryId, C.CategoryName FROM Drink AS D JOIN DrinkCategory AS DC ON DC.DrinkId = @DrinkId JOIN Category AS B ON DC.CategoryId = C.CategoryId;";
                 var categoryQueryResult = dbService.ExecuteSelect(getCategoriesQuery, drinkIdParameter);
 

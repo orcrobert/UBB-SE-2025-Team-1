@@ -2,6 +2,8 @@ using Microsoft.UI;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using System;
+using Windows.System;
+using WinUIApp.Models;
 using WinUIApp.Services;
 using WinUIApp.Services.DummyServies;
 using WinUIApp.Views.ModelViews;
@@ -11,6 +13,7 @@ namespace WinUIApp.Views
 {
     public sealed partial class MainWindow : Window
     {
+
         public MainWindow()
         {
             this.InitializeComponent();

@@ -26,7 +26,7 @@
         <TextBlock x:Name="testModelsTextBlock"></TextBlock>
     </StackPanel>-->
     <Grid>
-        <components:AddRemoveFromDrinkListButton UserId="1" DrinkId="1" />
+        <components:AddRemoveFromDrinkListButton DrinkId="1" />
         <!--<Frame x:Name="MainFrame"/>-->
     </Grid>
 </Window>

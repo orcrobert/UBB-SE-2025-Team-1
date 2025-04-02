@@ -1,20 +1,12 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using System;
-using System.Threading.Tasks;
-using WinUIApp.Services; // Assuming DrinkService exists here
+using WinUIApp.Views.ViewModels;
+using System.Diagnostics;
 
 namespace WinUIApp.Views.Components
 {
     public sealed partial class AddRemoveFromDrinkListButton : UserControl
     {
-        public static readonly DependencyProperty UserIdProperty =
-            DependencyProperty.Register(
-                "UserId",
-                typeof(int),
-                typeof(AddRemoveFromDrinkListButton),
-                new PropertyMetadata(0, OnUserIdChanged));
-
         public static readonly DependencyProperty DrinkIdProperty =
             DependencyProperty.Register(
                 "DrinkId",
@@ -22,20 +14,10 @@ namespace WinUIApp.Views.Components
                 typeof(AddRemoveFromDrinkListButton),
                 new PropertyMetadata(0, OnDrinkIdChanged));
 
-        private bool _isInList = false;
-        private readonly DrinkService _drinkService;
-
         public AddRemoveFromDrinkListButton()
         {
             this.InitializeComponent();
-            _drinkService = new DrinkService();
-            this.Loaded += AddRemoveFromDrinkListButton_Loaded;
-        }
-
-        public int UserId
-        {
-            get { return (int)GetValue(UserIdProperty); }
-            set { SetValue(UserIdProperty, value); }
+            Loaded += AddRemoveFromDrinkListButton_Loaded;
         }
 
         public int DrinkId
@@ -44,102 +26,67 @@ namespace WinUIApp.Views.Components
             set { SetValue(DrinkIdProperty, value); }
         }
 
-        private static void OnUserIdChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            if (d is AddRemoveFromDrinkListButton button)
-            {
-                if (button.DrinkId > 0 && (int)e.NewValue > 0)
-                {
-                    button.CheckIfInList();
-                }
-            }
-        }
-
         private static void OnDrinkIdChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (d is AddRemoveFromDrinkListButton button)
+            if (d is AddRemoveFromDrinkListButton button && (int)e.NewValue > 0)
             {
-                if ((int)e.NewValue > 0 && button.UserId > 0)
+                Debug.WriteLine($"AddRemoveFromDrinkListButton: DrinkId changed to {(int)e.NewValue}");
+                if (button.ViewModel == null)
                 {
-                    button.CheckIfInList();
-                }
-            }
-        }
-
-        private void AddRemoveFromDrinkListButton_Loaded(object sender, RoutedEventArgs e)
-        {
-            if (UserId > 0 && DrinkId > 0)
-            {
-                 CheckIfInList();
-            }
-        }
-
-        private void CheckIfInList()
-        {
-            try
-            {
-                _isInList = _drinkService.isDrinkInPersonalList(UserId, DrinkId);
-                UpdateButtonStyle();
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"Error checking drink list: {ex.Message}");
-            }
-        }
-
-        private void AddRemoveButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
-        {
-            if (UserId <= 0 || DrinkId <= 0)
-            {
-                return;
-            }
-
-            try
-            {
-                if (_isInList)
-                {
-                    bool success = _drinkService.deleteFromPersonalDrinkList(UserId, DrinkId);
-                    if (success)
-                    {
-                        _isInList = false;
-                        UpdateButtonStyle();
-                    }
-                    else
-                    {
-                        System.Diagnostics.Debug.WriteLine("Failed to remove drink from personal list.");
-                    }
+                    button.ViewModel = new DrinkPageViewModel((int)e.NewValue);
+                    Debug.WriteLine($"AddRemoveFromDrinkListButton: ViewModel created with DrinkId {(int)e.NewValue}");
                 }
                 else
                 {
-                    bool success = _drinkService.addToPersonalDrinkList(UserId, DrinkId);
-                    if (success)
-                    {
-                        _isInList = true;
-                        UpdateButtonStyle();
-                    }
-                    else
-                    {
-                        System.Diagnostics.Debug.WriteLine("Failed to add drink to personal list.");
-                    }
+                    button.ViewModel.DrinkId = (int)e.NewValue;
+                    Debug.WriteLine($"AddRemoveFromDrinkListButton: ViewModel DrinkId updated to {(int)e.NewValue}");
                 }
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"Error updating drink list: {ex.Message}");
             }
         }
 
-        private void UpdateButtonStyle()
+        public DrinkPageViewModel ViewModel
         {
-            if (_isInList)
+            get { return (DrinkPageViewModel)GetValue(ViewModelProperty); }
+            set { SetValue(ViewModelProperty, value); }
+        }
+
+        public static readonly DependencyProperty ViewModelProperty =
+            DependencyProperty.Register(
+                "ViewModel",
+                typeof(DrinkPageViewModel),
+                typeof(AddRemoveFromDrinkListButton),
+                new PropertyMetadata(null, OnViewModelPropertyChanged));
+
+        private static void OnViewModelPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is AddRemoveFromDrinkListButton button && e.NewValue != null)
             {
-                ButtonText.Text = "\u2665";
+                Debug.WriteLine($"AddRemoveFromDrinkListButton: ViewModel property set");
+                button.DataContext = e.NewValue;
             }
-            else
+        }
+
+        private async void AddRemoveFromDrinkListButton_Loaded(object sender, RoutedEventArgs e)
+        {
+            Debug.WriteLine($"AddRemoveFromDrinkListButton: Loaded. DrinkId: {DrinkId}, ViewModel is {(ViewModel == null ? "null" : "not null")}");
+            if (ViewModel == null && DrinkId > 0)
             {
-                ButtonText.Text = "\U0001F5A4";
+                ViewModel = new DrinkPageViewModel(DrinkId);
+                Debug.WriteLine($"AddRemoveFromDrinkListButton: ViewModel created in Loaded with DrinkId {DrinkId}");
             }
-            ButtonText.FontFamily = new Microsoft.UI.Xaml.Media.FontFamily("Segoe UI Emoji");
+            if (ViewModel != null)
+            {
+                DataContext = ViewModel;
+                await ViewModel.CheckIfInListAsync();
+            }
+        }
+
+        private async void AddRemoveButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+        {
+            if (ViewModel != null)
+            {
+                await ViewModel.AddRemoveFromListAsync();
+            }
         }
     }
 }

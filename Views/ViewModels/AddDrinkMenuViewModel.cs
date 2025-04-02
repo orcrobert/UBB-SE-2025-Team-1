@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using WinUIApp.Models;
 using WinUIApp.Services;
 using WinUIApp.Services.DummyServies;
@@ -27,7 +28,7 @@ namespace WinUIApp.Views.ViewModels
         private string _buttonText;
 
         public event PropertyChangedEventHandler PropertyChanged;
-
+        public ICommand SaveDrinkCommand { get; }
         public AddDrinkMenuViewModel()
         {
             _drinkService = new DrinkService();
@@ -37,6 +38,7 @@ namespace WinUIApp.Views.ViewModels
             _selectedCategoryNames = new HashSet<string>();
             ButtonText = "Add Drink";
             LoadCategories();
+            SaveDrinkCommand = new RelayCommand(async () => await SaveDrinkAsync());
         }
 
         public int UserId

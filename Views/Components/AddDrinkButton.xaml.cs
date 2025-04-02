@@ -1,7 +1,8 @@
-using System;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using System;
 using WinUIApp.Services;
+using WinUIApp.Views.ViewModels;
 
 namespace WinUIApp.Views.Components
 {
@@ -10,6 +11,7 @@ namespace WinUIApp.Views.Components
         public AddDrinkButton()
         {
             this.InitializeComponent();
+            this.DataContext = new AddDrinkMenuViewModel();
         }
 
         private void AddDrinkButton_Click(object sender, RoutedEventArgs e)

@@ -2,15 +2,19 @@
     x:Class="WinUIApp.Views.Components.AddDrinkButton"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:WinUIApp.Views.Components"
+    xmlns:local="using:WinUIApp.Views.ViewModels"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
+    <UserControl.DataContext>
+        <local:AddDrinkMenuViewModel />
+    </UserControl.DataContext>
+
     <Grid>
         <Button x:Name="AddButton"
                 Content="Add New Drink"
-                Click="AddDrinkButton_Click"
+                Command="{Binding SaveDrinkCommand}"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Top"
                 Margin="10"
@@ -20,4 +24,4 @@
                 FontWeight="Bold"
                 Padding="20,10"/>
     </Grid>
-</UserControl> 
+</UserControl>

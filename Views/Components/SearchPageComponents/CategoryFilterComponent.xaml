@@ -8,19 +8,6 @@
     xmlns:models="using:WinUIApp.Models"
     mc:Ignorable="d">
 
-    <!--<ComboBox x:Name="CategoryComboBox"
-          Header="Category"
-          Width="200"
-          ItemsSource="{x:Bind Categories, Mode=OneWay}"
-          PlaceholderText="Select categories"
-          SelectionChanged="CategoryComboBox_SelectionChanged">
-        <ComboBox.ItemTemplate>
-            <DataTemplate x:DataType="models:Category">
-                <TextBlock Text="{x:Bind Name}" />
-            </DataTemplate>
-        </ComboBox.ItemTemplate>
-    </ComboBox>
-    -->
     <StackPanel x:Name="LayoutPanel" Spacing="10">
         <TextBlock 
             Text="Categories:"
@@ -33,7 +20,7 @@
                 x:Name="CategoryList"
                 Height="120"
                 SelectionMode="Multiple"
-                ItemsSource="{x:Bind Categories, Mode=OneWay}"
+                ItemsSource="{x:Bind CurrentCategories, Mode=OneWay}"
                 SelectionChanged="CategoryListView_SelectionChanged">
                 <ListView.ItemTemplate>
                     <DataTemplate x:DataType="models:Category">

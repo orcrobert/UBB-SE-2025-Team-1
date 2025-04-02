@@ -1,20 +1,17 @@
 using Microsoft.UI.Xaml.Controls;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using WinUIApp.Models;
-
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
 
 namespace WinUIApp.Views.Components.SearchPageComponents
 {
     public sealed partial class CategoryFilterComponent : UserControl
     {
-        private IEnumerable<Category> Categories { get; set; }
-        private IEnumerable<Category> FilteredCategories { get; set; }
-
-        private List<string> _categorySelectedFields = [];
+        private List<Category> _originalCategories = new List<Category>();
+        private HashSet<Category> _selectedCategories = new HashSet<Category>();
+        public ObservableCollection<Category> CurrentCategories { get; set; } = new ObservableCollection<Category>();
 
         public event EventHandler<List<string>> CategoryChanged;
 
@@ -25,43 +22,68 @@ namespace WinUIApp.Views.Components.SearchPageComponents
 
         public void CategoryListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            foreach (var removed in e.RemovedItems.Cast<Category>())
-                _categorySelectedFields.Remove(removed.Name);
+            foreach (Category removedCategory in e.RemovedItems)
+                _selectedCategories.Remove(removedCategory);
 
-            foreach (var added in e.AddedItems.Cast<Category>())
-                _categorySelectedFields.Add(added.Name);
+            foreach (Category addedCategory in e.AddedItems)
+                _selectedCategories.Add(addedCategory);
 
-
-            CategoryChanged?.Invoke(this, _categorySelectedFields);
+            // Raise the CategoryChanged event with the list of selected category names
+            CategoryChanged?.Invoke(this, _selectedCategories.Select(c => c.Name).ToList());
         }
 
         private void SearchBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             string query = SearchBox.Text.ToLower();
-            var selectedItems = CategoryList.SelectedItems.Cast<Category>().ToList();
 
-            FilteredCategories = Categories
-                .Where(c => c.Name.ToLower().Contains(query)).Cast<Category>();
-            CategoryList.ItemsSource = FilteredCategories;
+            List<Category> filteredCategories = _originalCategories
+                .Where(category => category.Name.ToLower().Contains(query))
+                .ToList();
 
-            foreach (var item in selectedItems)
+            CategoryList.SelectionChanged -= CategoryListView_SelectionChanged;
+
+            CurrentCategories.Clear();
+            foreach (Category category in filteredCategories)
             {
-                if (FilteredCategories.Contains(item))
-                    CategoryList.SelectedItems.Add(item);
+                CurrentCategories.Add(category);
             }
-        }
 
+            CategoryList.SelectedItems.Clear();
+            foreach (Category category in filteredCategories)
+            {
+                if (_selectedCategories.Contains(category))
+                {
+                    CategoryList.SelectedItems.Add(category);
+                }
+            }
+
+            CategoryList.SelectionChanged += CategoryListView_SelectionChanged;
+        }
 
         public void SetCategoriesFilter(IEnumerable<Category> categories)
         {
-            Categories = categories;
-            FilteredCategories = Categories;
-            CategoryList.ItemsSource = Categories;
+            _originalCategories = categories.ToList();
+            CurrentCategories.Clear();
+            foreach (Category category in _originalCategories)
+            {
+                CurrentCategories.Add(category);
+            }
+
+            CategoryList.SelectedItems.Clear();
+            foreach (Category category in CurrentCategories)
+            {
+                if (_selectedCategories.Contains(category))
+                {
+                    CategoryList.SelectedItems.Add(category);
+                }
+            }
         }
 
         public void ClearSelection()
         {
-            CategoryList.SelectedItem = null;
+            CategoryList.SelectedItems.Clear();
+            _selectedCategories.Clear();
+            CategoryChanged?.Invoke(this, new List<string>());
         }
     }
 }

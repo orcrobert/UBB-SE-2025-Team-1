@@ -1,20 +1,17 @@
 using Microsoft.UI.Xaml.Controls;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using WinUIApp.Models;
-
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
 
 namespace WinUIApp.Views.Components.SearchPageComponents
 {
     public sealed partial class BrandFilterComponent : UserControl
     {
-        private IEnumerable<Brand> Brands { get; set; }
-        private IEnumerable<Brand> FilteredBrands { get; set; }
-
-        private List<string> _brandSelectedFields = [];
+        private List<Brand> _originalBrands = new List<Brand>();
+        private HashSet<Brand> _selectedBrands = new HashSet<Brand>();
+        public ObservableCollection<Brand> CurrentBrands { get; set; } = new ObservableCollection<Brand>();
 
         public event EventHandler<List<string>> BrandChanged;
 
@@ -25,42 +22,67 @@ namespace WinUIApp.Views.Components.SearchPageComponents
 
         private void BrandListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            foreach (var removed in e.RemovedItems.Cast<Brand>())
-                _brandSelectedFields.Remove(removed.Name);
+            foreach (Brand removedBrand in e.RemovedItems)
+                _selectedBrands.Remove(removedBrand);
 
-            foreach (var added in e.AddedItems.Cast<Brand>())
-                _brandSelectedFields.Add(added.Name);
+            foreach (Brand addedBrand in e.AddedItems)
+                _selectedBrands.Add(addedBrand);
 
-
-            BrandChanged?.Invoke(this, _brandSelectedFields);
+            BrandChanged?.Invoke(this, _selectedBrands.Select(b => b.Name).ToList());
         }
 
         private void SearchBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             string query = SearchBox.Text.ToLower();
-            var selectedItems = BrandList.SelectedItems.Cast<Brand>().ToList();
 
-            FilteredBrands = Brands.Where(c => c.Name.ToLower().Contains(query)).Cast<Brand>();
-            BrandList.ItemsSource = FilteredBrands;
+            List<Brand> filteredBrands = _originalBrands
+                .Where(brand => brand.Name.ToLower().Contains(query))
+                .ToList();
 
-            foreach (var item in selectedItems)
+            BrandList.SelectionChanged -= BrandListView_SelectionChanged;
+
+            CurrentBrands.Clear();
+            foreach (Brand brand in filteredBrands)
             {
-                if (FilteredBrands.Contains(item))
-                    BrandList.SelectedItems.Add(item);
+                CurrentBrands.Add(brand);
             }
-        }
 
+            BrandList.SelectedItems.Clear();
+            foreach (Brand brand in filteredBrands)
+            {
+                if (_selectedBrands.Contains(brand))
+                {
+                    BrandList.SelectedItems.Add(brand);
+                }
+            }
+
+            BrandList.SelectionChanged += BrandListView_SelectionChanged;
+        }
 
         public void SetBrandFilter(IEnumerable<Brand> brands)
         {
-            Brands = brands;
-            FilteredBrands = Brands;
-            BrandList.ItemsSource = FilteredBrands;
+            _originalBrands = brands?.ToList() ?? new List<Brand>();
+            CurrentBrands.Clear();
+            foreach (Brand brand in _originalBrands)
+            {
+                CurrentBrands.Add(brand);
+            }
+
+            BrandList.SelectedItems.Clear();
+            foreach (Brand brand in CurrentBrands)
+            {
+                if (_selectedBrands.Contains(brand))
+                {
+                    BrandList.SelectedItems.Add(brand);
+                }
+            }
         }
 
         public void ClearSelection()
         {
-            BrandList.SelectedItem = null;
+            BrandList.SelectedItems.Clear();
+            _selectedBrands.Clear();
+            BrandChanged?.Invoke(this, new List<string>());
         }
     }
 }

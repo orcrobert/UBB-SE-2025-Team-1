@@ -20,15 +20,6 @@ namespace WinUIApp.Views
         public MainWindow()
         {
             this.InitializeComponent();
-            mainGrid = (Grid)Content; // Ensure the Grid is assigned AFTER initialization
-            Content = mainGrid;
-        }
-
-        private Grid mainGrid; // Add a field for the Grid
-
-        private void GoToDrinkListTest_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
-        {
-            MainFrame.Navigate(typeof(DrinkListTestPage), ViewModel);
         }
 
         // You can keep or remove the SetFixedSize and other commented-out code as needed

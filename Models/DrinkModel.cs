@@ -577,7 +577,7 @@ namespace WinUIApp.Models
 
                 if (drinkQueryResult.Count == 0)
                 {
-                    resetDrinkOfTheDay();
+                    setDrinkOfTheDay();
                     drinkQueryResult = dbService.ExecuteSelect(getDrinkOfTheDayQuery);
                 }
 
@@ -644,33 +644,84 @@ namespace WinUIApp.Models
             }
         }
 
-        private void resetDrinkOfTheDay()
+        private int getCurrentTopVotedDrink()
         {
             var dbService = DatabaseService.Instance;
-            try
-            {
-                Console.WriteLine(DateTime.UtcNow.Date.AddDays(-1).ToString("yyyy-MM-dd HH:mm:ss"));
-                string topVoteCountQuery = @"
+            string topVoteCountQuery = @"
                                             SELECT DrinkId, COUNT(*) AS VoteCount 
                                             FROM Vote 
                                             WHERE DATE(VoteTime) = DATE(@VoteTime)
                                             GROUP BY DrinkId
                                             ORDER BY VoteCount DESC
                                             LIMIT 1;";
-                List<MySqlParameter> voteDayParameter =
+            List<MySqlParameter> voteDayParameter =
+            [
+                new MySqlParameter("@VoteTime", MySqlDbType.DateTime) { Value = DateTime.UtcNow.Date.AddDays(-1) }
+            ];
+            int currentTopVotedDrink;
+            var topVoteCountResult = dbService.ExecuteSelect(topVoteCountQuery, voteDayParameter);
+
+            if (topVoteCountResult.Count == 0)
+            {
+                currentTopVotedDrink = getRandomDrinkId();
+            }
+
+            currentTopVotedDrink = Convert.ToInt32(topVoteCountResult[0]["DrinkId"]);
+            return currentTopVotedDrink;
+        }
+
+        public int getRandomDrinkId()
+        {
+            var dbService = DatabaseService.Instance;
+            try
+            {
+                string getRandomDrinkIdQuery = "SELECT DrinkId FROM Drink ORDER BY RAND() LIMIT 1;";
+                var selectResult = dbService.ExecuteSelect(getRandomDrinkIdQuery);
+                if (selectResult.Count > 0)
+                {
+                    return Convert.ToInt32(selectResult[0]["DrinkId"]);
+                }
+                else
+                {
+                    throw new Exception("No drinks found in the database.");
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Failed to get random drink ID", ex);
+            }
+
+        }
+        private void setDrinkOfTheDay()
+        {
+            var dbService = DatabaseService.Instance;
+            try
+            {
+                int newDrinkOfTheDayId = getCurrentTopVotedDrink();
+
+                string insertDrinkOfTheDayQuery = "INSERT INTO DrinkOfTheDay (DrinkId, DrinkTime) VALUES (@DrinkId, @DrinkTime);";
+                List<MySqlParameter> parameters =
                 [
-                    new MySqlParameter("@VoteTime", MySqlDbType.DateTime) { Value = DateTime.UtcNow.Date.AddDays(-1) }
+                    new MySqlParameter("@DrinkId", MySqlDbType.Int32) { Value = newDrinkOfTheDayId },
+                    new MySqlParameter("@DrinkTime", MySqlDbType.DateTime) { Value = DateTime.UtcNow }
                 ];
 
-                var topVoteCountResult = dbService.ExecuteSelect(topVoteCountQuery, voteDayParameter);
+                dbService.ExecuteQuery(insertDrinkOfTheDayQuery, parameters);
 
-                if (topVoteCountResult.Count == 0)
-                {
-                    throw new Exception("No votes found for yesterdays Drink of the Day");
-                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Failed to reset drink of the day", ex);
+            }
+        }
+        
 
-                int newDrinkOfTheDayId = Convert.ToInt32(topVoteCountResult[0]["DrinkId"]);
-
+        private void resetDrinkOfTheDay()
+        {
+            var dbService = DatabaseService.Instance;
+            try
+            {
+                int newDrinkOfTheDayId = getCurrentTopVotedDrink();
                 string updateDrinkOfTheDayQuery = "UPDATE DrinkOfTheDay SET DrinkId = @DrinkId, DrinkTime = @DrinkTime;";
                 List<MySqlParameter> parameters =
                 [

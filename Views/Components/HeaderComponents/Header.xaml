@@ -9,7 +9,7 @@
     xmlns:components="using:WinUIApp.Views.Components.HeaderComponents"
     mc:Ignorable="d">
 
-    <Grid Height="60">
+    <Grid Height="60" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Button x:Name="Logo"
                 Content="DrinkMDb"
                 Click="Logo_Click"

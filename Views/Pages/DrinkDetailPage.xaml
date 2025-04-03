@@ -6,14 +6,68 @@
     xmlns:local="using:WinUIApp.Views.Pages"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:components="using:WinUIApp.Views.Components"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-
-    <Grid>
-        <StackPanel>
-            <TextBlock Text="Drink Details" FontSize="20" FontWeight="Bold" Margin="10"/>
-            <TextBlock x:Name="DrinkIdText" FontSize="16" FontWeight="Bold" Margin="10"/>
+    
+    <ScrollViewer>
+        <StackPanel Orientation="Vertical">
+            <TextBlock Text="{Binding Drink.DrinkName}"
+                   HorizontalAlignment="Center"
+                   x:Name="Name" 
+                   FontSize="18" 
+                   FontWeight="Bold"/>
+            <Image Source="{Binding Drink.DrinkURL}"
+               x:Name="DrinkImage"
+               Height="180"/>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0 5 0 0">
+                <components:AddRemoveFromDrinkListButton DrinkId="{Binding Drink.Id}" />
+                <components:UpdateDrinkButton Drink="{Binding Drink}" />
+                <Button>
+                    <Button.Flyout>
+                        <Flyout Placement="Bottom">
+                            <StackPanel>
+                                <TextBlock Text="Are you sure?" HorizontalAlignment="Center" />
+                                <Button x:Name="ConfirmRemoveButton" Click="ConfirmRemoveButton_Click" HorizontalAlignment="Center" Margin="0 5 0 0">Confirm</Button>
+                            </StackPanel>
+                        </Flyout>
+                    </Button.Flyout>
+                    <TextBlock x:Name="RemoveButtonText" Foreground="Black"/>
+                </Button>
+            </StackPanel>
+            <StackPanel HorizontalAlignment="Center">
+                <TextBlock Text="Brand" FontSize="18" FontWeight="Bold"/>
+                <TextBlock Text="{Binding Drink.Brand.Name}" FontSize="14"/>
+                <TextBlock Text="Alcohol percentage" FontSize="18" FontWeight="Bold"/>
+                <TextBlock Text="{Binding Drink.AlcoholContent}" FontSize="14"/>
+                <TextBlock Text="Categories" FontSize="18" FontWeight="Bold"/>
+                <TextBlock Text="{Binding CategoriesDisplay}" FontSize="14"/>
+                <TextBlock Text="Review score" FontSize="18" FontWeight="Bold"/>
+                <TextBlock FontSize="14">
+                <Run Text="⭐" />
+                <Run Text="{Binding AverageReviewScore}" />
+                <Run Text="/ 5" />
+                </TextBlock>
+                <TextBlock Text="Reviews" FontSize="18" FontWeight="Bold" />
+                <ItemsControl ItemsSource="{Binding Reviews}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border BorderThickness="1" BorderBrush="Goldenrod" Padding="10" Margin="0 0 0 10">
+                                <StackPanel>
+                                    <TextBlock Text="{Binding Title}" FontWeight="Bold" FontSize="16"/>
+                                    <TextBlock Text="{Binding Description}" TextWrapping="WrapWholeWords"/>
+                                    <TextBlock Text="{Binding PostedDateTime}" FontSize="12" Foreground="Gray"/>
+                                    <TextBlock>
+                                    <Run Text="⭐ " />
+                                    <Run Text="{Binding Score}" />
+                                    <Run Text="/5" />
+                                    </TextBlock>
+                                </StackPanel>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
         </StackPanel>
-        
-    </Grid>
+    </ScrollViewer>
 </Page>

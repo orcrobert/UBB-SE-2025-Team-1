@@ -583,16 +583,56 @@ namespace WinUIApp.Models
         public void voteDrinkOfTheDay(int drinkId, int userId)
         {
             var dbService = DatabaseService.Instance;
+            DateTime voteTime = DateTime.UtcNow;
+
             try
             {
-                string addVoteQuery = "INSERT INTO Vote (UserId, DrinkId, VoteTime) VALUES (@UserId, @DrinkId, @VoteTime);";
-                List<MySqlParameter> parameters =
-                [
+                string checkQuery = @"
+                SELECT COUNT(*) FROM Vote 
+                WHERE UserId = @UserId 
+                AND DATE(VoteTime) = DATE(@VoteTime);";
+
+                var checkParams = new List<MySqlParameter>
+            {
+                new MySqlParameter("@UserId", MySqlDbType.Int32) { Value = userId },
+                new MySqlParameter("@VoteTime", MySqlDbType.DateTime) { Value = voteTime }
+            };
+
+                var count = dbService.ExecuteSelect(checkQuery, checkParams).Count;
+
+                if (count > 0)
+                {
+                    string updateQuery = @"
+                    UPDATE Vote 
+                    SET DrinkId = @DrinkId, VoteTime = @VoteTime 
+                    WHERE UserId = @UserId 
+                    AND DATE(VoteTime) = DATE(@VoteTime);";
+
+                    var updateParams = new List<MySqlParameter>
+                {
                     new MySqlParameter("@DrinkId", MySqlDbType.Int32) { Value = drinkId },
                     new MySqlParameter("@UserId", MySqlDbType.Int32) { Value = userId },
-                    new MySqlParameter("@VoteTime", MySqlDbType.DateTime) { Value = DateTime.UtcNow }
-                ];
-                dbService.ExecuteQuery(addVoteQuery, parameters);
+                    new MySqlParameter("@VoteTime", MySqlDbType.DateTime) { Value = voteTime }
+                };
+
+                    dbService.ExecuteQuery(updateQuery, updateParams);
+                }
+                else
+                {
+                    string insertQuery = @"
+                    INSERT INTO Vote (UserId, DrinkId, VoteTime) 
+                    VALUES (@UserId, @DrinkId, @VoteTime);";
+
+                    var insertParams = new List<MySqlParameter>
+                {
+                    new MySqlParameter("@DrinkId", MySqlDbType.Int32) { Value = drinkId },
+                    new MySqlParameter("@UserId", MySqlDbType.Int32) { Value = userId },
+                    new MySqlParameter("@VoteTime", MySqlDbType.DateTime) { Value = voteTime }
+                };
+
+                    dbService.ExecuteQuery(insertQuery, insertParams);
+                }
+
             }
             catch (Exception ex)
             {

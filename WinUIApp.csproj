@@ -109,9 +109,6 @@
     <Page Update="Views\Components\UpdateDrinkButton.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Update="Views\Pages\DrinkDetailsPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Update="Views\DrinkModelCrudTest.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>

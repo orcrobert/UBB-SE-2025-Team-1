@@ -20,7 +20,7 @@ namespace WinUIApp.ViewModels
         {
             _drinkService = drinkService;
             _userService = userService;
-            //LoadDrinkOfTheDayData();
+            LoadDrinkOfTheDayData();
             LoadPersonalDrinkListData();
         }
 

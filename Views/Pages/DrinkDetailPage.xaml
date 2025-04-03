@@ -23,6 +23,17 @@
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0 5 0 0">
                 <components:AddRemoveFromDrinkListButton DrinkId="{Binding Drink.Id}" />
                 <components:UpdateDrinkButton Drink="{Binding Drink}" />
+                <Button>
+                    <Button.Flyout>
+                        <Flyout Placement="Bottom">
+                            <StackPanel>
+                                <TextBlock Text="Are you sure?" HorizontalAlignment="Center" />
+                                <Button x:Name="ConfirmRemoveButton" Click="ConfirmRemoveButton_Click" HorizontalAlignment="Center" Margin="0 5 0 0">Confirm</Button>
+                            </StackPanel>
+                        </Flyout>
+                    </Button.Flyout>
+                    <TextBlock x:Name="RemoveButtonText" Foreground="Black"/>
+                </Button>
             </StackPanel>
             <StackPanel HorizontalAlignment="Center">
                 <TextBlock Text="Brand" FontSize="18" FontWeight="Bold"/>

@@ -5,9 +5,11 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.Management.Deployment;
 using WinUIApp.Models;
 using WinUIApp.Services;
 using WinUIApp.Services.DummyServies;
+using WinUIApp.Views.Pages;
 
 namespace WinUIApp.Views.ViewModels
 {
@@ -17,7 +19,10 @@ namespace WinUIApp.Views.ViewModels
 
         private readonly DrinkService _drinkService;
         private readonly ReviewService _reviewService;
-        
+        private readonly UserService _userService;
+        private readonly AdminService _adminService;
+
+
         private Drink _drink;
         public Drink Drink
         {
@@ -47,10 +52,12 @@ namespace WinUIApp.Views.ViewModels
         }
         public ObservableCollection<Review> Reviews { get; set; } = new ObservableCollection<Review>();
 
-        public DrinkDetailPageViewModel(DrinkService drinkService, ReviewService reviewService)
+        public DrinkDetailPageViewModel(DrinkService drinkService, ReviewService reviewService, UserService userService, AdminService adminService)
         {
             _drinkService = drinkService;
             _reviewService = reviewService;
+            _userService = userService;
+            _adminService = adminService;
         }
 
         public void LoadDrink(int drinkId)
@@ -68,6 +75,23 @@ namespace WinUIApp.Views.ViewModels
         protected void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        public bool IsCurrentUserAdmin()
+        {
+            return _adminService.IsAdmin(_userService.GetCurrentUserID());
+        }
+
+        public void RemoveDrink()
+        {
+            if (IsCurrentUserAdmin())
+            {
+                _drinkService.deleteDrink(Drink.Id);
+            }
+            else
+            {
+                _adminService.SendNotification(_userService.GetCurrentUserID(), "Removal of drink with id:"+Drink.Id+" and name:"+Drink.DrinkName, "User requested removal of drink from database.");
+            }
         }
     }
 }

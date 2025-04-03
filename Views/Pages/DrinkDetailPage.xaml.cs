@@ -18,7 +18,6 @@ namespace WinUIApp.Views.Pages
             if (e.Parameter is int drinkId)
             {
                 _drinkId = drinkId;
-                DrinkIdText.Text = $"Drink ID: {_drinkId}";
             }
         }
     }

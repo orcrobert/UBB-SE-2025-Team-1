@@ -13,7 +13,6 @@
 
     <StackPanel Background="LightGray">
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,20,0">
-            <drinkComponent:AddDrinkButton x:Name="AddDrinkButtonControl" Margin="0,0,10,0"/>
             <component:SortSelectorComponent x:Name="SortSelectorControl" 
                                          SortByChanged="SortByDropdownControl_SortByChanged"
                                          SortOrderChanged="SortSelectorControl_SortOrderChanged"/>

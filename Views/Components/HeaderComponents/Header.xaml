@@ -6,7 +6,8 @@
     xmlns:local="using:WinUIApp.Views.Components.HeaderComponents"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:components="using:WinUIApp.Views.Components.HeaderComponents"
+    xmlns:headerComponents="using:WinUIApp.Views.Components.HeaderComponents"
+    xmlns:components="using:WinUIApp.Views.Components"
     mc:Ignorable="d">
 
     <Grid Height="60" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
@@ -25,7 +26,7 @@
             <Button x:Name="OpenCategorySelectionMenuButton">
                 <Button.Flyout >
                     <Flyout Placement="Bottom">
-                        <components:CategorySelectionMenu x:Name="CategoryMenu"/>
+                        <headerComponents:CategorySelectionMenu x:Name="CategoryMenu"/>
                     </Flyout>
                 </Button.Flyout>
                 <Grid Width="120">
@@ -46,5 +47,9 @@
                 <SymbolIcon Symbol="Find"/>
             </Button>
         </StackPanel>
+        <components:AddDrinkButton x:Name="AddDrinkButtonControl" 
+                                   Margin="0 0 30 0"
+                                   HorizontalAlignment="Right"
+                                   VerticalAlignment="Center"/>
     </Grid>
 </UserControl>

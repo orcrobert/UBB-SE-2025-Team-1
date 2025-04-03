@@ -225,11 +225,20 @@ namespace WinUIApp.Models
                 var brandIdResult = dbService.ExecuteSelect(brandIdQuery, brandNameParameter);
                 int brandId = brandIdResult.Count > 0 ? Convert.ToInt32(brandIdResult[0]["BrandId"]) : -1;
 
-
                 if (brandId == -1)
                 {
-                    throw new Exception("Brand does not exist");
+                    string addBrandQuery = @"INSERT INTO Brand (BrandName) VALUES (@BrandName);";
+                    List<MySqlParameter> brandParameters =
+                    [
+                        new MySqlParameter("@BrandName",MySqlDbType.VarChar){Value = brandName }
+                    ];
+
+                    dbService.ExecuteQuery(addBrandQuery, brandParameters);
+                    brandIdResult = dbService.ExecuteSelect(brandIdQuery, brandNameParameter);
+                    brandId = Convert.ToInt32(brandIdResult[0]["BrandId"]);
                 }
+
+
 
                 string addDrinkQuery = @"INSERT INTO Drink (DrinkName, DrinkUrl, AlcoholContent, BrandId) 
                                 VALUES (@DrinkName, @DrinkUrl, @AlcoholContent, @BrandId);";
@@ -290,7 +299,7 @@ namespace WinUIApp.Models
         public void updateDrink(Drink drink)
         {
             var dbService = DatabaseService.Instance;
-         
+
             try
             {
                 string brandIdQuery = @"SELECT BrandId FROM Brand 
@@ -423,7 +432,7 @@ namespace WinUIApp.Models
                 WHERE ud.UserId = @UserId
                 GROUP BY d.DrinkId, b.BrandId
                 ORDER BY d.DrinkId";
-                //LIMIT @NumberOfDrinks;";
+            //LIMIT @NumberOfDrinks;";
 
             var parameters = new List<MySqlParameter>
             {
@@ -683,7 +692,7 @@ namespace WinUIApp.Models
                 string getCategoriesQuery = "SELECT C.CategoryId, C.CategoryName FROM Drink AS D JOIN DrinkCategory AS DC ON DC.DrinkId = @DrinkId JOIN Category AS B ON DC.CategoryId = C.CategoryId;";
                 var categoryQueryResult = dbService.ExecuteSelect(getCategoriesQuery, drinkIdParameter);
 
-               
+
                 List<Category> categories = [];
                 foreach (var row in categoryQueryResult)
                 {
@@ -787,7 +796,7 @@ namespace WinUIApp.Models
                 throw new Exception("Failed to reset drink of the day", ex);
             }
         }
-        
+
 
         private void resetDrinkOfTheDay()
         {

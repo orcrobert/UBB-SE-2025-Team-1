@@ -71,9 +71,12 @@ namespace WinUIApp.Views.Components.SearchPageComponents
             }
 
             HashSet<int> ids = new HashSet<int>();
-            foreach (Category category in initialCategories)
+            if (initialCategories != null)
             {
-                ids.Add(category.Id);
+                foreach (Category category in initialCategories)
+                {
+                    ids.Add(category.Id);
+                }
             }
             CategoryList.SelectedItems.Clear();
 

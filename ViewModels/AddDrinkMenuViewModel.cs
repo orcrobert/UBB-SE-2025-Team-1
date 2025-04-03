@@ -107,9 +107,6 @@ namespace WinUIApp.ViewModels
             if (string.IsNullOrWhiteSpace(BrandName))
                 throw new ArgumentException("Brand is required");
 
-            var validBrand = AllBrands.FirstOrDefault(b => b.Name.Equals(BrandName, StringComparison.OrdinalIgnoreCase));
-            if (validBrand == null)
-                throw new ArgumentException("The brand you entered does not exist.");
 
             if (!float.TryParse(AlcoholContent, out var alc) || alc < 0 || alc > 100)
                 throw new ArgumentException("Valid alcohol content (0–100%) is required");
@@ -133,7 +130,7 @@ namespace WinUIApp.ViewModels
         {
             try
             {
-                var brand = ResolveBrand(BrandName);
+                //var brand = ResolveBrand(BrandName);
                 var categories = GetSelectedCategories();
                 float alcoholContent = float.Parse(AlcoholContent);
 
@@ -141,7 +138,7 @@ namespace WinUIApp.ViewModels
                     drinkName: DrinkName,
                     drinkUrl: DrinkURL,
                     categories: categories,
-                    brandName: brand.Name,
+                    brandName: BrandName,
                     alcoholContent: alcoholContent
                 );
                 Debug.WriteLine("Drink added successfully (admin).");

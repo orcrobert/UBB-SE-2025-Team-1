@@ -1,5 +1,6 @@
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
+using WinUIApp.Models;
 using WinUIApp.Views.ViewModels;
 using WinUIApp.Views.Components;
 using WinUIApp.Services.DummyServies;
@@ -20,6 +21,11 @@ namespace WinUIApp.Views.Pages
                 RemoveButtonText.Text = "Remove drink";
             else
                 RemoveButtonText.Text = "Send remove drink request";
+
+            UpdateButton.OnDrinkUpdated = () =>
+            {
+                ViewModel.LoadDrink(ViewModel.Drink.Id);
+            };
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -34,6 +40,7 @@ namespace WinUIApp.Views.Pages
         private void ConfirmRemoveButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
             ViewModel.RemoveDrink();
+            MainWindow.AppMainFrame.Navigate(MainWindow.PreviousPage);
         }
 
         private void VoteButton_Click(object sender, RoutedEventArgs e)

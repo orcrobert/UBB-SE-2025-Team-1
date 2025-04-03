@@ -21,6 +21,7 @@ namespace WinUIApp.Views.Components
         typeof(Drink),
         typeof(UpdateDrinkButton),
         new PropertyMetadata(null));
+        public Action OnDrinkUpdated { get; set; }
 
         public Drink Drink
         {
@@ -31,6 +32,7 @@ namespace WinUIApp.Views.Components
         public UpdateDrinkButton()
         {
             this.InitializeComponent();
+
         }
 
         private void UpdateDrinkButton_Click(object sender, RoutedEventArgs e)
@@ -43,6 +45,11 @@ namespace WinUIApp.Views.Components
                     DrinkToUpdate = Drink,
                     UserId = userService.GetCurrentUserID()
                 }
+            };
+
+            flyout.Closed += (s, args) =>
+            {
+                OnDrinkUpdated?.Invoke();
             };
 
             flyout.ShowAt(UpdateButton);

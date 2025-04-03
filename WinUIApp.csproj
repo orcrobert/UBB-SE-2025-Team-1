@@ -91,6 +91,9 @@
     <Page Update="Views\Components\SharedComponents\CategorySelectionMenu.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Update="Views\Components\VoteDrinkOfTheDayButton.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Update="Views\Components\AddRemoveFromDrinkListButton.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>

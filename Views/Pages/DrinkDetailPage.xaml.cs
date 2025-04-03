@@ -2,7 +2,11 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using WinUIApp.Models;
 using WinUIApp.Views.ViewModels;
-
+using WinUIApp.Views.Components;
+using WinUIApp.Services.DummyServies;
+using WinUIApp.Services;
+using Microsoft.UI.Xaml;
+using WinUIApp.Models;
 namespace WinUIApp.Views.Pages
 {
     public sealed partial class DrinkDetailPage : Page
@@ -37,6 +41,12 @@ namespace WinUIApp.Views.Pages
         {
             ViewModel.RemoveDrink();
             MainWindow.AppMainFrame.Navigate(MainWindow.PreviousPage);
+        }
+
+        private void VoteButton_Click(object sender, RoutedEventArgs e)
+        {
+              ViewModel.VoteForDrink();
+            
         }
     }
 }

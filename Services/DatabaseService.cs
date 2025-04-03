@@ -76,7 +76,7 @@ namespace WinUIApp.Services
             }
             finally
             {
-                //_databaseConnection.CloseConnection();
+                _databaseConnection.CloseConnection();
             }
 
             return result;
@@ -104,7 +104,7 @@ namespace WinUIApp.Services
             }
             finally
             {
-                //_databaseConnection.CloseConnection();
+                _databaseConnection.CloseConnection();
             }
 
             return rowsAffected;

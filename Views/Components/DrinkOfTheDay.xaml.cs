@@ -33,13 +33,13 @@ namespace WinUIApp.Views.Components
         public static readonly DependencyProperty DrinkNameProperty =
             DependencyProperty.Register("DrinkName", typeof(string), typeof(DrinkOfTheDayComponent), new PropertyMetadata(string.Empty));
 
-        public static readonly DependencyProperty BrandProperty =
+        public static readonly DependencyProperty DrinkBrandProperty =
             DependencyProperty.Register("DrinkBrand", typeof(string), typeof(DrinkOfTheDayComponent), new PropertyMetadata(string.Empty));
 
-        public static readonly DependencyProperty CategoryProperty =
-            DependencyProperty.Register("DrinkCategory", typeof(List<Category>), typeof(DrinkOfTheDayComponent), new PropertyMetadata(string.Empty));
+        public static readonly DependencyProperty DrinkCategoriesProperty =
+            DependencyProperty.Register("DrinkCategories", typeof(List<Category>), typeof(DrinkOfTheDayComponent), new PropertyMetadata(new List<Category>()));
 
-        public static readonly DependencyProperty AlcoholProperty =
+        public static readonly DependencyProperty AlcoholContentProperty =
             DependencyProperty.Register("AlcoholContent", typeof(float), typeof(DrinkOfTheDayComponent), new PropertyMetadata(0.0));
 
         public static readonly DependencyProperty ImageSourceProperty =
@@ -52,20 +52,20 @@ namespace WinUIApp.Views.Components
         }
         public string DrinkBrand
         {
-            get { return (string)GetValue(BrandProperty); }
-            set { SetValue(BrandProperty, value); }
+            get { return (string)GetValue(DrinkBrandProperty); }
+            set { SetValue(DrinkBrandProperty, value); }
         }
 
-        public List<Category> DrinkCategory
+        public List<Category> DrinkCategories
         {
-            get { return (List<Category>)GetValue(CategoryProperty); }
-            set { SetValue(CategoryProperty, value); }
+            get { return (List<Category>)GetValue(DrinkCategoriesProperty); }
+            set { SetValue(DrinkCategoriesProperty, value); }
         }
 
         public float AlcoholContent
         {
-            get { return (float)GetValue(AlcoholProperty); }
-            set { SetValue(AlcoholProperty, value); }
+            get { return (float)GetValue(AlcoholContentProperty); }
+            set { SetValue(AlcoholContentProperty, value); }
         }
 
         public string ImageSource

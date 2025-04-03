@@ -2,122 +2,105 @@ using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
+using Org.BouncyCastle.Asn1.Ocsp;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using WinUIApp.Models;
 using WinUIApp.Services;
+using WinUIApp.Services.DummyServies;
+using WinUIApp.ViewModels;
 
 namespace WinUIApp.Views.Components
 {
     public sealed partial class UpdateDrinkFlyout : UserControl
     {
+        private UpdateDrinkMenuViewModel _viewModel;
+
         public Drink DrinkToUpdate { get; set; }
         public int UserId { get; set; }
-
-        private List<string> _allCategories = new();
-
-        private readonly HashSet<string> _selectedCategoryNames = new();
-
-        private List<Category> _allCategoryObjects = new(); // For ID lookups
-
 
         public UpdateDrinkFlyout()
         {
             this.InitializeComponent();
-
-            CategoryList.ItemsSource = new List<string>(_allCategories);
-            CategoryList.SelectionMode = ListViewSelectionMode.Multiple;
-
+            this.Loaded += UpdateDrinkFlyout_Loaded;
             CategoryList.SelectionChanged += CategoryList_SelectionChanged;
 
             SearchBox.TextChanged += (s, e) =>
             {
                 string query = SearchBox.Text.ToLower();
 
-                var filtered = _allCategories
+                var filtered = _viewModel.AllCategories
                     .Where(c => c.ToLower().Contains(query))
                     .ToList();
 
                 CategoryList.SelectionChanged -= CategoryList_SelectionChanged;
-
                 CategoryList.ItemsSource = filtered;
 
                 DispatcherQueue.TryEnqueue(() =>
                 {
                     foreach (var item in filtered)
                     {
-                        if (_selectedCategoryNames.Contains(item))
-                        {
+                        if (_viewModel.SelectedCategoryNames.Contains(item))
                             CategoryList.SelectedItems.Add(item);
-                        }
                     }
 
                     CategoryList.SelectionChanged += CategoryList_SelectionChanged;
                 });
             };
-
-            this.Loaded += UpdateDrinkFlyout_Loaded;
-        }
-
-        private void CategoryList_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            foreach (var removed in e.RemovedItems.Cast<string>())
-                _selectedCategoryNames.Remove(removed);
-
-            foreach (var added in e.AddedItems.Cast<string>())
-                _selectedCategoryNames.Add(added);
         }
 
         private void UpdateDrinkFlyout_Loaded(object sender, RoutedEventArgs e)
         {
-            var adminService = new WinUIApp.Services.DummyServies.AdminService();
-            var service = new WinUIApp.Services.DrinkService();
+            var drinkService = new DrinkService();
+            var userService = new UserService();
+            var adminService = new AdminService();
             bool isAdmin = adminService.IsAdmin(UserId);
-            _allCategories = _allCategories = service.getDrinkCategories().Select(c => c.Name).ToList();
-            _allCategoryObjects = service.getDrinkCategories();
 
+            var allBrands = drinkService.getDrinkBrands(); 
+            var allCategories = drinkService.getDrinkCategories();
+
+            _viewModel = new UpdateDrinkMenuViewModel(
+                DrinkToUpdate,
+                drinkService,
+                userService,
+                adminService
+            )
+            {
+                AllBrands = allBrands,
+                AllCategoryObjects = allCategories,
+                AllCategories = allCategories.Select(c => c.Name).ToList(),
+                BrandName = DrinkToUpdate.Brand?.Name ?? ""
+            };
+
+            foreach (var category in DrinkToUpdate.Categories)
+                _viewModel.SelectedCategoryNames.Add(category.Name);
+
+            this.DataContext = _viewModel;
 
             SaveButton.Content = isAdmin ? "Save" : "Send Request to Admin";
 
-            if (DrinkToUpdate != null)
+            CategoryList.ItemsSource = _viewModel.AllCategories;
+
+            foreach (var item in _viewModel.AllCategories)
             {
-                BrandBox.Text = DrinkToUpdate.Brand?.Name ?? "";
-                AlcoholBox.Text = DrinkToUpdate.AlcoholContent.ToString();
-                NameBox.Text = DrinkToUpdate.DrinkName;
-                ImageUrlBox.Text = DrinkToUpdate.DrinkURL;
-
-                var selectedNames = DrinkToUpdate.Categories.Select(c => c.Name).ToList();
-                foreach (var name in selectedNames)
-                {
-                    _selectedCategoryNames.Add(name);
-                }
-
-                CategoryList.ItemsSource = _allCategories;
-
-                foreach (var item in _allCategories)
-                {
-                    if (_selectedCategoryNames.Contains(item))
-                        CategoryList.SelectedItems.Add(item);
-                }
+                if (_viewModel.SelectedCategoryNames.Contains(item))
+                    CategoryList.SelectedItems.Add(item);
             }
         }
 
-        private Brand ResolveBrand(string brandName)
+
+        private void CategoryList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            var service = new DrinkService();
-            var existingBrands = service.getDrinkBrands();
+            if (_viewModel == null) return;
 
-            var match = existingBrands
-                .FirstOrDefault(b => b.Name.Equals(brandName, StringComparison.OrdinalIgnoreCase));
+            foreach (var removed in e.RemovedItems.Cast<string>())
+                _viewModel.SelectedCategoryNames.Remove(removed);
 
-            ///Daca nu exista brand-ul, dam eroare. Brandul trebuie sa existe.
-            if (match == null)
-            {
-                throw new ArgumentException("The brand you tried to add was not found.");
-            }
-            return match;
+            foreach (var added in e.AddedItems.Cast<string>())
+                if (!_viewModel.SelectedCategoryNames.Contains(added))
+                    _viewModel.SelectedCategoryNames.Add(added);
         }
 
         private void SaveButton_Click(object sender, RoutedEventArgs e)
@@ -127,29 +110,8 @@ namespace WinUIApp.Views.Components
 
             try
             {
-                //validation
-                if (string.IsNullOrWhiteSpace(NameBox.Text))
-                    throw new ArgumentException("Drink name is required");
-
-                if (string.IsNullOrWhiteSpace(BrandBox.Text))
-                    throw new ArgumentException("Brand is required");
-
-                if (!float.TryParse(AlcoholBox.Text, out var alcoholContent) || alcoholContent < 0 || alcoholContent > 100)
-                    throw new ArgumentException("Valid alcohol content (0-100%) is required");
-
-                if (_selectedCategoryNames.Count == 0)
-                    throw new ArgumentException("At least one category must be selected");
-
-                // Set drink fields
-                DrinkToUpdate.Brand = ResolveBrand(BrandBox.Text);
-                DrinkToUpdate.DrinkName = NameBox.Text;
-                DrinkToUpdate.DrinkURL = ImageUrlBox.Text;
-                DrinkToUpdate.AlcoholContent = alcoholContent;
-
-                // Map selected category names to Category objects
-                DrinkToUpdate.Categories = _selectedCategoryNames
-                    .Select(name => _allCategoryObjects.First(c => c.Name == name))
-                    .ToList();
+                _viewModel.Validate();
+                DrinkToUpdate.Categories = _viewModel.GetSelectedCategories();
 
                 var adminService = new WinUIApp.Services.DummyServies.AdminService();
                 bool isAdmin = adminService.IsAdmin(UserId);
@@ -158,22 +120,15 @@ namespace WinUIApp.Views.Components
 
                 if (isAdmin)
                 {
-                    var service = new DrinkService();
-                    service.updateDrink(DrinkToUpdate);
-                    var testDrink = service.getDrinks(null, null, null, null, null, null)[0];
+                    _viewModel.InstantUpdateDrink();
                     message = "Drink updated successfully.";
                 }
                 else
                 {
+                    _viewModel.SendUpdateDrinkRequest();
                     message = "A request was sent to the admin.";
-                    adminService.SendNotification(
-                        senderUserID: UserId,
-                        title: "Drink Update Request",
-                        description: $"User requested to update drink: {DrinkToUpdate.DrinkName}"
-                    );
                 }
 
-                // Success dialog
                 var dialog = new ContentDialog
                 {
                     Title = "Success",
@@ -185,7 +140,6 @@ namespace WinUIApp.Views.Components
             }
             catch (Exception ex)
             {
-                // Error dialog
                 var dialog = new ContentDialog
                 {
                     Title = "Error",
@@ -196,6 +150,5 @@ namespace WinUIApp.Views.Components
                 _ = dialog.ShowAsync();
             }
         }
-
     }
 }

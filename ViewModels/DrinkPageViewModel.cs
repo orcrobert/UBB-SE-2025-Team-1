@@ -9,7 +9,7 @@ using WinUIApp.Services;
 using WinUIApp.Services.DummyServies;
 using System.Diagnostics;
 
-namespace WinUIApp.Views.ViewModels
+namespace WinUIApp.ViewModels
 {
     public class DrinkPageViewModel : INotifyPropertyChanged
     {

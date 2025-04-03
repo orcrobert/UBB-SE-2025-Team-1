@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WinUIApp.Views.ViewModels
+namespace WinUIApp.ViewModels
 {
-    class UpdateDrinkMenuViewModel
+    class AddDrinkMenuViewModel
     {
     }
 }

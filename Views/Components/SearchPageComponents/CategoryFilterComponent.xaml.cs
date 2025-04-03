@@ -2,7 +2,9 @@ using Microsoft.UI.Xaml.Controls;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 using WinUIApp.Models;
 
 namespace WinUIApp.Views.Components.SearchPageComponents
@@ -18,6 +20,7 @@ namespace WinUIApp.Views.Components.SearchPageComponents
         public CategoryFilterComponent()
         {
             this.InitializeComponent();
+            Debug.WriteLine("selected in component" + CategoryList.SelectedItems.Count);
         }
 
         public void CategoryListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -27,8 +30,6 @@ namespace WinUIApp.Views.Components.SearchPageComponents
 
             foreach (Category addedCategory in e.AddedItems)
                 _selectedCategories.Add(addedCategory);
-
-            // Raise the CategoryChanged event with the list of selected category names
             CategoryChanged?.Invoke(this, _selectedCategories.Select(c => c.Name).ToList());
         }
 
@@ -60,7 +61,7 @@ namespace WinUIApp.Views.Components.SearchPageComponents
             CategoryList.SelectionChanged += CategoryListView_SelectionChanged;
         }
 
-        public void SetCategoriesFilter(IEnumerable<Category> categories)
+        public async void SetCategoriesFilter(IEnumerable<Category> categories, IEnumerable<Category> initialCategories)
         {
             _originalCategories = categories.ToList();
             CurrentCategories.Clear();
@@ -69,12 +70,20 @@ namespace WinUIApp.Views.Components.SearchPageComponents
                 CurrentCategories.Add(category);
             }
 
-            CategoryList.SelectedItems.Clear();
-            foreach (Category category in CurrentCategories)
+            HashSet<int> ids = new HashSet<int>();
+            foreach (Category category in initialCategories)
             {
-                if (_selectedCategories.Contains(category))
+                ids.Add(category.Id);
+            }
+            CategoryList.SelectedItems.Clear();
+
+            await Task.Delay(50);
+            foreach (Category category in _originalCategories)
+            {
+                if (ids.Contains(category.Id))
                 {
                     CategoryList.SelectedItems.Add(category);
+                    _selectedCategories.Add(category);
                 }
             }
         }

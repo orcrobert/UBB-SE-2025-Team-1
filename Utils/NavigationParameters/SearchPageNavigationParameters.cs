@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using WinUIApp.Models;
 
 namespace WinUIApp.Utils.NavigationParameters
 {
     public class SearchPageNavigationParameters
     {
-        public List<string>? InitialCategories { get; set; }
+        public List<Category>? InitialCategories { get; set; }
         public string? SearchedTerms { get; set; }
     }
 }

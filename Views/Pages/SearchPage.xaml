@@ -7,14 +7,17 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
     xmlns:component="using:WinUIApp.Views.Components.SearchPageComponents"
+    xmlns:drinkComponent="using:WinUIApp.Views.Components"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <StackPanel Background="LightGray">
-        <component:SortSelectorComponent x:Name="SortSelectorControl" 
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,20,0">
+            <drinkComponent:AddDrinkButton x:Name="AddDrinkButtonControl" Margin="0,0,10,0"/>
+            <component:SortSelectorComponent x:Name="SortSelectorControl" 
                                          SortByChanged="SortByDropdownControl_SortByChanged"
-                                         SortOrderChanged="SortSelectorControl_SortOrderChanged" 
-                                         HorizontalAlignment="Right"/>
+                                         SortOrderChanged="SortSelectorControl_SortOrderChanged"/>
+        </StackPanel>
         <StackPanel Orientation="Horizontal" Margin="20">
             <StackPanel Orientation="Vertical">
                 <TextBlock Text="Search Filters"

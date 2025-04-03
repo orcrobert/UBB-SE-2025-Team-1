@@ -19,22 +19,31 @@
             <TextBlock Text="Add New Drink" FontSize="18" FontWeight="Bold"/>
 
             <TextBlock Text="Drink Name:"/>
-            <TextBox x:Name="NameBox" PlaceholderText="Enter drink name..." />
+            <TextBox x:Name="NameBox"
+                     PlaceholderText="Enter drink name..."
+                     Text="{Binding DrinkName, Mode=TwoWay}" />
 
             <TextBlock Text="Image URL:"/>
-            <TextBox x:Name="ImageUrlBox" PlaceholderText="Enter image URL..." />
+            <TextBox x:Name="ImageUrlBox"
+                     PlaceholderText="Enter image URL..."
+                     Text="{Binding DrinkURL, Mode=TwoWay}" />
 
             <TextBlock Text="Categories:"/>
             <TextBox x:Name="SearchBox" PlaceholderText="Search categories..." />
             <ListView x:Name="CategoryList"
                       Height="120"
-                      SelectionMode="Multiple"/>
+                      SelectionMode="Multiple"
+                      ItemsSource="{Binding AllCategories}"/>
 
             <TextBlock Text="Brand:"/>
-            <TextBox x:Name="BrandBox" PlaceholderText="Brand" />
+            <TextBox x:Name="BrandBox"
+                     PlaceholderText="Brand"
+                     Text="{Binding BrandName, Mode=TwoWay}" />
 
             <TextBlock Text="Alcohol Content (%):"/>
-            <TextBox x:Name="AlcoholBox" PlaceholderText="Alcohol %" />
+            <TextBox x:Name="AlcoholBox"
+                     PlaceholderText="Alcohol %"
+                     Text="{Binding AlcoholContent, Mode=TwoWay}" />
 
             <Button x:Name="SaveButton"
                     Content="Add Drink"

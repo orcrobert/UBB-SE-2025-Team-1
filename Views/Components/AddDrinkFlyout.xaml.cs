@@ -7,49 +7,40 @@ using System.Collections.Generic;
 using System.Linq;
 using WinUIApp.Models;
 using WinUIApp.Services;
+using WinUIApp.Services.DummyServies;
+using WinUIApp.ViewModels;
 
 namespace WinUIApp.Views.Components
 {
     public sealed partial class AddDrinkFlyout : UserControl
     {
+        private AddDrinkMenuViewModel _viewModel;
+
         public int UserId { get; set; }
-
-        private readonly List<string> _allCategories = new();
-        
-
-        private readonly HashSet<string> _selectedCategoryNames = new();
 
         public AddDrinkFlyout()
         {
             this.InitializeComponent();
-            var service = new DrinkService();
-            _allCategories = service.getDrinkCategories().Select(c => c.Name).ToList();
-
-            CategoryList.ItemsSource = new List<string>(_allCategories);
-            CategoryList.SelectionMode = ListViewSelectionMode.Multiple;
-
+            this.Loaded += AddDrinkFlyout_Loaded;
             CategoryList.SelectionChanged += CategoryList_SelectionChanged;
 
             SearchBox.TextChanged += (s, e) =>
             {
                 string query = SearchBox.Text.ToLower();
 
-                var filtered = _allCategories
+                var filtered = _viewModel.AllCategories
                     .Where(c => c.ToLower().Contains(query))
                     .ToList();
 
                 CategoryList.SelectionChanged -= CategoryList_SelectionChanged;
-
                 CategoryList.ItemsSource = filtered;
 
                 DispatcherQueue.TryEnqueue(() =>
                 {
                     foreach (var item in filtered)
                     {
-                        if (_selectedCategoryNames.Contains(item))
-                        {
+                        if (_viewModel.SelectedCategoryNames.Contains(item))
                             CategoryList.SelectedItems.Add(item);
-                        }
                     }
 
                     CategoryList.SelectionChanged += CategoryList_SelectionChanged;
@@ -57,88 +48,66 @@ namespace WinUIApp.Views.Components
             };
         }
 
-        //Asta e metoda care se apeleaza cand se schimba selectia de categorii
-        private void CategoryList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void AddDrinkFlyout_Loaded(object sender, RoutedEventArgs e)
         {
-            foreach (var removed in e.RemovedItems.Cast<string>())
-                _selectedCategoryNames.Remove(removed);
+            var drinkService = new DrinkService();
+            var userService = new UserService();
+            var adminService = new AdminService();
+            bool isAdmin = adminService.IsAdmin(UserId);
 
-            foreach (var added in e.AddedItems.Cast<string>())
-                _selectedCategoryNames.Add(added);
+            var allBrands = drinkService.getDrinkBrands();
+            var allCategories = drinkService.getDrinkCategories();
+
+            _viewModel = new AddDrinkMenuViewModel(
+                drinkService,
+                userService,
+                adminService
+            )
+            {
+                AllBrands = allBrands,
+                AllCategoryObjects = allCategories,
+                AllCategories = allCategories.Select(c => c.Name).ToList()
+            };
+
+            this.DataContext = _viewModel;
+
+            SaveButton.Content = isAdmin ? "Add Drink" : "Send Request to Admin";
+
+            CategoryList.ItemsSource = _viewModel.AllCategories;
         }
 
-        //Asta e metoda care verifica daca brand-ul exista deja in baza de date
-        private Brand ResolveBrand(string brandName)
+        private void CategoryList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            var service = new DrinkService();
-            var existingBrands = service.getDrinkBrands();
+            if (_viewModel == null) return;
 
-            var match = existingBrands
-                .FirstOrDefault(b => b.Name.Equals(brandName, StringComparison.OrdinalIgnoreCase));
-            
-            ///Daca nu exista brand-ul, dam eroare. Brandul trebuie sa existe.
-            if (match == null)
-            {
-                throw new ArgumentException("The brand you tried to add was not found.");
-            }
-            return match;
+            foreach (var removed in e.RemovedItems.Cast<string>())
+                _viewModel.SelectedCategoryNames.Remove(removed);
+
+            foreach (var added in e.AddedItems.Cast<string>())
+                if (!_viewModel.SelectedCategoryNames.Contains(added))
+                    _viewModel.SelectedCategoryNames.Add(added);
         }
 
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
-            //Ceva mici validari. Catalin this is just for refference, you can get rid of it daca vrei sa faci tu validarea
             try
             {
-                if (string.IsNullOrWhiteSpace(NameBox.Text))
-                {
-                    throw new ArgumentException("Drink name is required");
-                }
+                _viewModel.Validate();
 
-                if (string.IsNullOrWhiteSpace(BrandBox.Text))
-                {
-                    throw new ArgumentException("Brand is required");
-                }
-
-                if (!float.TryParse(AlcoholBox.Text, out var alcoholContent) || alcoholContent < 0 || alcoholContent > 100)
-                {
-                    throw new ArgumentException("Valid alcohol content (0-100%) is required");
-                }
-
-                if (_selectedCategoryNames.Count == 0)
-                {
-                    throw new ArgumentException("At least one category must be selected");
-                }
-                
-
-                var brand = ResolveBrand(BrandBox.Text);
-                var categories = _selectedCategoryNames
-                    .Select(name => new Category(1, name))
-                    .ToList();
-
-                var adminService = new WinUIApp.Services.DummyServies.AdminService();
+                var adminService = new AdminService();
                 bool isAdmin = adminService.IsAdmin(UserId);
-                //isAdmin = true; // Doar testez aici daca merge add-u, comentati linia asta si va merge normal
+
                 string message;
+
                 if (isAdmin)
                 {
-                    var service = new DrinkService();
-                    service.addDrink(
-                        drinkName: NameBox.Text,
-                        drinkUrl: ImageUrlBox.Text,
-                        categories: categories,
-                        brandName: brand.Name,
-                        alcoholContent: alcoholContent
-                    );
+                    _viewModel.InstantAddDrink();
                     message = "Drink added successfully.";
                 }
                 else
                 {
+                    _viewModel.SendAddDrinkRequest();
                     message = "A request was sent to the admin.";
-                    adminService.SendNotification(
-                        senderUserID: UserId,
-                        title: "New Drink Request",
-                        description: $"User requested to add new drink: {NameBox.Text}"
-                    );
                 }
 
                 var dialog = new ContentDialog
@@ -150,29 +119,7 @@ namespace WinUIApp.Views.Components
                 };
                 _ = dialog.ShowAsync();
 
-                // Clear the form
-                NameBox.Text = string.Empty;
-                ImageUrlBox.Text = string.Empty;
-                BrandBox.Text = string.Empty;
-                AlcoholBox.Text = string.Empty;
-                _selectedCategoryNames.Clear();
-                CategoryList.SelectedItems.Clear();
-            }
-            catch (Exception ex) when (ex.Message.Contains("The brand you tried to add was not found."))
-            {
-                // Specific pt eroarea de brand. Informam user-ul ce brnduri sunt valabile, ca sa stie pe data viitoare
-                var service = new DrinkService();
-                var availableBrands = service.getDrinkBrands();
-                var brandList = string.Join(", ", availableBrands.Select(b => b.Name));
-
-                var dialog = new ContentDialog
-                {
-                    Title = "Error",
-                    Content = $"Brand does not exist. Available brands are: {brandList}",
-                    CloseButtonText = "OK",
-                    XamlRoot = this.XamlRoot
-                };
-                _ = dialog.ShowAsync();
+                _viewModel.ClearForm();
             }
             catch (Exception ex)
             {

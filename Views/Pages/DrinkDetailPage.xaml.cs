@@ -1,11 +1,12 @@
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
+using WinUIApp.Views.ViewModels;
 
 namespace WinUIApp.Views.Pages
 {
     public sealed partial class DrinkDetailPage : Page
     {
-        private int _drinkId;
+        public DrinkDetailPageViewModel ViewModel { get; } = new DrinkDetailPageViewModel(new Services.DrinkService());
 
         public DrinkDetailPage()
         {
@@ -17,7 +18,7 @@ namespace WinUIApp.Views.Pages
             base.OnNavigatedTo(e);
             if (e.Parameter is int drinkId)
             {
-                _drinkId = drinkId;
+                ViewModel.LoadDrink(drinkId);
             }
         }
     }

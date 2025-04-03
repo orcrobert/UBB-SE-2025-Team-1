@@ -1,5 +1,6 @@
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
+using WinUIApp.Models;
 using WinUIApp.Views.ViewModels;
 
 namespace WinUIApp.Views.Pages
@@ -16,6 +17,11 @@ namespace WinUIApp.Views.Pages
                 RemoveButtonText.Text = "Remove drink";
             else
                 RemoveButtonText.Text = "Send remove drink request";
+
+            UpdateButton.OnDrinkUpdated = () =>
+            {
+                ViewModel.LoadDrink(ViewModel.Drink.Id);
+            };
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)

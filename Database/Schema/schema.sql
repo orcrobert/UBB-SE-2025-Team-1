@@ -130,9 +130,7 @@ INSERT INTO Vote (UserId, DrinkId, VoteTime) VALUES (4, 5, "2025-03-30 12:00:00"
 INSERT INTO Vote (UserId, DrinkId, VoteTime) VALUES (2, 8, "2025-03-31 09:00:00");
 INSERT INTO Vote (UserId, DrinkId, VoteTime) VALUES (5, 9, "2025-03-30 14:00:00");
 
-INSERT INTO DrinkOfTheDay (DrinkId, DrinkTime) VALUES (1, "2025-03-29 10:00:00");
-INSERT INTO DrinkOfTheDay (DrinkId, DrinkTime) VALUES (2, "2025-03-30 11:00:00");
-INSERT INTO DrinkOfTheDay (DrinkId, DrinkTime) VALUES (8, "2025-03-31 13:00:00");
+INSERT INTO DrinkOfTheDay (DrinkId, DrinkTime) VALUES (1, "2025-04-3 08:00:00");
 
 INSERT INTO UserDrink (UserId, DrinkId) VALUES (1, 1);
 INSERT INTO UserDrink (UserId, DrinkId) VALUES (1, 2);

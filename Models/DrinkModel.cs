@@ -486,9 +486,42 @@ namespace WinUIApp.Models
 
                 var result = dbService.ExecuteSelect(checkQuery, parameters);
 
-                if (result != null && Convert.ToInt64(result) > 0)
+                if (result != null && result.Count > 0)
                 {
-                    return true;
+                    if (result[0].ContainsKey("COUNT(*)"))
+                    {
+                        if (result[0]["COUNT(*)"] is long count)
+                        {
+                            return count > 0;
+                        }
+                        else if (result[0]["COUNT(*)"] is int intCount)
+                        {
+                            return intCount > 0;
+                        }
+                        else
+                        {
+                            System.Diagnostics.Debug.WriteLine($"Unexpected type for COUNT(*): {result[0]["COUNT(*)"]?.GetType()}");
+                        }
+                    }
+                    else if (result[0].ContainsKey("count(*)"))
+                    {
+                        if (result[0]["count(*)"] is long count)
+                        {
+                            return count > 0;
+                        }
+                        else if (result[0]["count(*)"] is int intCount)
+                        {
+                            return intCount > 0;
+                        }
+                        else
+                        {
+                            System.Diagnostics.Debug.WriteLine($"Unexpected type for count(*): {result[0]["count(*)"]?.GetType()}");
+                        }
+                    }
+                    else
+                    {
+                        System.Diagnostics.Debug.WriteLine("Warning: COUNT(*) column not found in the result.");
+                    }
                 }
                 return false;
             }

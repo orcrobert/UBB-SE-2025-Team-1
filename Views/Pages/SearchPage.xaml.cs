@@ -4,7 +4,6 @@ using Microsoft.UI.Xaml.Navigation;
 using System.Collections.Generic;
 using WinUIApp.Models;
 using WinUIApp.Utils.NavigationParameters;
-using WinUIApp.Utils;
 using WinUIApp.ViewModels;
 using WinUIApp.Views.Components.SearchPageComponents;
 
@@ -22,6 +21,7 @@ namespace WinUIApp.Views.Pages
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
+            MainWindow.PreviousPage = typeof(SearchPage);
             _searchPageViewModel = new SearchPageViewModel(new Services.DrinkService(), new Services.DummyServies.ReviewService());
             SortSelectorControl.SetSortOrder(_searchPageViewModel.IsAscending);
             if (e.Parameter is SearchPageNavigationParameters parameters)

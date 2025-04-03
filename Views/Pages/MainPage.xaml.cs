@@ -1,12 +1,9 @@
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
-using System.Diagnostics;
-using System.Xml.Serialization;
-using WinUIApp.ViewModels;
-using WinUIApp.Views.Pages;
-using WinUIApp.Services.DummyServies;
+using Microsoft.UI.Xaml.Navigation;
 using WinUIApp.Services;
-using WinUIApp.Views.Components;
+using WinUIApp.Services.DummyServies;
+using WinUIApp.ViewModels;
 namespace WinUIApp.Views.Pages
 {
     public sealed partial class MainPage : Page
@@ -25,6 +22,11 @@ namespace WinUIApp.Views.Pages
             MainWindow.AppMainFrame.Navigate(typeof(DrinkDetailPage), _viewModel.getDrinkOfTheDayId());
         }
 
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+            MainWindow.PreviousPage = typeof(MainPage);
+        }
 
     }
 }

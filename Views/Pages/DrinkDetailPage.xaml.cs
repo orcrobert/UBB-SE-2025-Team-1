@@ -30,6 +30,7 @@ namespace WinUIApp.Views.Pages
         private void ConfirmRemoveButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
             ViewModel.RemoveDrink();
+            MainWindow.AppMainFrame.Navigate(MainWindow.PreviousPage);
         }
     }
 }

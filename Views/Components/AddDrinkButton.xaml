@@ -13,11 +13,11 @@
                 Click="AddDrinkButton_Click"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Top"
-                Margin="10"
+                Margin="0"
                 Style="{StaticResource DefaultButton}"
                 Background="Yellow"
                 Foreground="Black"
                 FontWeight="Bold"
-                Padding="20,10"/>
+                Padding="10"/>
     </Grid>
 </UserControl> 

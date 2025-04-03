@@ -11,6 +11,7 @@ namespace WinUIApp.Views.Pages
         public DrinkDetailPage()
         {
             this.InitializeComponent();
+            this.DataContext = ViewModel;
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)

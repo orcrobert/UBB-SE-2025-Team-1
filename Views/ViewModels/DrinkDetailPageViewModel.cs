@@ -23,8 +23,14 @@ namespace WinUIApp.Views.ViewModels
             {
                 _drink = value;
                 OnPropertyChanged(nameof(Drink));
+                OnPropertyChanged(nameof(CategoriesDisplay));
             }
         }
+
+        public string CategoriesDisplay =>
+        Drink?.Categories != null
+        ? string.Join(", ", Drink.Categories.Select(c => c.Name))
+        : string.Empty;
 
         public DrinkDetailPageViewModel(DrinkService drinkService)
         {

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UserControl
+    x:Class="WinUIApp.Views.Components.SearchPageComponents.RatingFilterComponent"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:WinUIApp.Views.Components.SearchPageComponents"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <StackPanel x:Name="LayoutPanel" Spacing="10">
+        <TextBlock 
+        Text="Minimum Rating:"
+        Foreground="Black"/>
+        <ComboBox 
+            x:Name="RatingComboBox" 
+            SelectionChanged="RatingComboBox_SelectionChanged"
+            Width="210">
+            <ComboBoxItem Content="5 Stars"/>
+            <ComboBoxItem Content="4 Stars"/>
+            <ComboBoxItem Content="3 Stars"/>
+            <ComboBoxItem Content="2 Stars"/>
+            <ComboBoxItem Content="1 Star"/>
+        </ComboBox>
+        <!--<ListView 
+            x:Name="RatingComboBox"
+            Height="120"
+            SelectionMode="Single"
+            SelectionChanged="RatingComboBox_SelectionChanged">
+            <ListViewItem Content="5 Stars"/>
+            <ListViewItem Content="4 Stars"/>
+            <ListViewItem Content="3 Stars"/>
+            <ListViewItem Content="2 Stars"/>
+            <ListViewItem Content="1 Star"/>
+
+        </ListView>-->
+    </StackPanel>
+</UserControl>

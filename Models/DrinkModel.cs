@@ -1,13 +1,8 @@
-﻿using Microsoft.UI.Xaml.Controls;
-using MySql.Data.MySqlClient;
+﻿using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using WinUIApp.Services;
-using static Org.BouncyCastle.Asn1.Cmp.Challenge;
 
 namespace WinUIApp.Models
 {
@@ -491,9 +486,42 @@ namespace WinUIApp.Models
 
                 var result = dbService.ExecuteSelect(checkQuery, parameters);
 
-                if (result != null && Convert.ToInt64(result) > 0)
+                if (result != null && result.Count > 0)
                 {
-                    return true;
+                    if (result[0].ContainsKey("COUNT(*)"))
+                    {
+                        if (result[0]["COUNT(*)"] is long count)
+                        {
+                            return count > 0;
+                        }
+                        else if (result[0]["COUNT(*)"] is int intCount)
+                        {
+                            return intCount > 0;
+                        }
+                        else
+                        {
+                            System.Diagnostics.Debug.WriteLine($"Unexpected type for COUNT(*): {result[0]["COUNT(*)"]?.GetType()}");
+                        }
+                    }
+                    else if (result[0].ContainsKey("count(*)"))
+                    {
+                        if (result[0]["count(*)"] is long count)
+                        {
+                            return count > 0;
+                        }
+                        else if (result[0]["count(*)"] is int intCount)
+                        {
+                            return intCount > 0;
+                        }
+                        else
+                        {
+                            System.Diagnostics.Debug.WriteLine($"Unexpected type for count(*): {result[0]["count(*)"]?.GetType()}");
+                        }
+                    }
+                    else
+                    {
+                        System.Diagnostics.Debug.WriteLine("Warning: COUNT(*) column not found in the result.");
+                    }
                 }
                 return false;
             }
@@ -582,7 +610,8 @@ namespace WinUIApp.Models
 
                 if (drinkQueryResult.Count == 0)
                 {
-                    throw new Exception("No drink of the day found");
+                    setDrinkOfTheDay();
+                    drinkQueryResult = dbService.ExecuteSelect(getDrinkOfTheDayQuery);
                 }
 
                 int drinkId = Convert.ToInt32(drinkQueryResult[0]["DrinkId"]);
@@ -610,8 +639,7 @@ namespace WinUIApp.Models
                 int brandId = Convert.ToInt32(drinkQueryResult[0]["BrandId"]);
                 string drinkName = drinkQueryResult[0]["DrinkName"].ToString();
                 string drinkURL = drinkQueryResult[0]["DrinkURL"].ToString();
-                float alcoholContent = Convert.ToSingle(drinkQueryResult[0]["AlcoholContent"]);
-
+                float alcoholContent = (float)Convert.ToDouble(drinkQueryResult[0]["AlcoholContent"]);
                 string getCategoriesQuery = "SELECT C.CategoryId, C.CategoryName FROM Drink AS D JOIN DrinkCategory AS DC ON DC.DrinkId = @DrinkId JOIN Category AS B ON DC.CategoryId = C.CategoryId;";
                 var categoryQueryResult = dbService.ExecuteSelect(getCategoriesQuery, drinkIdParameter);
 
@@ -649,31 +677,84 @@ namespace WinUIApp.Models
             }
         }
 
+        private int getCurrentTopVotedDrink()
+        {
+            var dbService = DatabaseService.Instance;
+            string topVoteCountQuery = @"
+                                            SELECT DrinkId, COUNT(*) AS VoteCount 
+                                            FROM Vote 
+                                            WHERE DATE(VoteTime) = DATE(@VoteTime)
+                                            GROUP BY DrinkId
+                                            ORDER BY VoteCount DESC
+                                            LIMIT 1;";
+            List<MySqlParameter> voteDayParameter =
+            [
+                new MySqlParameter("@VoteTime", MySqlDbType.DateTime) { Value = DateTime.UtcNow.Date.AddDays(-1) }
+            ];
+            int currentTopVotedDrink;
+            var topVoteCountResult = dbService.ExecuteSelect(topVoteCountQuery, voteDayParameter);
+
+            if (topVoteCountResult.Count == 0)
+            {
+                currentTopVotedDrink = getRandomDrinkId();
+            }
+
+            currentTopVotedDrink = Convert.ToInt32(topVoteCountResult[0]["DrinkId"]);
+            return currentTopVotedDrink;
+        }
+
+        public int getRandomDrinkId()
+        {
+            var dbService = DatabaseService.Instance;
+            try
+            {
+                string getRandomDrinkIdQuery = "SELECT DrinkId FROM Drink ORDER BY RAND() LIMIT 1;";
+                var selectResult = dbService.ExecuteSelect(getRandomDrinkIdQuery);
+                if (selectResult.Count > 0)
+                {
+                    return Convert.ToInt32(selectResult[0]["DrinkId"]);
+                }
+                else
+                {
+                    throw new Exception("No drinks found in the database.");
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Failed to get random drink ID", ex);
+            }
+
+        }
+        private void setDrinkOfTheDay()
+        {
+            var dbService = DatabaseService.Instance;
+            try
+            {
+                int newDrinkOfTheDayId = getCurrentTopVotedDrink();
+
+                string insertDrinkOfTheDayQuery = "INSERT INTO DrinkOfTheDay (DrinkId, DrinkTime) VALUES (@DrinkId, @DrinkTime);";
+                List<MySqlParameter> parameters =
+                [
+                    new MySqlParameter("@DrinkId", MySqlDbType.Int32) { Value = newDrinkOfTheDayId },
+                    new MySqlParameter("@DrinkTime", MySqlDbType.DateTime) { Value = DateTime.UtcNow }
+                ];
+
+                dbService.ExecuteQuery(insertDrinkOfTheDayQuery, parameters);
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Failed to reset drink of the day", ex);
+            }
+        }
+        
+
         private void resetDrinkOfTheDay()
         {
             var dbService = DatabaseService.Instance;
             try
             {
-                string topVoteCountQuery = "SELECT DrinkId, COUNT(*) AS VoteCount " +
-                    "                   FROM Vote " +
-                    "                   WHERE CAST(VoteTime AS DATE) >= @VoteTime" +
-                    "                   GROUP BY DrinkId" +
-                    "                   ORDER BY VoteCount Desc" +
-                    "                   LIMIT 1;";
-                List<MySqlParameter> voteDayParameter =
-                [
-                    new MySqlParameter("@VoteTime", MySqlDbType.DateTime) { Value = DateTime.UtcNow.Date.AddDays(-1) }
-                ];
-
-                var topVoteCountResult = dbService.ExecuteSelect(topVoteCountQuery, voteDayParameter);
-
-                if (topVoteCountResult.Count == 0)
-                {
-                    throw new Exception("No votes found for yesterdays Drink of the Day");
-                }
-
-                int newDrinkOfTheDayId = Convert.ToInt32(topVoteCountResult[0]["DrinkId"]);
-
+                int newDrinkOfTheDayId = getCurrentTopVotedDrink();
                 string updateDrinkOfTheDayQuery = "UPDATE DrinkOfTheDay SET DrinkId = @DrinkId, DrinkTime = @DrinkTime;";
                 List<MySqlParameter> parameters =
                 [

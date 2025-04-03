@@ -25,8 +25,11 @@ namespace WinUIApp.Services
                     lock (_lock)
                     {
                         if (_instance == null)
-                        {
-                            _instance = new DatabaseService();
+                        {   
+                            lock(_lock)
+                            {
+                                _instance = new DatabaseService();
+                            }
                         }
                     }
                 }
@@ -73,7 +76,7 @@ namespace WinUIApp.Services
             }
             finally
             {
-                //_databaseConnection.CloseConnection();
+                _databaseConnection.CloseConnection();
             }
 
             return result;
@@ -101,7 +104,7 @@ namespace WinUIApp.Services
             }
             finally
             {
-                //_databaseConnection.CloseConnection();
+                _databaseConnection.CloseConnection();
             }
 
             return rowsAffected;

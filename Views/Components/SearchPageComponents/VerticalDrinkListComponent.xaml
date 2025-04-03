@@ -14,7 +14,9 @@
             ItemsSource="{x:Bind DrinksList, Mode=OneWay}" 
             SelectionMode="None" 
             IsItemClickEnabled="True" 
-            ItemClick="DrinkList_ItemClick">
+            ItemClick="DrinkList_ItemClick"
+            Height="680"
+            Width="1150">
             <ListView.ItemTemplate>
                 <DataTemplate x:DataType="local:DrinkDisplayItem">
                     <Grid Padding="10">

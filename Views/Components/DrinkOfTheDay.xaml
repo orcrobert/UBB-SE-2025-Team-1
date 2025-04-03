@@ -1,60 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <UserControl
-    x:Class="WinUIApp.Views.Components.DrinkOfTheDayComponents.DrinkOfTheDayComponent"
+    x:Class="WinUIApp.Views.Components.DrinkOfTheDayComponent"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:WinUIApp.Views.Components.DrinkOfTheDayComponents"
+    xmlns:local="using:WinUIApp.Views.Components"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d">
+    mc:Ignorable="d"
+    xmlns:converters="using:WinUIApp.Utils.Converters"
+    >
 
-    <Grid CornerRadius="12" Padding="12" Background="{StaticResource MediumDarkGray}" Width="800" Height="600">
+    <Grid CornerRadius="12" Padding="12" Background="{StaticResource MediumDarkGray}" Width="800" Height="600" Margin="25,0,0,0">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
         <!--Title-->
-        <TextBlock Text="Drink of the Day" Foreground="White" FontWeight="Bold" Grid.Row="0" FontSize="22" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        <TextBlock Text="Drink of the Day" Foreground="White" FontWeight="Bold" Grid.Row="0" FontSize="26" HorizontalAlignment="Left" VerticalAlignment="Center"/>
 
         <!-- Image container with overlay -->
         <Grid Grid.Row="1" CornerRadius="12">
-            <!-- Image of the drink -->
-            <Image Source="{Binding ImageSource}" Stretch="UniformToFill" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <Image Source="{Binding ImageSource, Converter={StaticResource ImageUrlConverter}}" Stretch="UniformToFill" HorizontalAlignment="Center" VerticalAlignment="Center"/>
 
-            <!-- Gradient overlay at bottom for text -->
             <Rectangle VerticalAlignment="Bottom" Height="200">
                 <Rectangle.Fill>
                     <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                        <!-- Smoother gradient with more intermediate steps -->
                         <GradientStop Color="Transparent" Offset="0.3"/>
                         <GradientStop Color="#33000000" Offset="0.4"/>
-                        <!-- Very faint black (20% opacity) -->
                         <GradientStop Color="#66000000" Offset="0.5"/>
-                        <!-- Medium transparency (40% opacity) -->
                         <GradientStop Color="#99000000" Offset="0.65"/>
-                        <!-- More opaque (60% opacity) -->
                         <GradientStop Color="#CC000000" Offset="0.8"/>
-                        <!-- Darker (80% opacity) -->
                         <GradientStop Color="#DD000000" Offset="0.9"/>
-                        <!-- Almost fully opaque (87% opacity) -->
                         <GradientStop Color="#FF000000" Offset="1.0"/>
-                        <!-- Fully black (100% opacity) -->
                     </LinearGradientBrush>
                 </Rectangle.Fill>
             </Rectangle>
 
             <!-- Drink Information (Overlay on image) -->
             <StackPanel Orientation="Vertical" VerticalAlignment="Bottom" Margin="20" HorizontalAlignment="Left">
-                <!-- Horizontal line for brand + name -->
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="{Binding DrinkName}" FontWeight="Bold" FontSize="20" Foreground="White"/>
                     <TextBlock Text=",  " FontSize="20" Foreground="White"/>
                     <TextBlock Text="{Binding DrinkBrand}" FontSize="20" Foreground="White"/>
                 </StackPanel>
 
-                <TextBlock Text="{Binding DrinkCategory}" FontSize="18" Margin="0,5,0,0" Foreground="White" FontWeight="Light"/>
-                <TextBlock Text="{Binding AlcoholContent}" FontSize="14" Margin="0,5,0,0" Foreground="White"/>
+                <TextBlock Text="{Binding DrinkCategories, Converter={StaticResource CategoriesConverter}}" FontSize="18" Margin="0,5,0,0" Foreground="White" FontWeight="Light"/>
+                <TextBlock Text="{Binding AlcoholContent, Converter={StaticResource AlcoholContentConverter}}" FontSize="14" Margin="0,5,0,0" Foreground="White"/>
             </StackPanel>
         </Grid>
     </Grid>

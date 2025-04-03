@@ -2,10 +2,8 @@ using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
-using Org.BouncyCastle.Asn1.Ocsp;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using WinUIApp.Models;
 using WinUIApp.Services;
@@ -14,17 +12,16 @@ using WinUIApp.ViewModels;
 
 namespace WinUIApp.Views.Components
 {
-    public sealed partial class UpdateDrinkFlyout : UserControl
+    public sealed partial class AddDrinkFlyout : UserControl
     {
-        private UpdateDrinkMenuViewModel _viewModel;
+        private AddDrinkMenuViewModel _viewModel;
 
-        public Drink DrinkToUpdate { get; set; }
         public int UserId { get; set; }
 
-        public UpdateDrinkFlyout()
+        public AddDrinkFlyout()
         {
             this.InitializeComponent();
-            this.Loaded += UpdateDrinkFlyout_Loaded;
+            this.Loaded += AddDrinkFlyout_Loaded;
             CategoryList.SelectionChanged += CategoryList_SelectionChanged;
 
             SearchBox.TextChanged += (s, e) =>
@@ -51,18 +48,17 @@ namespace WinUIApp.Views.Components
             };
         }
 
-        private void UpdateDrinkFlyout_Loaded(object sender, RoutedEventArgs e)
+        private void AddDrinkFlyout_Loaded(object sender, RoutedEventArgs e)
         {
             var drinkService = new DrinkService();
             var userService = new UserService();
             var adminService = new AdminService();
             bool isAdmin = adminService.IsAdmin(UserId);
 
-            var allBrands = drinkService.getDrinkBrands(); 
+            var allBrands = drinkService.getDrinkBrands();
             var allCategories = drinkService.getDrinkCategories();
 
-            _viewModel = new UpdateDrinkMenuViewModel(
-                DrinkToUpdate,
+            _viewModel = new AddDrinkMenuViewModel(
                 drinkService,
                 userService,
                 adminService
@@ -70,26 +66,15 @@ namespace WinUIApp.Views.Components
             {
                 AllBrands = allBrands,
                 AllCategoryObjects = allCategories,
-                AllCategories = allCategories.Select(c => c.Name).ToList(),
-                BrandName = DrinkToUpdate.Brand?.Name ?? ""
+                AllCategories = allCategories.Select(c => c.Name).ToList()
             };
-
-            foreach (var category in DrinkToUpdate.Categories)
-                _viewModel.SelectedCategoryNames.Add(category.Name);
 
             this.DataContext = _viewModel;
 
-            SaveButton.Content = isAdmin ? "Save" : "Send Request to Admin";
+            SaveButton.Content = isAdmin ? "Add Drink" : "Send Request to Admin";
 
             CategoryList.ItemsSource = _viewModel.AllCategories;
-
-            foreach (var item in _viewModel.AllCategories)
-            {
-                if (_viewModel.SelectedCategoryNames.Contains(item))
-                    CategoryList.SelectedItems.Add(item);
-            }
         }
-
 
         private void CategoryList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -105,27 +90,23 @@ namespace WinUIApp.Views.Components
 
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
-            if (DrinkToUpdate == null)
-                return;
-
             try
             {
                 _viewModel.Validate();
-                DrinkToUpdate.Categories = _viewModel.GetSelectedCategories();
 
-                var adminService = new WinUIApp.Services.DummyServies.AdminService();
+                var adminService = new AdminService();
                 bool isAdmin = adminService.IsAdmin(UserId);
 
                 string message;
 
                 if (isAdmin)
                 {
-                    _viewModel.InstantUpdateDrink();
-                    message = "Drink updated successfully.";
+                    _viewModel.InstantAddDrink();
+                    message = "Drink added successfully.";
                 }
                 else
                 {
-                    _viewModel.SendUpdateDrinkRequest();
+                    _viewModel.SendAddDrinkRequest();
                     message = "A request was sent to the admin.";
                 }
 
@@ -137,6 +118,8 @@ namespace WinUIApp.Views.Components
                     XamlRoot = this.XamlRoot
                 };
                 _ = dialog.ShowAsync();
+
+                _viewModel.ClearForm();
             }
             catch (Exception ex)
             {
@@ -151,4 +134,4 @@ namespace WinUIApp.Views.Components
             }
         }
     }
-}
+} 

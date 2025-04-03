@@ -7,22 +7,16 @@ namespace WinUIApp.Views.ViewModels
 {
     public class VoteButtonViewModel 
     {
-        private readonly DrinkService _drinkService = new DrinkService();
-        private readonly UserService _userService = new UserService();
+        private readonly DrinkService _drinkService;
+        private readonly UserService _userService;
 
-        public void VoteForDrink(int drinkId)
+        public VoteButtonViewModel(DrinkService drinkService, UserService userService)
         {
-            int userId = _userService.GetCurrentUserID();
-            drinkId = 1;
-            try
-            {
-                _drinkService.voteDrinkOfTheDay(drinkId, userId);
-            }
-            catch (Exception e)
-            {
-                throw new Exception("Error happened while voting for a drink:", e);
-            }
+            _drinkService = drinkService;
+            _userService = userService;
         }
+
+        
 
     }
 }

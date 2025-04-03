@@ -55,7 +55,6 @@ namespace WinUIApp.Views.Components
         {
             if (sender is Button button && button.Tag is int drinkId)
             {
-                // Simple direct navigation
                 MainWindow.AppMainFrame.Navigate(typeof(DrinkDetailPage), drinkId);
             }
         }

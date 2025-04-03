@@ -7,7 +7,7 @@
     mc:Ignorable="d">
 
     <Button x:Name="VoteButton"
-        Content="Vote for Drink"
-        Click="VoteButton_Click">
+            Tag="{x:Bind DrinkId}"
+        Content="Vote for Drink" Foreground="Black" Margin="5,0,0,0">
     </Button>
 </UserControl>

@@ -7,13 +7,9 @@ namespace WinUIApp.Views.Components
 {
     public sealed partial class VoteDrinkOfTheDayButton : UserControl
     {
-        public VoteButtonViewModel ViewModel { get; } = new VoteButtonViewModel();
 
         public static readonly DependencyProperty DrinkIdProperty =
             DependencyProperty.Register(nameof(DrinkId), typeof(int), typeof(VoteDrinkOfTheDayButton), new PropertyMetadata(0));
-
-        public static readonly DependencyProperty UserIdProperty =
-            DependencyProperty.Register(nameof(UserId), typeof(int), typeof(VoteDrinkOfTheDayButton), new PropertyMetadata(0));
 
         public int DrinkId
         {
@@ -21,21 +17,11 @@ namespace WinUIApp.Views.Components
             set => SetValue(DrinkIdProperty, value);
         }
 
-        public int UserId
-        {
-            get => (int)GetValue(UserIdProperty);
-            set => SetValue(UserIdProperty, value);
-        }
-
         public VoteDrinkOfTheDayButton()
         {
             InitializeComponent();
-            DataContext = ViewModel;
         }
 
-        private void VoteButton_Click(object sender, RoutedEventArgs e)
-        {
-            ViewModel.VoteForDrink(DrinkId);
-        }
+        
     }
 }

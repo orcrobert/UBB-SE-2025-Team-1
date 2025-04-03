@@ -93,5 +93,18 @@ namespace WinUIApp.Views.ViewModels
                 _adminService.SendNotification(_userService.GetCurrentUserID(), "Removal of drink with id:"+Drink.Id+" and name:"+Drink.DrinkName, "User requested removal of drink from database.");
             }
         }
+
+        public void VoteForDrink()
+        {
+            int userId = _userService.GetCurrentUserID();
+            try
+            {
+                _drinkService.voteDrinkOfTheDay(Drink.Id, userId);
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Error happened while voting for a drink:", e);
+            }
+        }
     }
 }

@@ -7,6 +7,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:components="using:WinUIApp.Views.Components"
+    xmlns:votebutton="using:WinUIApp.Views.Components"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
     
@@ -34,6 +35,7 @@
                     </Button.Flyout>
                     <TextBlock x:Name="RemoveButtonText" Foreground="Black"/>
                 </Button>
+                <votebutton:VoteDrinkOfTheDayButton Tapped="VoteButton_Click"  DrinkId="{Binding Drink.Id}" />
             </StackPanel>
             <StackPanel HorizontalAlignment="Center">
                 <TextBlock Text="Brand" FontSize="18" FontWeight="Bold"/>
@@ -67,6 +69,7 @@
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
+                
             </StackPanel>
         </StackPanel>
     </ScrollViewer>

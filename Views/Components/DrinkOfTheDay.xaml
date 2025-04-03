@@ -45,7 +45,6 @@
                     <TextBlock Text="{Binding DrinkBrand}" FontSize="20" Foreground="White"/>
                 </StackPanel>
 
-                <TextBlock Text="{Binding DrinkCategories, Converter={StaticResource CategoriesConverter}}" FontSize="18" Margin="0,5,0,0" Foreground="White" FontWeight="Light"/>
                 <TextBlock Text="{Binding AlcoholContent, Converter={StaticResource AlcoholContentConverter}}" FontSize="14" Margin="0,5,0,0" Foreground="White"/>
             </StackPanel>
         </Grid>

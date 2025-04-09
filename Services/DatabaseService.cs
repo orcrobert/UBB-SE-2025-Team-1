@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using MySql.Data.MySqlClient;
+using System.Data.SqlClient; // Changed from MySql to SQL Server
 using System.Configuration;
 using System.Diagnostics;
 using WinUIApp.Database;
+using Microsoft.Data.SqlClient; // Ensure you have the correct using directive for SQL Server
 
 namespace WinUIApp.Services
 {
@@ -25,8 +26,8 @@ namespace WinUIApp.Services
                     lock (_lock)
                     {
                         if (_instance == null)
-                        {   
-                            lock(_lock)
+                        {
+                            lock (_lock)
                             {
                                 _instance = new DatabaseService();
                             }
@@ -42,14 +43,14 @@ namespace WinUIApp.Services
             _databaseConnection = DatabaseConnection.Instance;
         }
 
-        public List<Dictionary<string, object>> ExecuteSelect(string query, List<MySqlParameter> parameters = null)
+        public List<Dictionary<string, object>> ExecuteSelect(string query, List<SqlParameter> parameters = null)
         {
             var result = new List<Dictionary<string, object>>();
 
             try
             {
                 _databaseConnection.OpenConnection();
-                using (var command = new MySqlCommand(query, _databaseConnection.GetConnection()))
+                using (var command = new SqlCommand(query, _databaseConnection.GetConnection()))
                 {
                     if (parameters != null)
                     {
@@ -82,14 +83,14 @@ namespace WinUIApp.Services
             return result;
         }
 
-        public int ExecuteQuery(string query, List<MySqlParameter> parameters = null)
+        public int ExecuteQuery(string query, List<SqlParameter> parameters = null)
         {
             int rowsAffected = 0;
 
             try
             {
                 _databaseConnection.OpenConnection();
-                using (var command = new MySqlCommand(query, _databaseConnection.GetConnection()))
+                using (var command = new SqlCommand(query, _databaseConnection.GetConnection()))
                 {
                     if (parameters != null)
                     {

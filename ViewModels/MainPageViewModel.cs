@@ -81,7 +81,7 @@ namespace WinUIApp.ViewModels
             DrinkName = drink.DrinkName;
             DrinkBrand = drink.Brand.Name;
             DrinkCategories = drink.Categories;
-            AlcoholContent = drink.AlcoholContent;*/
+            AlcoholContent = drink.AlcoholContent;
         }
 
         public int getDrinkOfTheDayId()

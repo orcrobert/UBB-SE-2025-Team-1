@@ -36,8 +36,8 @@ namespace WinUIApp.Views.ViewModels
         }
 
         public string CategoriesDisplay =>
-        Drink?.Categories != null
-        ? string.Join(", ", Drink.Categories.Select(c => c.Name))
+        Drink?.CategoryList != null
+        ? string.Join(", ", Drink.CategoryList.Select(c => c.CategoryName))
         : string.Empty;
 
         private float _averageReviewScore;
@@ -86,11 +86,11 @@ namespace WinUIApp.Views.ViewModels
         {
             if (IsCurrentUserAdmin())
             {
-                _drinkService.deleteDrink(Drink.Id);
+                _drinkService.deleteDrink(Drink.DrinkId);
             }
             else
             {
-                _adminService.SendNotification(_userService.GetCurrentUserID(), "Removal of drink with id:"+Drink.Id+" and name:"+Drink.DrinkName, "User requested removal of drink from database.");
+                _adminService.SendNotification(_userService.GetCurrentUserID(), "Removal of drink with id:"+Drink.DrinkId +" and name:"+Drink.DrinkName, "User requested removal of drink from database.");
             }
         }
 
@@ -99,7 +99,7 @@ namespace WinUIApp.Views.ViewModels
             int userId = _userService.GetCurrentUserID();
             try
             {
-                _drinkService.voteDrinkOfTheDay(Drink.Id, userId);
+                _drinkService.voteDrinkOfTheDay(Drink.DrinkId, userId);
             }
             catch (Exception e)
             {

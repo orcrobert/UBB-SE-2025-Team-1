@@ -18,7 +18,7 @@ namespace WinUIApp.Views.Components.SearchPageComponents
         {
             if (e.ClickedItem is DrinkDisplayItem selectedDrink)
             {
-                DrinkClicked?.Invoke(this, selectedDrink.Drink.Id);
+                DrinkClicked?.Invoke(this, selectedDrink.Drink.DrinkId);
             }
         }
 

@@ -30,7 +30,7 @@ namespace WinUIApp.Views.Components.SearchPageComponents
 
             foreach (Category addedCategory in e.AddedItems)
                 _selectedCategories.Add(addedCategory);
-            CategoryChanged?.Invoke(this, _selectedCategories.Select(c => c.Name).ToList());
+            CategoryChanged?.Invoke(this, _selectedCategories.Select(c => c.CategoryName).ToList());
         }
 
         private void SearchBox_TextChanged(object sender, TextChangedEventArgs e)
@@ -38,7 +38,7 @@ namespace WinUIApp.Views.Components.SearchPageComponents
             string query = SearchBox.Text.ToLower();
 
             List<Category> filteredCategories = _originalCategories
-                .Where(category => category.Name.ToLower().Contains(query))
+                .Where(category => category.CategoryName.ToLower().Contains(query))
                 .ToList();
 
             CategoryList.SelectionChanged -= CategoryListView_SelectionChanged;
@@ -75,7 +75,7 @@ namespace WinUIApp.Views.Components.SearchPageComponents
             {
                 foreach (Category category in initialCategories)
                 {
-                    ids.Add(category.Id);
+                    ids.Add(category.CategoryId);
                 }
             }
             CategoryList.SelectedItems.Clear();
@@ -83,7 +83,7 @@ namespace WinUIApp.Views.Components.SearchPageComponents
             await Task.Delay(50);
             foreach (Category category in _originalCategories)
             {
-                if (ids.Contains(category.Id))
+                if (ids.Contains(category.CategoryId))
                 {
                     CategoryList.SelectedItems.Add(category);
                     _selectedCategories.Add(category);

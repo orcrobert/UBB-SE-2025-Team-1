@@ -28,7 +28,7 @@ namespace WinUIApp.Views.Components.SearchPageComponents
             foreach (Brand addedBrand in e.AddedItems)
                 _selectedBrands.Add(addedBrand);
 
-            BrandChanged?.Invoke(this, _selectedBrands.Select(b => b.Name).ToList());
+            BrandChanged?.Invoke(this, _selectedBrands.Select(b => b.BrandName).ToList());
         }
 
         private void SearchBox_TextChanged(object sender, TextChangedEventArgs e)
@@ -36,7 +36,7 @@ namespace WinUIApp.Views.Components.SearchPageComponents
             string query = SearchBox.Text.ToLower();
 
             List<Brand> filteredBrands = _originalBrands
-                .Where(brand => brand.Name.ToLower().Contains(query))
+                .Where(brand => brand.BrandName.ToLower().Contains(query))
                 .ToList();
 
             BrandList.SelectionChanged -= BrandListView_SelectionChanged;

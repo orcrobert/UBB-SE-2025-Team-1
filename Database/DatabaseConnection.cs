@@ -1,7 +1,7 @@
 ﻿using System;
-using MySql.Data.MySqlClient;
 using System.Configuration;
 using System.Diagnostics;
+using Microsoft.Data.SqlClient; // Ensure you have the correct using directive for SQL Server
 
 namespace WinUIApp.Database
 {
@@ -9,19 +9,19 @@ namespace WinUIApp.Database
     {
         private static DatabaseConnection _instance;
         private static readonly object _lock = new object();
-        private MySqlConnection _connection;
+        private SqlConnection _connection;
         private static string _connectionString;
 
         static DatabaseConnection()
         {
-            _connectionString = ConfigurationManager.ConnectionStrings["cn"].ConnectionString;
+            _connectionString = "Data Source=DESKTOP-51TFR1B;Initial Catalog=ISSApp;Integrated Security=True;TrustServerCertificate=True";
         }
 
         private DatabaseConnection()
         {
             try
             {
-                _connection = new MySqlConnection(_connectionString);
+                _connection = new SqlConnection(_connectionString);
                 Debug.WriteLine("DatabaseConnection constructor: Connection created.");
             }
             catch (Exception ex)
@@ -49,11 +49,11 @@ namespace WinUIApp.Database
             }
         }
 
-        public MySqlConnection GetConnection()
+        public SqlConnection GetConnection()
         {
             if (_connection == null)
             {
-                _connection = new MySqlConnection(_connectionString);
+                _connection = new SqlConnection(_connectionString);
             }
 
             return _connection;

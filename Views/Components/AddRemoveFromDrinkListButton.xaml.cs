@@ -7,12 +7,15 @@ namespace WinUIApp.Views.Components
 {
     public sealed partial class AddRemoveFromDrinkListButton : UserControl
     {
+        private const int defaultIntValue = 0;
+        private const object defaultObjectValue = null;
+
         public static readonly DependencyProperty DrinkIdProperty =
             DependencyProperty.Register(
                 "DrinkId",
                 typeof(int),
                 typeof(AddRemoveFromDrinkListButton),
-                new PropertyMetadata(0, OnDrinkIdChanged));
+                new PropertyMetadata(defaultIntValue, OnDrinkIdChanged));
 
         public AddRemoveFromDrinkListButton()
         {
@@ -26,20 +29,20 @@ namespace WinUIApp.Views.Components
             set { SetValue(DrinkIdProperty, value); }
         }
 
-        private static void OnDrinkIdChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private static void OnDrinkIdChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs eventArguments)
         {
-            if (d is AddRemoveFromDrinkListButton button && (int)e.NewValue > 0)
+            if (dependencyObject is AddRemoveFromDrinkListButton button && (int)eventArguments.NewValue > defaultIntValue)
             {
-                Debug.WriteLine($"AddRemoveFromDrinkListButton: DrinkId changed to {(int)e.NewValue}");
+                Debug.WriteLine($"AddRemoveFromDrinkListButton: DrinkId changed to {(int)eventArguments.NewValue}");
                 if (button.ViewModel == null)
                 {
-                    button.ViewModel = new DrinkPageViewModel((int)e.NewValue);
-                    Debug.WriteLine($"AddRemoveFromDrinkListButton: ViewModel created with DrinkId {(int)e.NewValue}");
+                    button.ViewModel = new DrinkPageViewModel((int)eventArguments.NewValue);
+                    Debug.WriteLine($"AddRemoveFromDrinkListButton: ViewModel created with DrinkId {(int)eventArguments.NewValue}");
                 }
                 else
                 {
-                    button.ViewModel.DrinkId = (int)e.NewValue;
-                    Debug.WriteLine($"AddRemoveFromDrinkListButton: ViewModel DrinkId updated to {(int)e.NewValue}");
+                    button.ViewModel.DrinkId = (int)eventArguments.NewValue;
+                    Debug.WriteLine($"AddRemoveFromDrinkListButton: ViewModel DrinkId updated to {(int)eventArguments.NewValue}");
                 }
             }
         }
@@ -55,35 +58,35 @@ namespace WinUIApp.Views.Components
                 "ViewModel",
                 typeof(DrinkPageViewModel),
                 typeof(AddRemoveFromDrinkListButton),
-                new PropertyMetadata(null, OnViewModelPropertyChanged));
+                new PropertyMetadata(defaultObjectValue, OnViewModelPropertyChanged));
 
-        private static void OnViewModelPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private static void OnViewModelPropertyChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs eventArguments)
         {
-            if (d is AddRemoveFromDrinkListButton button && e.NewValue != null)
+            if (dependencyObject is AddRemoveFromDrinkListButton button && eventArguments.NewValue != defaultObjectValue)
             {
                 Debug.WriteLine($"AddRemoveFromDrinkListButton: ViewModel property set");
-                button.DataContext = e.NewValue;
+                button.DataContext = eventArguments.NewValue;
             }
         }
 
-        private async void AddRemoveFromDrinkListButton_Loaded(object sender, RoutedEventArgs e)
+        private async void AddRemoveFromDrinkListButton_Loaded(object sender, RoutedEventArgs eventArguments)
         {
-            Debug.WriteLine($"AddRemoveFromDrinkListButton: Loaded. DrinkId: {DrinkId}, ViewModel is {(ViewModel == null ? "null" : "not null")}");
-            if (ViewModel == null && DrinkId > 0)
+            Debug.WriteLine($"AddRemoveFromDrinkListButton: Loaded. DrinkId: {DrinkId}, ViewModel is {(ViewModel == defaultObjectValue ? "null" : "not null")}");
+            if (ViewModel == defaultObjectValue && DrinkId > defaultIntValue)
             {
                 ViewModel = new DrinkPageViewModel(DrinkId);
                 Debug.WriteLine($"AddRemoveFromDrinkListButton: ViewModel created in Loaded with DrinkId {DrinkId}");
             }
-            if (ViewModel != null)
+            if (ViewModel != defaultObjectValue)
             {
                 DataContext = ViewModel;
                 await ViewModel.CheckIfInListAsync();
             }
         }
 
-        private async void AddRemoveButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+        private async void AddRemoveButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs eventArguments)
         {
-            if (ViewModel != null)
+            if (ViewModel != defaultObjectValue)
             {
                 await ViewModel.AddRemoveFromListAsync();
             }

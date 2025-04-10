@@ -12,7 +12,7 @@ namespace WinUIApp.Utils.Converters
         {
             if (value is List<Category> categories && categories.Count > 0)
             {
-                return string.Join(", ", categories.Select(c => c.Name));
+                return string.Join(", ", categories.Select(c => c.CategoryName));
             }
             return "N/A";
         }

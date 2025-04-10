@@ -94,7 +94,7 @@ namespace WinUIApp.ViewModels
         public List<Category> GetSelectedCategories()
         {
             return SelectedCategoryNames
-                .Select(name => AllCategoryObjects.FirstOrDefault(c => c.Name == name))
+                .Select(name => AllCategoryObjects.FirstOrDefault(c => c.CategoryName == name))
                 .Where(c => c != null)
                 .ToList();
         }
@@ -118,7 +118,7 @@ namespace WinUIApp.ViewModels
         private Brand ResolveBrand(string brandName)
         {
             var existingBrands = _drinkService.getDrinkBrands();
-            var match = existingBrands.FirstOrDefault(b => b.Name.Equals(brandName, StringComparison.OrdinalIgnoreCase));
+            var match = existingBrands.FirstOrDefault(b => b.BrandName.Equals(brandName, StringComparison.OrdinalIgnoreCase));
 
             if (match == null)
                 throw new ArgumentException("The brand you tried to add was not found.");

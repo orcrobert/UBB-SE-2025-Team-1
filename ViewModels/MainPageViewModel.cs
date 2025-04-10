@@ -77,16 +77,16 @@ namespace WinUIApp.ViewModels
         {
             var drink =  _drinkService.getDrinkOfTheDay();
 
-            ImageSource = drink.DrinkURL;
+            ImageSource = drink.DrinkImageUrl;
             DrinkName = drink.DrinkName;
-            DrinkBrand = drink.Brand.Name;
-            DrinkCategories = drink.Categories;
+            DrinkBrand = drink.DrinkBrand.BrandName;
+            DrinkCategories = drink.CategoryList;
             AlcoholContent = drink.AlcoholContent;
         }
 
         public int getDrinkOfTheDayId()
         {
-            return _drinkService.getDrinkOfTheDay().Id;
+            return _drinkService.getDrinkOfTheDay().DrinkId;
         }
 
         public List<Drink> PersonalDrinks { get; set; } = new List<Drink>();

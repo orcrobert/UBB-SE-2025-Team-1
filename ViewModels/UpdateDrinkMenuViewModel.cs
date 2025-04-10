@@ -63,12 +63,12 @@ namespace WinUIApp.ViewModels
 
         public string DrinkURL
         {
-            get => DrinkToUpdate.DrinkURL;
+            get => DrinkToUpdate.DrinkImageUrl;
             set
             {
-                if (DrinkToUpdate.DrinkURL != value)
+                if (DrinkToUpdate.DrinkImageUrl != value)
                 {
-                    DrinkToUpdate.DrinkURL = value;
+                    DrinkToUpdate.DrinkImageUrl = value;
                     OnPropertyChanged();
                 }
             }
@@ -76,12 +76,12 @@ namespace WinUIApp.ViewModels
 
         public string BrandName
         {
-            get => DrinkToUpdate.Brand?.Name ?? "";
+            get => DrinkToUpdate.DrinkBrand?.BrandName ?? "";
             set
             {
-                if (DrinkToUpdate.Brand == null || DrinkToUpdate.Brand.Name != value)
+                if (DrinkToUpdate.DrinkBrand == null || DrinkToUpdate.DrinkBrand.BrandName != value)
                 {
-                    DrinkToUpdate.Brand = new Brand(0, value);
+                    DrinkToUpdate.DrinkBrand = new Brand(0, value);
                     OnPropertyChanged();
                 }
             }
@@ -103,7 +103,7 @@ namespace WinUIApp.ViewModels
         public List<Category> GetSelectedCategories()
         {
             return SelectedCategoryNames
-                .Select(name => AllCategoryObjects.FirstOrDefault(c => c.Name == name))
+                .Select(name => AllCategoryObjects.FirstOrDefault(c => c.CategoryName == name))
                 .Where(c => c != null)
                 .ToList();
         }
@@ -119,11 +119,11 @@ namespace WinUIApp.ViewModels
             if (string.IsNullOrWhiteSpace(BrandName))
                 throw new ArgumentException("Brand is required.");
 
-            var validBrand = AllBrands.FirstOrDefault(b => b.Name.Equals(BrandName, StringComparison.OrdinalIgnoreCase));
+            var validBrand = AllBrands.FirstOrDefault(b => b.BrandName.Equals(BrandName, StringComparison.OrdinalIgnoreCase));
             if (validBrand == null)
                 throw new ArgumentException("The brand you entered does not exist.");
 
-            DrinkToUpdate.Brand = validBrand;
+            DrinkToUpdate.DrinkBrand = validBrand;
 
             if (!float.TryParse(AlcoholContent, out var alc) || alc < 0 || alc > 100)
                 throw new ArgumentException("Valid alcohol content (0–100%) is required");
@@ -135,7 +135,7 @@ namespace WinUIApp.ViewModels
         private Brand ResolveBrand(string brandName)
         {
             var existingBrands = _drinkService.getDrinkBrands();
-            var match = existingBrands.FirstOrDefault(b => b.Name.Equals(brandName, StringComparison.OrdinalIgnoreCase));
+            var match = existingBrands.FirstOrDefault(b => b.BrandName.Equals(brandName, StringComparison.OrdinalIgnoreCase));
 
             if (match == null)
                 throw new ArgumentException("The brand you tried to add was not found.");
@@ -147,8 +147,8 @@ namespace WinUIApp.ViewModels
         {
             try
             {
-                DrinkToUpdate.Brand = ResolveBrand(BrandName);
-                DrinkToUpdate.Categories = GetSelectedCategories();
+                DrinkToUpdate.DrinkBrand = ResolveBrand(BrandName);
+                DrinkToUpdate.CategoryList = GetSelectedCategories();
                 _drinkService.updateDrink(DrinkToUpdate);
                 Debug.WriteLine("Drink updated successfully (admin).");
             }

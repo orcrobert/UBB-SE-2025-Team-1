@@ -2,74 +2,69 @@
 
 namespace WinUIApp.Models
 {
+    /// <summary>
+    /// Represents a user review for a drink.
+    /// </summary>
     public class Review
     {
-        private int _drinkID;
-        private float _score;
-        private int _reviewerID;
-        private string _title;
-        private string _description;
-        private DateTime _postedDateTime;
+        /// <summary>
+        /// Gets the ID of the reviewed drink.
+        /// </summary>
+        public int DrinkId { get; }
 
-        public Review(int drinkID, float score, int reviewerID, string title, string description, DateTime postedDateTime)
-        {
-            _drinkID = drinkID;
-            _score = score;
-            _reviewerID = reviewerID;
-            _title = title;
-            _description = description;
-            _postedDateTime = postedDateTime;
-        }
+        /// <summary>
+        /// Gets the score given to the drink (0 to 5).
+        /// </summary>
+        public float ReviewScore { get; }
 
-        public int DrinkID
-        {
-            get { return _drinkID; }
-            set { _drinkID = value; }
-        }
+        /// <summary>
+        /// Gets the user ID of the reviewer.
+        /// </summary>
+        public int ReviewerUserId { get; }
 
-        public float Score
-        {
-            get { return _score; }
-            set
-            {
-                if (value < 0 || value > 5)
-                    throw new ArgumentOutOfRangeException(nameof(Score), "Score must be between 0 and 5");
-                _score = value;
-            }
-        }
+        /// <summary>
+        /// Gets the title of the review.
+        /// </summary>
+        public string ReviewTitle { get; }
 
-        public int ReviewerID
-        {
-            get { return _reviewerID; }
-            set { _reviewerID = value; }
-        }
+        /// <summary>
+        /// Gets the description/body of the review.
+        /// </summary>
+        public string ReviewDescription { get; }
 
-        public string Title
-        {
-            get { return _title; }
-            set
-            {
-                if (string.IsNullOrEmpty(value))
-                    throw new ArgumentException("Title cannot be null or empty", nameof(Title));
-                _title = value;
-            }
-        }
+        /// <summary>
+        /// Gets the date and time the review was posted.
+        /// </summary>
+        public DateTime ReviewPostedDateTime { get; }
 
-        public string Description
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Review"/> class.
+        /// </summary>
+        /// <param name="drinkId">The ID of the reviewed drink.</param>
+        /// <param name="reviewScore">The score given (0–5).</param>
+        /// <param name="reviewerUserId">The ID of the reviewer.</param>
+        /// <param name="reviewTitle">Title of the review.</param>
+        /// <param name="reviewDescription">Description/body of the review.</param>
+        /// <param name="reviewPostedDateTime">Date the review was posted.</param>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown if score is not between 0 and 5.</exception>
+        /// <exception cref="ArgumentException">Thrown if title or description is null/empty.</exception>
+        public Review(int drinkId, float reviewScore, int reviewerUserId, string reviewTitle, string reviewDescription, DateTime reviewPostedDateTime)
         {
-            get { return _description; }
-            set
-            {
-                if (string.IsNullOrEmpty(value))
-                    throw new ArgumentException("Description cannot be null or empty", nameof(Description));
-                _description = value;
-            }
-        }
+            if (reviewScore < 0 || reviewScore > 5)
+                throw new ArgumentOutOfRangeException(nameof(reviewScore), "Score must be between 0 and 5.");
 
-        public DateTime PostedDateTime
-        {
-            get { return _postedDateTime; }
-            set { _postedDateTime = value; }
+            if (string.IsNullOrWhiteSpace(reviewTitle))
+                throw new ArgumentException("Review title cannot be null or empty.", nameof(reviewTitle));
+
+            if (string.IsNullOrWhiteSpace(reviewDescription))
+                throw new ArgumentException("Review description cannot be null or empty.", nameof(reviewDescription));
+
+            DrinkId = drinkId;
+            ReviewScore = reviewScore;
+            ReviewerUserId = reviewerUserId;
+            ReviewTitle = reviewTitle;
+            ReviewDescription = reviewDescription;
+            ReviewPostedDateTime = reviewPostedDateTime;
         }
     }
 }

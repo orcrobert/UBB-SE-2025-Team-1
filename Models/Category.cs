@@ -1,50 +1,42 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace WinUIApp.Models
 {
+    /// <summary>
+    /// Represents a category assigned to a drink (e.g., beer, wine).
+    /// </summary>
     public class Category
     {
-        private int _id;
-        private string _name;
+        /// <summary>
+        /// Gets the unique identifier for the category.
+        /// </summary>
+        public int CategoryId { get; }
 
-        public Category(int id, string name)
-        {
-            _id = id;
-            _name = name;
-        }
+        /// <summary>
+        /// Gets the name of the category.
+        /// </summary>
+        public string CategoryName { get; }
 
-        public int Id
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Category"/> class.
+        /// </summary>
+        /// <param name="categoryId">Unique identifier for the category.</param>
+        /// <param name="categoryName">Name of the category.</param>
+        /// <exception cref="ArgumentException">Thrown when categoryName is null or empty.</exception>
+        public Category(int categoryId, string categoryName)
         {
-            get { return _id; }
-            set { _id = value; }
-        }
+            if (string.IsNullOrWhiteSpace(categoryName))
+                throw new ArgumentException("Category name cannot be null or empty.", nameof(categoryName));
 
-        public string Name
-        {
-            get { return _name; }
-            set
-            {
-                if (string.IsNullOrEmpty(value))
-                    throw new ArgumentException("Category name cannot be null or empty", nameof(Name));
-                _name = value;
-            }
+            CategoryId = categoryId;
+            CategoryName = categoryName;
         }
 
         public override bool Equals(object? obj)
         {
-            if (obj == null || GetType() != obj.GetType())
-                return false;
-            Category category = (Category)obj;
-            return _id == category.Id;
+            return obj is Category other && CategoryId == other.CategoryId;
         }
 
-        public override int GetHashCode()
-        {
-            return Id.GetHashCode();
-        }
+        public override int GetHashCode() => CategoryId.GetHashCode();
     }
 }

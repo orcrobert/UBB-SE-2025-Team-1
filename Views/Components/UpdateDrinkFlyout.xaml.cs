@@ -74,13 +74,13 @@ namespace WinUIApp.Views.Components
             {
                 AllBrands = allBrands,
                 AllCategoryObjects = allCategories,
-                AllCategories = allCategories.Select(category => category.Name).ToList(),
-                BrandName = DrinkToUpdate.Brand?.Name ?? String.Empty
+                AllCategories = allCategories.Select(category => category.CategoryName).ToList(),
+                BrandName = DrinkToUpdate.DrinkBrand?.BrandName ?? String.Empty
             };
 
-            foreach (var category in DrinkToUpdate.Categories)
+            foreach (var category in DrinkToUpdate.CategoryList)
             {
-                _viewModel.SelectedCategoryNames.Add(category.Name);
+                _viewModel.SelectedCategoryNames.Add(category.CategoryName);
             }
 
             this.DataContext = _viewModel;
@@ -134,7 +134,7 @@ namespace WinUIApp.Views.Components
             try
             {
                 _viewModel.Validate();
-                DrinkToUpdate.Categories = _viewModel.GetSelectedCategories();
+                DrinkToUpdate.CategoryList = _viewModel.GetSelectedCategories();
 
                 var adminService = new WinUIApp.Services.DummyServies.AdminService();
                 bool isAdmin = adminService.IsAdmin(UserId);

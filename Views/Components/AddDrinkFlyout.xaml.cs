@@ -70,7 +70,7 @@ namespace WinUIApp.Views.Components
             {
                 AllBrands = allBrands,
                 AllCategoryObjects = allCategories,
-                AllCategories = allCategories.Select(category => category.Name).ToList()
+                AllCategories = allCategories.Select(category => category.CategoryName).ToList()
             };
 
             this.DataContext = _viewModel;

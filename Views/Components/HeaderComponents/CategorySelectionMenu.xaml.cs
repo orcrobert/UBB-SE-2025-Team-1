@@ -47,7 +47,7 @@ namespace WinUIApp.Views.Components.HeaderComponents
         private void CategorySearchBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             string query = CategorySearchBox.Text.ToLower();
-            List<Category> filteredCategories = _originalCategories.Where(category => category.Name.ToLower().Contains(query)).ToList();
+            List<Category> filteredCategories = _originalCategories.Where(category => category.CategoryName.ToLower().Contains(query)).ToList();
             CategoryList.SelectionChanged -= CategoryList_SelectionChanged;
             CurrentCategories.Clear();
             foreach (Category category in filteredCategories)

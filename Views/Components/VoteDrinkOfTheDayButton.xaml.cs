@@ -7,9 +7,10 @@ namespace WinUIApp.Views.Components
 {
     public sealed partial class VoteDrinkOfTheDayButton : UserControl
     {
+        private const int defaultIntValue = 0;
 
         public static readonly DependencyProperty DrinkIdProperty =
-            DependencyProperty.Register(nameof(DrinkId), typeof(int), typeof(VoteDrinkOfTheDayButton), new PropertyMetadata(0));
+            DependencyProperty.Register(nameof(DrinkId), typeof(int), typeof(VoteDrinkOfTheDayButton), new PropertyMetadata(defaultIntValue));
 
         public int DrinkId
         {

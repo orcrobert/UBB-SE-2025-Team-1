@@ -100,11 +100,20 @@ namespace WinUIApp.ViewModels
 
             if (_fieldToSortBy == nameField || _fieldToSortBy == "Alcohol Content")
             {
+                string sortField;
+                if (_fieldToSortBy == nameField)
+                {
+                    sortField = "D.DrinkName";
+                }
+                else
+                {
+                    sortField = "D.AlcoholContent";
+                }
+
                 var orderBy = new Dictionary<string, bool>
                 {
-                    { _fieldToSortBy == nameField ? "D.DrinkName" : "D.AlcoholContent", _isAscending }
+                    { sortField, _isAscending }
                 };
-
                 List<Drink> drinks = _drinkService.getDrinks(
                     searchedTerm: _searchedTerms,
                     brandNameFilter: _brandFilter,

@@ -16,6 +16,7 @@ namespace WinUIApp.ViewModels
     /// </summary>
     class MainPageViewModel 
     {
+        private const int HardCodedNumberOfDrinks = 5; // Number of drinks to display in the personal drink list.
         private DrinkService _drinkService;
         private UserService _userService;
 
@@ -153,7 +154,7 @@ namespace WinUIApp.ViewModels
         private void LoadPersonalDrinkListData()
         {
             int userId = _userService.GetCurrentUserID();
-            PersonalDrinks = _drinkService.getPersonalDrinkList(userId, 5);
+            PersonalDrinks = _drinkService.getPersonalDrinkList(userId, HardCodedNumberOfDrinks);
         }
 
 

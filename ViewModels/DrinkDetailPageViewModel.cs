@@ -18,6 +18,8 @@ namespace WinUIApp.Views.ViewModels
     /// </summary>
     public class DrinkDetailPageViewModel : INotifyPropertyChanged
     {
+        private const string CategorySeparator = ", ";
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         private readonly DrinkService _drinkService;
@@ -52,7 +54,7 @@ namespace WinUIApp.Views.ViewModels
             {
                 if (Drink?.CategoryList != null)
                 {
-                    return string.Join(", ", Drink.CategoryList.Select(c => c.CategoryName));
+                    return string.Join(CategorySeparator, Drink.CategoryList.Select(drinkCategory => drinkCategory.CategoryName));
                 }
                 else
                 {
@@ -117,7 +119,10 @@ namespace WinUIApp.Views.ViewModels
         /// <param name="propertyName">The name of the property that changed.</param>
         protected void OnPropertyChanged(string propertyName)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            if (PropertyChanged != null)
+            {
+                PropertyChanged.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            }
         }
 
         /// <summary>

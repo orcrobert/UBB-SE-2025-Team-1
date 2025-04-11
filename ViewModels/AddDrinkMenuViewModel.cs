@@ -15,6 +15,8 @@ namespace WinUIApp.ViewModels
     /// </summary>
     public class AddDrinkMenuViewModel : INotifyPropertyChanged
     {   
+        private const float MaxAlcoholContent = 100.0f;
+        private const float MinAlcoholContent = 0.0f;
         private readonly DrinkService _drinkService;
         private readonly UserService _userService;
         private readonly AdminService _adminService;
@@ -132,14 +134,14 @@ namespace WinUIApp.ViewModels
         public List<Category> GetSelectedCategories()
         {
             return SelectedCategoryNames
-                .Select(name => AllCategoryObjects.FirstOrDefault(c => c.CategoryName == name))
-                .Where(c => c != null)
+                .Select(name => AllCategoryObjects.FirstOrDefault(drinkCategory => drinkCategory.CategoryName == name))
+                .Where(selectedCategory => selectedCategory != null)
                 .ToList();
         }
 
         /// <summary>
         /// Validates the input data for adding a drink.
-        /// The drink name must not be empty, the brand must exist, the alcohol content must be a valid number between 0 and 100, and at least one category must be selected.
+        /// The drink name must not be empty, the brand must exist, the alcohol content must be a valid number between 0 and 100, and at least one drinkCategory must be selected.
         /// </summary>
         public void ValidateUserDrinkInput()
         {
@@ -150,11 +152,11 @@ namespace WinUIApp.ViewModels
                 throw new ArgumentException("Brand is required");
 
 
-            if (!float.TryParse(AlcoholContent, out var alc) || alc < 0 || alc > 100)
+            if (!float.TryParse(AlcoholContent, out var alcoholContentValue) || alcoholContentValue < MinAlcoholContent || alcoholContentValue > MaxAlcoholContent)
                 throw new ArgumentException("Valid alcohol content (0–100%) is required");
 
             if (SelectedCategoryNames.Count == 0)
-                throw new ArgumentException("At least one category must be selected");
+                throw new ArgumentException("At least one drinkCategory must be selected");
         }
 
         /// <summary>
@@ -166,7 +168,7 @@ namespace WinUIApp.ViewModels
         private Brand FindBrandByName(string brandName)
         {
             var existingBrands = _drinkService.getDrinkBrands();
-            var match = existingBrands.FirstOrDefault(b => b.BrandName.Equals(brandName, StringComparison.OrdinalIgnoreCase));
+            var match = existingBrands.FirstOrDefault(currentBrand => currentBrand.BrandName.Equals(brandName, StringComparison.OrdinalIgnoreCase));
 
             if (match == null)
                 throw new ArgumentException("The brand you tried to add was not found.");
@@ -182,7 +184,7 @@ namespace WinUIApp.ViewModels
         {
             try
             {
-                //var brand = ResolveBrand(BrandName);
+                //var brand = FindBrandByName(BrandName);
                 var categories = GetSelectedCategories();
                 float alcoholContent = float.Parse(AlcoholContent);
 
@@ -243,7 +245,10 @@ namespace WinUIApp.ViewModels
         /// </summary>
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            if (PropertyChanged != null)
+            {
+                PropertyChanged.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            }
         }
     }
 }

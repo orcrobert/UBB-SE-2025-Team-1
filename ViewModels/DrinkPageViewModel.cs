@@ -143,9 +143,9 @@ namespace WinUIApp.ViewModels
                 UpdateButtonText();
                 Debug.WriteLine($"DrinkPageViewModel: CheckIfInListAsync - _isInUserDrinksList is now {_isInUserDrinksList}");
             }
-            catch (Exception ex)
+            catch (Exception CheckingDrinkListException)
             {
-                Debug.WriteLine($"DrinkPageViewModel: Error checking drink list: {ex.Message}");
+                Debug.WriteLine($"DrinkPageViewModel: Error checking drink list: {CheckingDrinkListException.Message}");
             }
         }
 

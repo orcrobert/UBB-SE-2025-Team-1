@@ -19,7 +19,7 @@ namespace WinUIApp.Views.ViewModels
 
         public List<Category> GetCategories()
         {
-            return _drinkService.getDrinkCategories();
+            return _drinkService.GetDrinkCategories();
         }
 
     }

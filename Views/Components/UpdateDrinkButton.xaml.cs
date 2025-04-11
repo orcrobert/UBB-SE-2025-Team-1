@@ -43,7 +43,7 @@ namespace WinUIApp.Views.Components
                 Content = new UpdateDrinkFlyout
                 {
                     DrinkToUpdate = Drink,
-                    UserId = userService.GetCurrentUserID()
+                    UserId = userService.GetCurrentUserId()
                 }
             };
 

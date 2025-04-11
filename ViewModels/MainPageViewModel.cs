@@ -75,7 +75,7 @@ namespace WinUIApp.ViewModels
 
         public void LoadDrinkOfTheDayData()
         {
-            var drink =  _drinkService.getDrinkOfTheDay();
+            var drink =  _drinkService.GetDrinkOfTheDay();
 
             ImageSource = drink.DrinkURL;
             DrinkName = drink.DrinkName;
@@ -86,15 +86,15 @@ namespace WinUIApp.ViewModels
 
         public int getDrinkOfTheDayId()
         {
-            return _drinkService.getDrinkOfTheDay().Id;
+            return _drinkService.GetDrinkOfTheDay().Id;
         }
 
         public List<Drink> PersonalDrinks { get; set; } = new List<Drink>();
 
         private void LoadPersonalDrinkListData()
         {
-            int userId = _userService.GetCurrentUserID();
-            PersonalDrinks = _drinkService.getPersonalDrinkList(userId, 5);
+            int userId = _userService.GetCurrentUserId();
+            PersonalDrinks = _drinkService.GetUserPersonalDrinkList(userId, 5);
         }
 
 

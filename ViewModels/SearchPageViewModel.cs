@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Mysqlx.Crud;
+using System.Collections.Generic;
 using System.Linq;
 using WinUIApp.Models;
 using WinUIApp.Services;
@@ -9,11 +10,11 @@ using WinUIApp.Views.Pages;
 
 namespace WinUIApp.ViewModels
 {
-    public class SearchPageViewModel(DrinkService drinkService, ReviewService reviewService)
+    public class SearchPageViewModel(DrinkService drinkService, DrinkReviewService reviewService)
     {
 
         private readonly DrinkService _drinkService = drinkService;
-        private ReviewService _reviewService = reviewService;
+        private DrinkReviewService _reviewService = reviewService;
 
         private bool _isAscending = true;
         private string _sortByField = "Name";
@@ -40,7 +41,7 @@ namespace WinUIApp.ViewModels
             set => _sortByField = value;
         }
 
-        public ReviewService ReviewService
+        public DrinkReviewService ReviewService
         {
             get => _reviewService;
             set => _reviewService = value;
@@ -72,14 +73,13 @@ namespace WinUIApp.ViewModels
                 {
                     { _sortByField == "Name" ? "D.DrinkName" : "D.AlcoholContent", _isAscending }
                 };
-
-                List<Drink> drinks = _drinkService.getDrinks(
-                    searchedTerm: _searchedTerms,
-                    brandNameFilter: _brandFilter,
-                    categoryFilter: _categoryFilter,
-                    minAlcohol: _minAlcoholFilter,
-                    maxAlcohol: _maxAlcoholFilter,
-                    orderBy: orderBy
+                List<Drink> drinks = _drinkService.GetDrinks(
+                    searchKeyword: _searchedTerms,
+                    drinkBrandNameFilter: _brandFilter,
+                    drinkCategoryFilter: _categoryFilter,
+                    minimumAlcoholPercentage: _minAlcoholFilter,
+                    maximumAlcoholPercentage: _maxAlcoholFilter,
+                    orderingCriteria: orderBy
                 );
 
                 displayItems = new List<DrinkDisplayItem>();
@@ -102,13 +102,14 @@ namespace WinUIApp.ViewModels
             }
             else
             {
-                List<Drink> drinks = _drinkService.getDrinks(
-                    searchedTerm: _searchedTerms,
-                    brandNameFilter: _brandFilter,
-                    categoryFilter: _categoryFilter,
-                    minAlcohol: _minAlcoholFilter,
-                    maxAlcohol: _maxAlcoholFilter,
-                    orderBy: null
+
+                List<Drink> drinks = _drinkService.GetDrinks(
+                    searchKeyword: _searchedTerms,
+                    drinkBrandNameFilter: _brandFilter,
+                    drinkCategoryFilter: _categoryFilter,
+                    minimumAlcoholPercentage: _minAlcoholFilter,
+                    maximumAlcoholPercentage: _maxAlcoholFilter,
+                    orderingCriteria: null
                 );
 
                 displayItems = new List<DrinkDisplayItem>();
@@ -139,12 +140,12 @@ namespace WinUIApp.ViewModels
 
         public IEnumerable<Category> GetCategories()
         {
-            return _drinkService.getDrinkCategories();
+            return _drinkService.GetDrinkCategories();
         }
 
         public IEnumerable<Brand> GetBrands()
         {
-            return _drinkService.getDrinkBrands();
+            return _drinkService.GetDrinkBrandNames();
         }
 
         public void SetSortByField(string sortByField)

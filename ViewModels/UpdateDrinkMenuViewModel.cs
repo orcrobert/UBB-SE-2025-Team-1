@@ -134,7 +134,7 @@ namespace WinUIApp.ViewModels
 
         private Brand ResolveBrand(string brandName)
         {
-            var existingBrands = _drinkService.getDrinkBrands();
+            var existingBrands = _drinkService.GetDrinkBrandNames();
             var match = existingBrands.FirstOrDefault(b => b.Name.Equals(brandName, StringComparison.OrdinalIgnoreCase));
 
             if (match == null)
@@ -149,7 +149,7 @@ namespace WinUIApp.ViewModels
             {
                 DrinkToUpdate.Brand = ResolveBrand(BrandName);
                 DrinkToUpdate.Categories = GetSelectedCategories();
-                _drinkService.updateDrink(DrinkToUpdate);
+                _drinkService.UpdateDrink(DrinkToUpdate);
                 Debug.WriteLine("Drink updated successfully (admin).");
             }
             catch (Exception ex)
@@ -162,11 +162,11 @@ namespace WinUIApp.ViewModels
         {
             try
             {
-                int userId = _userService.GetCurrentUserID();
-                _adminService.SendNotification(
-                    senderUserID: userId,
-                    title: "Drink Update Request",
-                    description: $"User requested to update drink: {DrinkToUpdate.DrinkName}"
+                int userId = _userService.GetCurrentUserId();
+                _adminService.SendNotificationFromUserToAdmin(
+                    senderUserId: userId,
+                    userModificationRequestType: "Drink Update Request",
+                    userModificationRequestDetails: $"User requested to update drink: {DrinkToUpdate.DrinkName}"
                 );
                 Debug.WriteLine("Drink update request sent to admin.");
             }

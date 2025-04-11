@@ -18,7 +18,7 @@ namespace WinUIApp.Views.ViewModels
         public event PropertyChangedEventHandler PropertyChanged;
 
         private readonly DrinkService _drinkService;
-        private readonly ReviewService _reviewService;
+        private readonly DrinkReviewService _reviewService;
         private readonly UserService _userService;
         private readonly AdminService _adminService;
 
@@ -52,7 +52,7 @@ namespace WinUIApp.Views.ViewModels
         }
         public ObservableCollection<Review> Reviews { get; set; } = new ObservableCollection<Review>();
 
-        public DrinkDetailPageViewModel(DrinkService drinkService, ReviewService reviewService, UserService userService, AdminService adminService)
+        public DrinkDetailPageViewModel(DrinkService drinkService, DrinkReviewService reviewService, UserService userService, AdminService adminService)
         {
             _drinkService = drinkService;
             _reviewService = reviewService;
@@ -62,7 +62,7 @@ namespace WinUIApp.Views.ViewModels
 
         public void LoadDrink(int drinkId)
         {
-            Drink=_drinkService.getDrinkById(drinkId);
+            Drink=_drinkService.GetDrinkById(drinkId);
             AverageReviewScore=_reviewService.GetReviewAverageByID(drinkId);
             List<Review> reviews = _reviewService.GetReviewsByID(drinkId);
             Reviews.Clear();
@@ -79,27 +79,27 @@ namespace WinUIApp.Views.ViewModels
 
         public bool IsCurrentUserAdmin()
         {
-            return _adminService.IsAdmin(_userService.GetCurrentUserID());
+            return _adminService.IsAdmin(_userService.GetCurrentUserId());
         }
 
         public void RemoveDrink()
         {
             if (IsCurrentUserAdmin())
             {
-                _drinkService.deleteDrink(Drink.Id);
+                _drinkService.DeleteDrink(Drink.Id);
             }
             else
             {
-                _adminService.SendNotification(_userService.GetCurrentUserID(), "Removal of drink with id:"+Drink.Id+" and name:"+Drink.DrinkName, "User requested removal of drink from database.");
+                _adminService.SendNotificationFromUserToAdmin(_userService.GetCurrentUserId(), "Removal of drink with id:"+Drink.Id+" and name:"+Drink.DrinkName, "User requested removal of drink from database.");
             }
         }
 
         public void VoteForDrink()
         {
-            int userId = _userService.GetCurrentUserID();
+            int userId = _userService.GetCurrentUserId();
             try
             {
-                _drinkService.voteDrinkOfTheDay(Drink.Id, userId);
+                _drinkService.VoteDrinkOfTheDay(Drink.Id, userId);
             }
             catch (Exception e)
             {

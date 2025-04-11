@@ -19,7 +19,7 @@ namespace WinUIApp.Views.Components
             {
                 Content = new AddDrinkFlyout
                 {
-                    UserId = userService.GetCurrentUserID()
+                    UserId = userService.GetCurrentUserId()
                 }
             };
 

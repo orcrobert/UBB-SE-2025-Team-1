@@ -117,7 +117,7 @@ namespace WinUIApp.ViewModels
 
         private Brand ResolveBrand(string brandName)
         {
-            var existingBrands = _drinkService.getDrinkBrands();
+            var existingBrands = _drinkService.GetDrinkBrandNames();
             var match = existingBrands.FirstOrDefault(b => b.Name.Equals(brandName, StringComparison.OrdinalIgnoreCase));
 
             if (match == null)
@@ -134,12 +134,14 @@ namespace WinUIApp.ViewModels
                 var categories = GetSelectedCategories();
                 float alcoholContent = float.Parse(AlcoholContent);
 
-                _drinkService.addDrink(
-                    drinkName: DrinkName,
-                    drinkUrl: DrinkURL,
-                    categories: categories,
-                    brandName: BrandName,
-                    alcoholContent: alcoholContent
+
+
+                _drinkService.AddDrink(
+                    inputedDrinkName: DrinkName,
+                    inputedDrinkPath: DrinkURL,
+                    inputedDrinkCategories: categories,
+                    inputedDrinkBrandName: BrandName,
+                    inputedAlcoholPercentage: alcoholContent
                 );
                 Debug.WriteLine("Drink added successfully (admin).");
             }
@@ -154,11 +156,11 @@ namespace WinUIApp.ViewModels
         {
             try
             {
-                int userId = _userService.GetCurrentUserID();
-                _adminService.SendNotification(
-                    senderUserID: userId,
-                    title: "New Drink Request",
-                    description: $"User requested to add new drink: {DrinkName}"
+                int userId = _userService.GetCurrentUserId();
+                _adminService.SendNotificationFromUserToAdmin(
+                    senderUserId: userId,
+                    userModificationRequestType: "New Drink Request",
+                    userModificationRequestDetails: $"User requested to add new drink: {DrinkName}"
                 );
                 Debug.WriteLine("Drink add request sent to admin.");
             }

@@ -91,7 +91,7 @@ namespace WinUIApp.ViewModels
 
         private int GetCurrentUserId()
         {
-            int userId = _userService.GetCurrentUserID();
+            int userId = _userService.GetCurrentUserId();
             Debug.WriteLine($"DrinkPageViewModel: GetCurrentUserId returned {userId}");
             return userId;
         }
@@ -109,7 +109,7 @@ namespace WinUIApp.ViewModels
 
             try
             {
-                _isInList = await Task.Run(() => _drinkService.isDrinkInPersonalList(GetCurrentUserId(), DrinkId));
+                _isInList = await Task.Run(() => _drinkService.IsDrinkInUserPersonalList(GetCurrentUserId(), DrinkId));
                 UpdateButtonText();
                 Debug.WriteLine($"DrinkPageViewModel: CheckIfInListAsync - _isInList is now {_isInList}");
             }
@@ -134,7 +134,7 @@ namespace WinUIApp.ViewModels
                 if (_isInList)
                 {
                     Debug.WriteLine($"DrinkPageViewModel: Removing Drink {DrinkId} for User {GetCurrentUserId()}");
-                    success = await Task.Run(() => _drinkService.deleteFromPersonalDrinkList(GetCurrentUserId(), DrinkId));
+                    success = await Task.Run(() => _drinkService.DeleteFromUserPersonalDrinkList(GetCurrentUserId(), DrinkId));
                     if (success)
                     {
                         _isInList = false;
@@ -148,7 +148,7 @@ namespace WinUIApp.ViewModels
                 else
                 {
                     Debug.WriteLine($"DrinkPageViewModel: Adding Drink {DrinkId} for User {GetCurrentUserId()}");
-                    success = await Task.Run(() => _drinkService.addToPersonalDrinkList(GetCurrentUserId(), DrinkId));
+                    success = await Task.Run(() => _drinkService.AddToUserPersonalDrinkList(GetCurrentUserId(), DrinkId));
                     if (success)
                     {
                         _isInList = true;

@@ -204,57 +204,61 @@ namespace WinUIApp.Models
 
             try
             {
-                const string getBrandIdQuery = @"SELECT BrandId FROM Brand WHERE BrandName = @BrandName";
-                var brandParams = new List<SqlParameter>
-                {
+                string brandIdQuery = @"SELECT BrandId 
+                                        FROM Brand 
+                                        WHERE BrandName = @BrandName";
+
+                List<SqlParameter> brandNameParameter =
+                [
                     new SqlParameter("@BrandName", SqlDbType.VarChar) { Value = brandName }
-                };
-                var brandResult = dbService.ExecuteSelect(getBrandIdQuery, brandParams);
-                int brandId = brandResult.Count > 0 ? Convert.ToInt32(brandResult[0]["BrandId"]) : -1;
+                ];
+                var brandIdResult = dbService.ExecuteSelect(brandIdQuery, brandNameParameter);
+                int brandId = brandIdResult.Count > 0 ? Convert.ToInt32(brandIdResult[0]["BrandId"]) : -1;
 
                 if (brandId == -1)
                 {
-                    const string insertBrandQuery = @"
-                        INSERT INTO Brand (BrandName) VALUES (@BrandName);
-                        SELECT SCOPE_IDENTITY() AS BrandId;";
-                    var insertBrandResult = dbService.ExecuteSelect(insertBrandQuery, brandParams);
-                    brandId = Convert.ToInt32(insertBrandResult[0]["BrandId"]);
+                    string addBrandQuery = @"INSERT INTO Brand (BrandName) VALUES (@BrandName);
+                                          SELECT SCOPE_IDENTITY() AS BrandId;";
+                    List<SqlParameter> brandParameters =
+                    [
+                        new SqlParameter("@BrandName", SqlDbType.VarChar) { Value = brandName }
+                    ];
+
+                    var newBrandResult = dbService.ExecuteSelect(addBrandQuery, brandParameters);
+                    brandId = Convert.ToInt32(newBrandResult[0]["BrandId"]);
                 }
 
-                const string insertDrinkQuery = @"
-                    INSERT INTO Drink (DrinkName, DrinkUrl, AlcoholContent, BrandId)
-                    VALUES (@DrinkName, @DrinkUrl, @AlcoholContent, @BrandId);
-                    SELECT SCOPE_IDENTITY() AS DrinkId;";
+                string addDrinkQuery = @"INSERT INTO Drink (DrinkName, DrinkUrl, AlcoholContent, BrandId) 
+                                VALUES (@DrinkName, @DrinkUrl, @AlcoholContent, @BrandId);
+                                SELECT SCOPE_IDENTITY() AS DrinkId;";
 
-                var drinkParams = new List<SqlParameter>
-                {
+                List<SqlParameter> drinkParameters =
+                [
                     new SqlParameter("@DrinkName", SqlDbType.VarChar) { Value = drinkName },
                     new SqlParameter("@DrinkUrl", SqlDbType.VarChar) { Value = drinkUrl },
                     new SqlParameter("@AlcoholContent", SqlDbType.Float) { Value = alcoholContent },
                     new SqlParameter("@BrandId", SqlDbType.Int) { Value = brandId }
-                };
+                ];
 
-                var drinkResult = dbService.ExecuteSelect(insertDrinkQuery, drinkParams);
-                int drinkId = Convert.ToInt32(drinkResult[0]["DrinkId"]);
+                var drinkIdResult = dbService.ExecuteSelect(addDrinkQuery, drinkParameters);
+                int drinkId = Convert.ToInt32(drinkIdResult[0]["DrinkId"]);
 
-                foreach (var category in categories)
+                foreach (Category category in categories)
                 {
-                    const string insertCategoryLink = @"
-                        INSERT INTO DrinkCategory (DrinkId, CategoryId)
-                        VALUES (@DrinkId, @CategoryId);";
-
-                    var categoryParams = new List<SqlParameter>
-                    {
+                    string addCategoriesQuery = @"INSERT INTO DrinkCategory (DrinkId, CategoryId) 
+                                               VALUES (@DrinkId, @CategoryId);";
+                    List<SqlParameter> categoryParameters =
+                    [
                         new SqlParameter("@DrinkId", SqlDbType.Int) { Value = drinkId },
                         new SqlParameter("@CategoryId", SqlDbType.Int) { Value = category.CategoryId }
-                    };
+                    ];
 
-                    dbService.ExecuteQuery(insertCategoryLink, categoryParams);
+                    dbService.ExecuteQuery(addCategoriesQuery, categoryParameters);
                 }
             }
             catch (Exception ex)
             {
-                throw new Exception("Database error occurred while adding a new drink.", ex);
+                throw new Exception("Database error occurred", ex);
             }
         }
 
@@ -719,7 +723,7 @@ namespace WinUIApp.Models
             }
             catch (Exception ex)
             {
-                throw new Exception("Failed to retrieve drink of the day.", ex);
+                throw new Exception("Failed to retrieve drink of the day." + ex.Message, ex);
             }
         }
 
@@ -789,11 +793,12 @@ namespace WinUIApp.Models
 
             try
             {
+                //Temporarily removed WHERE CONVERT(date, VoteTime) = CONVERT(date, GETDATE()) from query due to
+                // the fact that it runs on flawed logic and can cause the application to not run.
                 const string insertQuery = @"
                     INSERT INTO DrinkOfTheDay (DrinkId, DrinkTime)
                     SELECT TOP 1 DrinkId, GETDATE()
                     FROM Vote
-                    WHERE CONVERT(date, VoteTime) = CONVERT(date, GETDATE())
                     GROUP BY DrinkId
                     ORDER BY COUNT(*) DESC;";
 

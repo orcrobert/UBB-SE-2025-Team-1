@@ -11,17 +11,23 @@ using System.Diagnostics;
 
 namespace WinUIApp.ViewModels
 {
+    /// <summary>
+    /// ViewModel for the DrinkPage. Manages the state and behavior of the drink page, including adding/removing drinks from a user's personal list.
+    /// </summary>
     public class DrinkPageViewModel : INotifyPropertyChanged
     {
         private readonly DrinkService _drinkService;
         private readonly UserService _userService;
         private int _userId;
         private int _drinkId;
-        private bool _isInList;
+        private bool _isInUserDrinksList;
         private string _buttonText;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
+        /// <summary>
+        /// Default constructor for the DrinkPageViewModel. Initializes the drink service and user service.
+        /// </summary>
         public DrinkPageViewModel()
         {
             _drinkService = new DrinkService();
@@ -30,6 +36,10 @@ namespace WinUIApp.ViewModels
             Debug.WriteLine("DrinkPageViewModel: Default constructor called");
         }
 
+        /// <summary>
+        /// Constructor for a specific drink ID. Initializes the drink service and user service, and sets the drink ID.
+        /// </summary>
+        /// <param name="drinkId">The ID of the drink to be managed.</param>
         public DrinkPageViewModel(int drinkId)
         {
             _drinkService = new DrinkService();
@@ -39,6 +49,9 @@ namespace WinUIApp.ViewModels
             Debug.WriteLine($"DrinkPageViewModel: Constructor called with DrinkId {drinkId}");
         }
 
+        /// <summary>
+        /// Event handler for updating the UI when user ID changes.
+        /// </summary>
         public int UserId
         {
             get => _userId;
@@ -57,6 +70,9 @@ namespace WinUIApp.ViewModels
             }
         }
 
+        /// <summary>
+        /// Event handler for updating the UI when drink ID changes.
+        /// </summary>
         public int DrinkId
         {
             get => _drinkId;
@@ -75,6 +91,9 @@ namespace WinUIApp.ViewModels
             }
         }
 
+        /// <summary>
+        /// Event handler for updating the UI when the button text changes.
+        /// </summary>
         public string ButtonText
         {
             get => _buttonText;
@@ -89,6 +108,10 @@ namespace WinUIApp.ViewModels
             }
         }
 
+        /// <summary>
+        /// Gets the current user ID from the user service.
+        /// </summary>
+        /// <returns>Current user ID.</returns>
         private int GetCurrentUserId()
         {
             int userId = _userService.GetCurrentUserID();
@@ -96,22 +119,29 @@ namespace WinUIApp.ViewModels
             return userId;
         }
 
+        /// <summary>
+        /// Checks if the drink is in the user's personal list.
+        /// If the user ID or drink ID is invalid, sets _isInUserDrinksList to false.
+        /// If valid, checks the drink list using the drink service.
+        /// If the drink is found, sets _isInUserDrinksList to true and updates the button text accordingly.
+        /// </summary>
+        /// <returns>A task representing the asynchronous operation.</returns>
         public async Task CheckIfInListAsync()
         {
             Debug.WriteLine($"DrinkPageViewModel: CheckIfInListAsync called for User {GetCurrentUserId()}, Drink {DrinkId}");
             if (GetCurrentUserId() <= 0 || DrinkId <= 0)
             {
-                _isInList = false;
+                _isInUserDrinksList = false;
                 UpdateButtonText();
-                Debug.WriteLine($"DrinkPageViewModel: CheckIfInListAsync - User or Drink ID invalid, _isInList set to false");
+                Debug.WriteLine($"DrinkPageViewModel: CheckIfInListAsync - User or Drink ID invalid, _isInUserDrinksList set to false");
                 return;
             }
 
             try
             {
-                _isInList = await Task.Run(() => _drinkService.isDrinkInPersonalList(GetCurrentUserId(), DrinkId));
+                _isInUserDrinksList = await Task.Run(() => _drinkService.isDrinkInPersonalList(GetCurrentUserId(), DrinkId));
                 UpdateButtonText();
-                Debug.WriteLine($"DrinkPageViewModel: CheckIfInListAsync - _isInList is now {_isInList}");
+                Debug.WriteLine($"DrinkPageViewModel: CheckIfInListAsync - _isInUserDrinksList is now {_isInUserDrinksList}");
             }
             catch (Exception ex)
             {
@@ -119,9 +149,16 @@ namespace WinUIApp.ViewModels
             }
         }
 
+        /// <summary>
+        /// Adds or removes the drink from the user's personal list based on its current state.
+        /// If the drink is already in the list, it will be removed; otherwise, it will be added.
+        /// If the user ID or drink ID is invalid, the method will return without making any changes.
+        /// </summary>
+        /// <returns></returns>
+
         public async Task AddRemoveFromListAsync()
         {
-            Debug.WriteLine($"DrinkPageViewModel: AddRemoveFromListAsync called for User {GetCurrentUserId()}, Drink {DrinkId}. _isInList: {_isInList}");
+            Debug.WriteLine($"DrinkPageViewModel: AddRemoveFromListAsync called for User {GetCurrentUserId()}, Drink {DrinkId}. _isInUserDrinksList: {_isInUserDrinksList}");
             if (GetCurrentUserId() <= 0 || DrinkId <= 0)
             {
                 Debug.WriteLine($"DrinkPageViewModel: AddRemoveFromListAsync - User or Drink ID invalid, returning");
@@ -130,14 +167,14 @@ namespace WinUIApp.ViewModels
 
             try
             {
-                bool success;
-                if (_isInList)
+                bool isOperationSuccessful;
+                if (_isInUserDrinksList)
                 {
                     Debug.WriteLine($"DrinkPageViewModel: Removing Drink {DrinkId} for User {GetCurrentUserId()}");
-                    success = await Task.Run(() => _drinkService.deleteFromPersonalDrinkList(GetCurrentUserId(), DrinkId));
-                    if (success)
+                    isOperationSuccessful = await Task.Run(() => _drinkService.deleteFromPersonalDrinkList(GetCurrentUserId(), DrinkId));
+                    if (isOperationSuccessful)
                     {
-                        _isInList = false;
+                        _isInUserDrinksList = false;
                         Debug.WriteLine($"DrinkPageViewModel: Successfully removed Drink {DrinkId}");
                     }
                     else
@@ -148,10 +185,10 @@ namespace WinUIApp.ViewModels
                 else
                 {
                     Debug.WriteLine($"DrinkPageViewModel: Adding Drink {DrinkId} for User {GetCurrentUserId()}");
-                    success = await Task.Run(() => _drinkService.addToPersonalDrinkList(GetCurrentUserId(), DrinkId));
-                    if (success)
+                    isOperationSuccessful = await Task.Run(() => _drinkService.addToPersonalDrinkList(GetCurrentUserId(), DrinkId));
+                    if (isOperationSuccessful)
                     {
-                        _isInList = true;
+                        _isInUserDrinksList = true;
                         Debug.WriteLine($"DrinkPageViewModel: Successfully added Drink {DrinkId}");
                     }
                     else
@@ -161,21 +198,32 @@ namespace WinUIApp.ViewModels
                 }
                 UpdateButtonText();
             }
-            catch (Exception ex)
+            catch (Exception UpdateDrinkListException)
             {
-                Debug.WriteLine($"DrinkPageViewModel: Error updating drink list: {ex.Message}");
+                Debug.WriteLine($"DrinkPageViewModel: Error updating drink list: {UpdateDrinkListException.Message}");
             }
         }
 
+        /// <summary>
+        /// Internal method to update the button text based on the current state of _isInUserDrinksList.
+        /// If the drink is in the user's list, the button text will be a heart symbol; otherwise, it will be a black heart symbol.
+        /// </summary>
         private void UpdateButtonText()
         {
-            ButtonText = _isInList ? "\u2665" : "\U0001F5A4";
-            Debug.WriteLine($"DrinkPageViewModel: ButtonText updated to {ButtonText} (_isInList: {_isInList})");
+            ButtonText = _isInUserDrinksList ? "\u2665" : "\U0001F5A4";
+            Debug.WriteLine($"DrinkPageViewModel: ButtonText updated to {ButtonText} (_isInUserDrinksList: {_isInUserDrinksList})");
         }
 
+        /// <summary>
+        /// Raises the PropertyChanged event for the specified property name.
+        /// </summary>
+        /// <param name="propertyName">String name of the property that changed.</param>
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            if (PropertyChanged != null)
+            {
+                PropertyChanged.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            }
         }
     }
 }

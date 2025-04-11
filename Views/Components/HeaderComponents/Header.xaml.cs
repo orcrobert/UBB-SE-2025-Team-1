@@ -9,27 +9,43 @@ namespace WinUIApp.Views.Components.HeaderComponents
 {
     public sealed partial class Header : UserControl
     {
-        private HeaderViewModel _viewModel;
+        private HeaderViewModel viewModel;
+
+        /// <summary>
+        /// Initializes a new instance of the Header control, sets up the view model,
+        /// and populates the category menu with available categories.
+        /// </summary>
         public Header()
         {
             this.InitializeComponent();
-            _viewModel = new HeaderViewModel(new Services.DrinkService());
-            CategoryMenu.PopulateCategories(_viewModel.GetCategories());
+            viewModel = new HeaderViewModel(new Services.DrinkService());
+            CategoryMenu.PopulateCategories(viewModel.GetCategories());
         }
 
-        private void Logo_Click(object sender, RoutedEventArgs e)
+        /// <summary>
+        /// Handles click events on the logo by navigating to the MainPage.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="routedEventArgs">Event data for the click event.</param>
+        private void Logo_Click(object sender, RoutedEventArgs routedEventArgs)
         {
             MainWindow.AppMainFrame.Navigate(typeof(MainPage));
         }
 
-        private void SearchDrinksButton_Click(object sender, RoutedEventArgs e)
+        /// <summary>
+        /// Handles the search button click by navigating to the SearchPage with parameters
+        /// containing selected categories and search terms.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="routedEventArgs">Event data for the click event.</param>
+        private void SearchDrinksButton_Click(object sender, RoutedEventArgs routedEventArgs)
         {
-            SearchPageNavigationParameters parameters = new SearchPageNavigationParameters
+            SearchPageNavigationParameters navigationParameters = new SearchPageNavigationParameters
             {
-                InitialCategories = CategoryMenu.SelectedCategories.Select(category => category).ToList(),
+                InitialCategories = CategoryMenu.SelectedCategories.ToList(),
                 SearchedTerms = DrinkSearchBox.Text
             };
-            MainWindow.AppMainFrame.Navigate(typeof(SearchPage), parameters);
+            MainWindow.AppMainFrame.Navigate(typeof(SearchPage), navigationParameters);
         }
     }
 }

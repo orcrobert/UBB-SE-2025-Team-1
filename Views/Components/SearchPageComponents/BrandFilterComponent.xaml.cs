@@ -42,7 +42,7 @@ namespace WinUIApp.Views.Components.SearchPageComponents
             {
                 selectedBrands.Add(addedBrand);
             }
-            BrandChanged?.Invoke(this, selectedBrands.Select(brand => brand.Name).ToList());
+            BrandChanged?.Invoke(this, selectedBrands.Select(brand => brand.BrandName).ToList());
         }
 
         /// <summary>
@@ -55,7 +55,7 @@ namespace WinUIApp.Views.Components.SearchPageComponents
         {
             string searchQuery = SearchBox.Text.ToLower();
             List<Brand> filteredBrands = originalBrands
-                .Where(brand => brand.Name.ToLower().Contains(searchQuery))
+                .Where(brand => brand.BrandName.ToLower().Contains(searchQuery))
                 .ToList();
 
             BrandList.SelectionChanged -= BrandListView_SelectionChanged;

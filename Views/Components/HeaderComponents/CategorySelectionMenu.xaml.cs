@@ -70,7 +70,7 @@ namespace WinUIApp.Views.Components.HeaderComponents
         {
             string searchQuery = CategorySearchBox.Text.ToLower();
             List<Category> filteredCategories = originalCategories
-                .Where(category => category.Name.ToLower().Contains(searchQuery))
+                .Where(category => category.CategoryName.ToLower().Contains(searchQuery))
                 .ToList();
             CategoryList.SelectionChanged -= CategoryList_SelectionChanged;
             CurrentCategories.Clear();

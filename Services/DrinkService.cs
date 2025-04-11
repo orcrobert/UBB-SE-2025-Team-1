@@ -165,7 +165,7 @@ namespace WinUIApp.Services
             }
             catch (Exception e)
             {
-                throw new Exception("Error getting drink of the day:", e);
+                throw new Exception("Error getting drink of the day:" + e.Message, e);
             }
         }
     }

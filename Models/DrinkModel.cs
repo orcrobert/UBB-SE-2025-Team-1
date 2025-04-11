@@ -719,7 +719,7 @@ namespace WinUIApp.Models
             }
             catch (Exception ex)
             {
-                throw new Exception("Failed to retrieve drink of the day.", ex);
+                throw new Exception("Failed to retrieve drink of the day." + ex.Message, ex);
             }
         }
 
@@ -789,11 +789,12 @@ namespace WinUIApp.Models
 
             try
             {
+                //Temporarily removed WHERE CONVERT(date, VoteTime) = CONVERT(date, GETDATE()) from query due to
+                // the fact that it runs on flawed logic and can cause the application to not run.
                 const string insertQuery = @"
                     INSERT INTO DrinkOfTheDay (DrinkId, DrinkTime)
                     SELECT TOP 1 DrinkId, GETDATE()
                     FROM Vote
-                    WHERE CONVERT(date, VoteTime) = CONVERT(date, GETDATE())
                     GROUP BY DrinkId
                     ORDER BY COUNT(*) DESC;";
 

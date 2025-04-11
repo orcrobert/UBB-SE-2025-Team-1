@@ -109,7 +109,7 @@ namespace WinUIApp.Views.Components
         {
             try
             {
-                _viewModel.Validate();
+                _viewModel.ValidateUserDrinkInput();
 
                 var adminService = new AdminService();
                 bool isAdmin = adminService.IsAdmin(UserId);

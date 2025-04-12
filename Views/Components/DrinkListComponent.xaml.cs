@@ -15,14 +15,12 @@ namespace WinUIApp.Views.Components
 {
     public sealed partial class DrinkListComponent : UserControl
     {
-        private const object defaultObjectValue = null;
-
         public static readonly DependencyProperty DrinksProperty =
            DependencyProperty.Register(
                "Drinks",
                typeof(List<Drink>), 
                typeof(DrinkListComponent),
-               new PropertyMetadata(defaultObjectValue));
+               new PropertyMetadata(null));
 
         public List<Drink> Drinks
         {
@@ -35,7 +33,7 @@ namespace WinUIApp.Views.Components
             InitializeComponent();
         }
 
-        private void DrinkItem_PointerEntered(object sender, PointerRoutedEventArgs eventArguments)
+        private void DrinkItem_PointerEntered(object sender, PointerRoutedEventArgs e)
         {
             if (sender is Button button && button.FindName("CardBorder") is Border border)
             {
@@ -44,7 +42,7 @@ namespace WinUIApp.Views.Components
             }
         }
 
-        private void DrinkItem_PointerExited(object sender, PointerRoutedEventArgs eventArgumentse)
+        private void DrinkItem_PointerExited(object sender, PointerRoutedEventArgs e)
         {
             if (sender is Button button && button.FindName("CardBorder") is Border border)
             {
@@ -53,7 +51,7 @@ namespace WinUIApp.Views.Components
             }
         }
 
-        private void DrinkItem_Click(object sender, RoutedEventArgs eventArguments)
+        private void DrinkItem_Click(object sender, RoutedEventArgs e)
         {
             if (sender is Button button && button.Tag is int drinkId)
             {

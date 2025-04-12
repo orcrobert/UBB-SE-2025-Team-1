@@ -5,7 +5,7 @@ namespace WinUIApp.Utils.NavigationParameters
 {
     public class SearchPageNavigationParameters
     {
-        public List<Category>? SelectedCategoryFilters { get; set; }
-        public string? InputSearchKeyword { get; set; }
+        public List<Category>? InitialCategories { get; set; }
+        public string? SearchedTerms { get; set; }
     }
 }

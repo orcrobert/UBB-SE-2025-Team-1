@@ -1,42 +1,50 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace WinUIApp.Models
 {
-    /// <summary>
-    /// Represents a category assigned to a drink (e.g., beer, wine).
-    /// </summary>
     public class Category
     {
-        /// <summary>
-        /// Gets the unique identifier for the category.
-        /// </summary>
-        public int CategoryId { get; }
+        private int _id;
+        private string _name;
 
-        /// <summary>
-        /// Gets the name of the category.
-        /// </summary>
-        public string CategoryName { get; }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Category"/> class.
-        /// </summary>
-        /// <param name="categoryId">Unique identifier for the category.</param>
-        /// <param name="categoryName">Name of the category.</param>
-        /// <exception cref="ArgumentException">Thrown when categoryName is null or empty.</exception>
-        public Category(int categoryId, string categoryName)
+        public Category(int id, string name)
         {
-            if (string.IsNullOrWhiteSpace(categoryName))
-                throw new ArgumentException("Category name cannot be null or empty.", nameof(categoryName));
+            _id = id;
+            _name = name;
+        }
 
-            CategoryId = categoryId;
-            CategoryName = categoryName;
+        public int Id
+        {
+            get { return _id; }
+            set { _id = value; }
+        }
+
+        public string Name
+        {
+            get { return _name; }
+            set
+            {
+                if (string.IsNullOrEmpty(value))
+                    throw new ArgumentException("Category name cannot be null or empty", nameof(Name));
+                _name = value;
+            }
         }
 
         public override bool Equals(object? obj)
         {
-            return obj is Category other && CategoryId == other.CategoryId;
+            if (obj == null || GetType() != obj.GetType())
+                return false;
+            Category category = (Category)obj;
+            return _id == category.Id;
         }
 
-        public override int GetHashCode() => CategoryId.GetHashCode();
+        public override int GetHashCode()
+        {
+            return Id.GetHashCode();
+        }
     }
 }

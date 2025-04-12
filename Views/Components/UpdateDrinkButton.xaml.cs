@@ -15,14 +15,12 @@ namespace WinUIApp.Views.Components
 {
     public sealed partial class UpdateDrinkButton : UserControl
     {
-        private const object defaultObjectValue = null;
-
         public static readonly DependencyProperty DrinkProperty =
         DependencyProperty.Register(
         nameof(Drink),
         typeof(Drink),
         typeof(UpdateDrinkButton),
-        new PropertyMetadata(defaultObjectValue));
+        new PropertyMetadata(null));
         public Action OnDrinkUpdated { get; set; }
 
         public Drink Drink
@@ -37,7 +35,7 @@ namespace WinUIApp.Views.Components
 
         }
 
-        private void UpdateDrinkButton_Click(object sender, RoutedEventArgs eventArguments)
+        private void UpdateDrinkButton_Click(object sender, RoutedEventArgs e)
         {
             var userService = new WinUIApp.Services.DummyServies.UserService();
             var flyout = new Flyout
@@ -45,11 +43,11 @@ namespace WinUIApp.Views.Components
                 Content = new UpdateDrinkFlyout
                 {
                     DrinkToUpdate = Drink,
-                    UserId = userService.GetCurrentUserId()
+                    UserId = userService.GetCurrentUserID()
                 }
             };
 
-            flyout.Closed += (sender, Arguments) =>
+            flyout.Closed += (s, args) =>
             {
                 OnDrinkUpdated?.Invoke();
             };

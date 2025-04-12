@@ -5,20 +5,18 @@ namespace WinUIApp.Utils.Converters
 {
     public class AlcoholContentConverter : IValueConverter
     {
-        private const string DefaultAlcoholPercentage = "0%";
-        private const string AlcoholPercentageFormat = "{0}%";
-        public object Convert(object alcoholContentSourceValue, Type destinationType, object converterParameter, string formattingCulture)
+        public object Convert(object value, Type targetType, object parameter, string language)
         {
-            if (alcoholContentSourceValue is float alcoholContent)
+            if (value is float alcoholContent)
             {
-                return string.Format(AlcoholPercentageFormat, alcoholContent);
+                return $"{alcoholContent}%";
             }
-            return DefaultAlcoholPercentage;
+            return "0%";
         }
 
-        public object ConvertBack(object displayedAlcoholContentValue, Type sourcePropertyType, object converterParameter, string formattingCulture)
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
-            throw new NotImplementedException("Converting from string to alcohol content is not supported.");
+            throw new NotImplementedException();
         }
     }
 }

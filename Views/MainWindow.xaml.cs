@@ -21,7 +21,7 @@ namespace WinUIApp.Views
             AppMainFrame = MainFrame;
 
             DrinkService drinkService = new DrinkService();
-            DrinkReviewService reviewService = new DrinkReviewService();
+            ReviewService reviewService = new ReviewService();
             UserService userService = new UserService();
             MainPage mainPage = new MainPage();
 

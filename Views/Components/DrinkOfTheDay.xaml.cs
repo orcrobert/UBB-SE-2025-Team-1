@@ -25,8 +25,6 @@ namespace WinUIApp.Views.Components
     /// </summary>
     public sealed partial class DrinkOfTheDayComponent : UserControl
     {
-        private const float defaultFloatValue = 0.0f;
-
         public DrinkOfTheDayComponent()
         {
             this.InitializeComponent();
@@ -42,7 +40,7 @@ namespace WinUIApp.Views.Components
             DependencyProperty.Register("DrinkCategories", typeof(List<Category>), typeof(DrinkOfTheDayComponent), new PropertyMetadata(new List<Category>()));
 
         public static readonly DependencyProperty AlcoholContentProperty =
-            DependencyProperty.Register("AlcoholContent", typeof(float), typeof(DrinkOfTheDayComponent), new PropertyMetadata(defaultFloatValue));
+            DependencyProperty.Register("AlcoholContent", typeof(float), typeof(DrinkOfTheDayComponent), new PropertyMetadata(0.0));
 
         public static readonly DependencyProperty ImageSourceProperty =
             DependencyProperty.Register("ImageSource", typeof(string), typeof(DrinkOfTheDayComponent), new PropertyMetadata(string.Empty));

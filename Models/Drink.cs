@@ -3,70 +3,67 @@ using System.Collections.Generic;
 
 namespace WinUIApp.Models
 {
-    /// <summary>
-    /// Represents a drink with associated brand, image, alcohol content, and categories.
-    /// </summary>
     public class Drink
     {
-        private const float MaxAlcoholContent = 100.0f;
-
-        public int DrinkId { get; set; }
-
+        private int _id;
         private string? _drinkName;
+        private string _drinkURL;
+        private List<Category> _categories;
+        private Brand _brand;
+        private float _alcoholContent;
+
+        public Drink(int id, string? drinkName, string drinkURL, List<Category> categories, Brand brand, float alcoholContent)
+        {
+            _id = id;
+            _drinkName = drinkName;
+            _drinkURL = drinkURL ?? string.Empty;
+            _categories = categories ?? new List<Category>();
+            _brand = brand;
+            AlcoholContent = alcoholContent;
+        }
+
+        public int Id
+        {
+            get { return _id; }
+            set { _id = value; }
+        }
+
         public string? DrinkName
         {
-            get => _drinkName;
-            set => _drinkName = value;
+            get { return _drinkName; }
+            set { _drinkName = value; }
         }
 
-        private string _drinkImageUrl = string.Empty;
-        public string DrinkImageUrl
+        public string DrinkURL
         {
-            get => _drinkImageUrl;
-            set => _drinkImageUrl = value ?? string.Empty;
+            get { return _drinkURL; }
+            set { _drinkURL = value ?? string.Empty; }
         }
 
-        private List<Category> _categoryList = new();
-        public List<Category> CategoryList
+        public List<Category> Categories
         {
-            get => _categoryList;
-            set => _categoryList = value ?? new List<Category>();
+            get { return _categories; }
+            set { _categories = value ?? new List<Category>(); }
         }
 
-        public Brand DrinkBrand { get; set; }
+        public Brand Brand
+        {
+            get { return _brand; }
+            set { _brand = value; }
+        }
 
-        private float _alcoholContent;
         public float AlcoholContent
         {
-            get => _alcoholContent;
+            get { return _alcoholContent; }
             set
             {
                 if (value < 0)
                     throw new ArgumentOutOfRangeException(nameof(AlcoholContent), "Alcohol content must be a positive value.");
-                if (value > MaxAlcoholContent)
-                    throw new ArgumentOutOfRangeException(nameof(AlcoholContent), $"Alcohol content must not exceed {MaxAlcoholContent}.");
+                else if (value > 100)
+                    throw new ArgumentOutOfRangeException(nameof(AlcoholContent), "Alcohol content must be less than 100.");
+
                 _alcoholContent = value;
             }
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Drink"/> class.
-        /// </summary>
-        /// <param name="id">Unique identifier for the drink.</param>
-        /// <param name="drinkName">Name of the drink.</param>
-        /// <param name="imageUrl">URL of the drink image.</param>
-        /// <param name="categories">Categories associated with the drink.</param>
-        /// <param name="brand">Brand of the drink.</param>
-        /// <param name="alcoholContent">Alcohol content percentage.</param>
-        /// <exception cref="ArgumentNullException">Thrown when brand is null.</exception>
-        public Drink(int id, string? drinkName, string imageUrl, List<Category> categories, Brand brand, float alcoholContent)
-        {
-            DrinkId = id;
-            DrinkName = drinkName;
-            DrinkImageUrl = imageUrl;
-            CategoryList = categories ?? new List<Category>();
-            DrinkBrand = brand ?? throw new ArgumentNullException(nameof(brand), "Brand cannot be null");
-            AlcoholContent = alcoholContent;
         }
     }
 }

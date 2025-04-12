@@ -22,17 +22,17 @@ namespace WinUIApp.Views.Pages
         {
             base.OnNavigatedTo(e);
             MainWindow.PreviousPage = typeof(SearchPage);
-            _searchPageViewModel = new SearchPageViewModel(new Services.DrinkService(), new Services.DummyServies.DrinkReviewService());
+            _searchPageViewModel = new SearchPageViewModel(new Services.DrinkService(), new Services.DummyServies.ReviewService());
             SortSelectorControl.SetSortOrder(_searchPageViewModel.IsAscending);
             if (e.Parameter is SearchPageNavigationParameters parameters)
             {
-                if (parameters.SelectedCategoryFilters != null)
+                if (parameters.InitialCategories != null)
                 {
-                    _searchPageViewModel.SetInitialCategoryFilter(parameters.SelectedCategoryFilters);
+                    _searchPageViewModel.SetInitialCategoryFilter(parameters.InitialCategories);
                 }
-                if (parameters.InputSearchKeyword != null)
+                if (parameters.SearchedTerms != null)
                 {
-                    _searchPageViewModel.SetSearchedTerms(parameters.InputSearchKeyword);
+                    _searchPageViewModel.SetSearchedTerms(parameters.SearchedTerms);
                 }
             }
             LoadDrinks();

@@ -13,29 +13,28 @@ namespace WinUIApp.Services
 {
     public class DatabaseService
     {
-        private static DatabaseService _databaseServiceInstance;
-        private static readonly object _databaseServiceInstanceLock = new object();
-        private readonly DatabaseConnection _databaseConnection;
-
+        private static DatabaseService _instance;
+        private static readonly object _lock = new object();
+        private DatabaseConnection _databaseConnection;
 
         public static DatabaseService Instance
         {
             get
             {
-                if (_databaseServiceInstance == null)
+                if (_instance == null)
                 {
-                    lock (_databaseServiceInstanceLock)
+                    lock (_lock)
                     {
-                        if (_databaseServiceInstance == null)
+                        if (_instance == null)
                         {
-                            lock (_databaseServiceInstanceLock)
+                            lock (_lock)
                             {
-                                _databaseServiceInstance = new DatabaseService();
+                                _instance = new DatabaseService();
                             }
                         }
                     }
                 }
-                return _databaseServiceInstance;
+                return _instance;
             }
         }
 
@@ -44,73 +43,72 @@ namespace WinUIApp.Services
             _databaseConnection = DatabaseConnection.Instance;
         }
 
-        public List<Dictionary<string, object>> ExecuteSelectQuery(string sqlSelectQuery, List<SqlParameter> sqlSelectQueryParameters = null)
+        public List<Dictionary<string, object>> ExecuteSelect(string query, List<SqlParameter> parameters = null)
         {
-            var selectQueryResults = new List<Dictionary<string, object>>();
+            var result = new List<Dictionary<string, object>>();
 
             try
             {
                 _databaseConnection.OpenConnection();
-                using (var sqlSelectCommand = new SqlCommand(sqlSelectQuery, _databaseConnection.GetConnection()))
+                using (var command = new SqlCommand(query, _databaseConnection.GetConnection()))
                 {
-                    if (sqlSelectQueryParameters != null)
+                    if (parameters != null)
                     {
-                        sqlSelectCommand.Parameters.AddRange(sqlSelectQueryParameters.ToArray());
+                        command.Parameters.AddRange(parameters.ToArray());
                     }
 
-                    using (var sqlDataReader = sqlSelectCommand.ExecuteReader())
+                    using (var reader = command.ExecuteReader())
                     {
-                        while (sqlDataReader.Read())
+                        while (reader.Read())
                         {
-                            var queryResultRowData = new Dictionary<string, object>();
-                            for (int currentColumnIndex = 0; currentColumnIndex < sqlDataReader.FieldCount; currentColumnIndex++)
+                            var row = new Dictionary<string, object>();
+                            for (int i = 0; i < reader.FieldCount; i++)
                             {
-                                queryResultRowData[sqlDataReader.GetName(currentColumnIndex)] = sqlDataReader.GetValue(currentColumnIndex);
+                                row[reader.GetName(i)] = reader.GetValue(i);
                             }
-                            selectQueryResults.Add(queryResultRowData);
+                            result.Add(row);
                         }
                     }
                 }
             }
-            catch (Exception executeSelectQueryException)
+            catch (Exception ex)
             {
-                Debug.WriteLine($"Error executing select query: {executeSelectQueryException.Message}");
+                Debug.WriteLine($"Error executing query: {ex.Message}");
             }
             finally
             {
                 _databaseConnection.CloseConnection();
             }
 
-            return selectQueryResults;
+            return result;
         }
 
-        public int ExecuteDataModificationQuery(string sqlDataModificationQuery, List<SqlParameter> sqlDataModificationQueryParameters = null)
+        public int ExecuteQuery(string query, List<SqlParameter> parameters = null)
         {
-            int numberOfRowsAffectedByQuery = 0;
+            int rowsAffected = 0;
 
             try
             {
                 _databaseConnection.OpenConnection();
-                using (var dataModificationQueryCommand = new SqlCommand(sqlDataModificationQuery, _databaseConnection.GetConnection()))
+                using (var command = new SqlCommand(query, _databaseConnection.GetConnection()))
                 {
-                      if (sqlDataModificationQueryParameters != null)
-                        {
-                            dataModificationQueryCommand.Parameters.AddRange(sqlDataModificationQueryParameters.ToArray());
-                        }
-                    numberOfRowsAffectedByQuery = dataModificationQueryCommand.ExecuteNonQuery();
-
+                    if (parameters != null)
+                    {
+                        command.Parameters.AddRange(parameters.ToArray());
+                    }
+                    rowsAffected = command.ExecuteNonQuery();
                 }
             }
-            catch (Exception dataModificationQueryExecutionException)
+            catch (Exception ex)
             {
-                Debug.WriteLine($"Error executing data modification query: {dataModificationQueryExecutionException.Message}");
+                Debug.WriteLine($"Error executing query: {ex.Message}");
             }
             finally
             {
                 _databaseConnection.CloseConnection();
             }
 
-            return numberOfRowsAffectedByQuery;
+            return rowsAffected;
         }
     }
 }

@@ -12,14 +12,14 @@ namespace WinUIApp.Views.Components
             this.InitializeComponent();
         }
 
-        private void AddDrinkButton_Click(object sender, RoutedEventArgs eventArguments)
+        private void AddDrinkButton_Click(object sender, RoutedEventArgs e)
         {
             var userService = new WinUIApp.Services.DummyServies.UserService();
             var flyout = new Flyout
             {
                 Content = new AddDrinkFlyout
                 {
-                    UserId = userService.GetCurrentUserId()
+                    UserId = userService.GetCurrentUserID()
                 }
             };
 

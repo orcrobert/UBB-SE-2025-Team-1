@@ -8,12 +8,11 @@ namespace WinUIApp.Services.DummyServies
 {
     public class UserService
     {
-        private const int DefaultUserId = 1;
-        public int CurrentUserId { get; } = DefaultUserId;
+        private int currentUserID = 1;
 
-        public int GetCurrentUserId()
+        public int GetCurrentUserID()
         {
-            return CurrentUserId;
+            return currentUserID;
         }
     }
 }

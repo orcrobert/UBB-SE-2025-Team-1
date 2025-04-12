@@ -1,44 +1,37 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace WinUIApp.Models
 {
-    /// <summary>
-    /// Represents a drink brand.
-    /// </summary>
     public class Brand
     {
-        /// <summary>
-        /// Gets or sets the unique identifier for the brand.
-        /// </summary>
-        public int BrandId { get; set; }
+        private int _id;
+        private string _name;
 
-        private string _brandName;
-
-        /// <summary>
-        /// Gets or sets the name of the brand.
-        /// </summary>
-        /// <exception cref="ArgumentException">Thrown when value is null or empty.</exception>
-        public string BrandName
+        public Brand(int id, string name)
         {
-            get => _brandName;
-            set
-            {
-                if (string.IsNullOrWhiteSpace(value))
-                    throw new ArgumentException("Brand name cannot be null or empty.", nameof(BrandName));
-                _brandName = value;
-            }
+            _id = id;
+            _name = name;
         }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Brand"/> class.
-        /// </summary>
-        /// <param name="brandId">Unique identifier for the brand.</param>
-        /// <param name="brandName">Name of the brand.</param>
-        /// <exception cref="ArgumentException">Thrown when brandName is null or empty.</exception>
-        public Brand(int brandId, string brandName)
+        public int Id
         {
-            BrandId = brandId;
-            BrandName = brandName; // validation happens in setter
+            get { return _id; }
+            set { _id = value; }
+        }
+
+        public string Name
+        {
+            get { return _name; }
+            set
+            {
+                if (string.IsNullOrEmpty(value))
+                    throw new ArgumentException("Brand name cannot be null or empty", nameof(Name));
+                _name = value;
+            }
         }
     }
 }

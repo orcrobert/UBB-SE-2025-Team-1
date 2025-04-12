@@ -24,7 +24,7 @@
                 SelectionChanged="CategoryListView_SelectionChanged">
                 <ListView.ItemTemplate>
                     <DataTemplate x:DataType="models:Category">
-                        <TextBlock Text="{x:Bind CategoryName}"/>
+                        <TextBlock Text="{x:Bind Name}"/>
                     </DataTemplate>
                 </ListView.ItemTemplate>
 

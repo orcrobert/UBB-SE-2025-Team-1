@@ -24,7 +24,7 @@
             SelectionChanged="BrandListView_SelectionChanged">
             <ListView.ItemTemplate>
                 <DataTemplate x:DataType="models:Brand">
-                    <TextBlock Text="{x:Bind BrandName}"/>
+                    <TextBlock Text="{x:Bind Name}"/>
                 </DataTemplate>
             </ListView.ItemTemplate>
 

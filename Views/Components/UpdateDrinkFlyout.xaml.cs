@@ -18,8 +18,6 @@ namespace WinUIApp.Views.Components
     {
         private UpdateDrinkMenuViewModel _viewModel;
 
-        private const object defaultObjectValue = null;
-
         public Drink DrinkToUpdate { get; set; }
         public int UserId { get; set; }
 
@@ -29,25 +27,23 @@ namespace WinUIApp.Views.Components
             this.Loaded += UpdateDrinkFlyout_Loaded;
             CategoryList.SelectionChanged += CategoryList_SelectionChanged;
 
-            SearchBox.TextChanged += (sender, eventArguments) =>
+            SearchBox.TextChanged += (s, e) =>
             {
                 string query = SearchBox.Text.ToLower();
 
-                var filteredCategories = _viewModel.AllCategories
-                    .Where(category => category.ToLower().Contains(query))
+                var filtered = _viewModel.AllCategories
+                    .Where(c => c.ToLower().Contains(query))
                     .ToList();
 
                 CategoryList.SelectionChanged -= CategoryList_SelectionChanged;
-                CategoryList.ItemsSource = filteredCategories;
+                CategoryList.ItemsSource = filtered;
 
                 DispatcherQueue.TryEnqueue(() =>
                 {
-                    foreach (var category in filteredCategories)
+                    foreach (var item in filtered)
                     {
-                        if (_viewModel.SelectedCategoryNames.Contains(category))
-                        {
-                            CategoryList.SelectedItems.Add(category);
-                        }
+                        if (_viewModel.SelectedCategoryNames.Contains(item))
+                            CategoryList.SelectedItems.Add(item);
                     }
 
                     CategoryList.SelectionChanged += CategoryList_SelectionChanged;
@@ -55,15 +51,15 @@ namespace WinUIApp.Views.Components
             };
         }
 
-        private void UpdateDrinkFlyout_Loaded(object sender, RoutedEventArgs eventArguments)
+        private void UpdateDrinkFlyout_Loaded(object sender, RoutedEventArgs e)
         {
             var drinkService = new DrinkService();
             var userService = new UserService();
             var adminService = new AdminService();
             bool isAdmin = adminService.IsAdmin(UserId);
 
-            var allBrands = drinkService.GetDrinkBrandNames(); 
-            var allCategories = drinkService.GetDrinkCategories();
+            var allBrands = drinkService.getDrinkBrands(); 
+            var allCategories = drinkService.getDrinkCategories();
 
             _viewModel = new UpdateDrinkMenuViewModel(
                 DrinkToUpdate,
@@ -74,67 +70,48 @@ namespace WinUIApp.Views.Components
             {
                 AllBrands = allBrands,
                 AllCategoryObjects = allCategories,
-                AllCategories = allCategories.Select(category => category.CategoryName).ToList(),
-                BrandName = DrinkToUpdate.DrinkBrand?.BrandName ?? String.Empty
+                AllCategories = allCategories.Select(c => c.Name).ToList(),
+                BrandName = DrinkToUpdate.Brand?.Name ?? ""
             };
 
-            foreach (var category in DrinkToUpdate.CategoryList)
-            {
-                _viewModel.SelectedCategoryNames.Add(category.CategoryName);
-            }
+            foreach (var category in DrinkToUpdate.Categories)
+                _viewModel.SelectedCategoryNames.Add(category.Name);
 
             this.DataContext = _viewModel;
 
-            if(isAdmin)
-            {
-                SaveButton.Content = "Save";
-            }
-            else
-            {
-                SaveButton.Content = "Send Request to Admin";
-            }
+            SaveButton.Content = isAdmin ? "Save" : "Send Request to Admin";
 
             CategoryList.ItemsSource = _viewModel.AllCategories;
 
-            foreach (var category in _viewModel.AllCategories)
+            foreach (var item in _viewModel.AllCategories)
             {
-                if (_viewModel.SelectedCategoryNames.Contains(category))
-                {
-                    CategoryList.SelectedItems.Add(category);
-                }
+                if (_viewModel.SelectedCategoryNames.Contains(item))
+                    CategoryList.SelectedItems.Add(item);
             }
         }
 
 
-        private void CategoryList_SelectionChanged(object sender, SelectionChangedEventArgs eventArguments)
+        private void CategoryList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (_viewModel == defaultObjectValue) return;
+            if (_viewModel == null) return;
 
-            foreach (var removedCategory in eventArguments.RemovedItems.Cast<string>())
-            {
-                _viewModel.SelectedCategoryNames.Remove(removedCategory);
-            }
+            foreach (var removed in e.RemovedItems.Cast<string>())
+                _viewModel.SelectedCategoryNames.Remove(removed);
 
-            foreach (var addedCategory in eventArguments.AddedItems.Cast<string>())
-            {
-                if (!_viewModel.SelectedCategoryNames.Contains(addedCategory))
-                {
-                    _viewModel.SelectedCategoryNames.Add(addedCategory);
-                }
-            }
+            foreach (var added in e.AddedItems.Cast<string>())
+                if (!_viewModel.SelectedCategoryNames.Contains(added))
+                    _viewModel.SelectedCategoryNames.Add(added);
         }
 
-        private void SaveButton_Click(object sender, RoutedEventArgs eventArguments)
+        private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
-            if (DrinkToUpdate == defaultObjectValue)
-            {
+            if (DrinkToUpdate == null)
                 return;
-            }
 
             try
             {
-                _viewModel.ValidateUpdatedDrinkDetails();
-                DrinkToUpdate.CategoryList = _viewModel.GetSelectedCategories();
+                _viewModel.Validate();
+                DrinkToUpdate.Categories = _viewModel.GetSelectedCategories();
 
                 var adminService = new WinUIApp.Services.DummyServies.AdminService();
                 bool isAdmin = adminService.IsAdmin(UserId);
@@ -161,12 +138,12 @@ namespace WinUIApp.Views.Components
                 };
                 _ = dialog.ShowAsync();
             }
-            catch (Exception exception)
+            catch (Exception ex)
             {
                 var dialog = new ContentDialog
                 {
                     Title = "Error",
-                    Content = exception.Message,
+                    Content = ex.Message,
                     CloseButtonText = "OK",
                     XamlRoot = this.XamlRoot
                 };

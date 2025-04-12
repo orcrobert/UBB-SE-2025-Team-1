@@ -23,7 +23,7 @@ namespace WinUIApp.Views.ViewModels
         public event PropertyChangedEventHandler PropertyChanged;
 
         private readonly DrinkService _drinkService;
-        private readonly ReviewService _reviewService;
+        private readonly DrinkReviewService _reviewService;
         private readonly UserService _userService;
         private readonly AdminService _adminService;
 
@@ -104,7 +104,7 @@ namespace WinUIApp.Views.ViewModels
         /// <param name="drinkId">The ID of the drink to load.</param>
         public void LoadDrink(int drinkId)
         {
-            Drink=_drinkService.getDrinkById(drinkId);
+            Drink=_drinkService.GetDrinkById(drinkId);
             AverageReviewScore=_reviewService.GetReviewAverageByID(drinkId);
             List<Review> reviews = _reviewService.GetReviewsByID(drinkId);
             Reviews.Clear();
@@ -131,7 +131,7 @@ namespace WinUIApp.Views.ViewModels
         /// <returns>True if the user is an admin; otherwise, false.</returns>
         public bool IsCurrentUserAdmin()
         {
-            return _adminService.IsAdmin(_userService.GetCurrentUserID());
+            return _adminService.IsAdmin(_userService.GetCurrentUserId());
         }
 
         /// <summary>
@@ -154,7 +154,7 @@ namespace WinUIApp.Views.ViewModels
         /// <exception cref="Exception">Thrown if an error occurs while voting for the drink.</exception>
         public void VoteForDrink()
         {
-            int userId = _userService.GetCurrentUserID();
+            int userId = _userService.GetCurrentUserId();
             try
             {
                 _drinkService.voteDrinkOfTheDay(Drink.DrinkId, userId);

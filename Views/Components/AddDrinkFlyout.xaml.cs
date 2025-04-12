@@ -59,8 +59,8 @@ namespace WinUIApp.Views.Components
             var adminService = new AdminService();
             bool isAdmin = adminService.IsAdmin(UserId);
 
-            var allBrands = drinkService.getDrinkBrands();
-            var allCategories = drinkService.getDrinkCategories();
+            var allBrands = drinkService.GetDrinkBrandNames();
+            var allCategories = drinkService.GetDrinkCategories();
 
             _viewModel = new AddDrinkMenuViewModel(
                 drinkService,

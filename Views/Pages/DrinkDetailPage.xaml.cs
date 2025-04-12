@@ -11,7 +11,7 @@ namespace WinUIApp.Views.Pages
 {
     public sealed partial class DrinkDetailPage : Page
     {
-        public DrinkDetailPageViewModel ViewModel { get; } = new DrinkDetailPageViewModel(new Services.DrinkService(), new Services.DummyServies.ReviewService(), new Services.DummyServies.UserService(), new Services.DummyServies.AdminService());
+        public DrinkDetailPageViewModel ViewModel { get; } = new DrinkDetailPageViewModel(new Services.DrinkService(), new Services.DummyServies.DrinkReviewService(), new Services.DummyServies.UserService(), new Services.DummyServies.AdminService());
 
         public DrinkDetailPage()
         {

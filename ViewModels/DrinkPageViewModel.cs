@@ -114,7 +114,7 @@ namespace WinUIApp.ViewModels
         /// <returns>Current user ID.</returns>
         private int GetCurrentUserId()
         {
-            int userId = _userService.GetCurrentUserID();
+            int userId = _userService.GetCurrentUserId();
             Debug.WriteLine($"DrinkPageViewModel: GetCurrentUserId returned {userId}");
             return userId;
         }

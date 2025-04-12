@@ -30,7 +30,7 @@ namespace WinUIApp.Views.ViewModels
         /// <returns>List of drink categories.</returns>
         public List<Category> GetCategories()
         {
-            return _drinkService.getDrinkCategories();
+            return _drinkService.GetDrinkCategories();
         }
 
     }

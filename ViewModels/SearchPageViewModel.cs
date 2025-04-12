@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Mysqlx.Crud;
+using System.Collections.Generic;
 using System.Linq;
 using WinUIApp.Models;
 using WinUIApp.Services;
@@ -19,7 +20,7 @@ namespace WinUIApp.ViewModels
         private const string nameField = "Name";
 
         private readonly DrinkService _drinkService = drinkService;
-        private ReviewService _reviewService = reviewService;
+        private DrinkReviewService _reviewService = reviewService;
 
         private bool _isAscending = true;
         private string _fieldToSortBy = nameField;
@@ -143,13 +144,14 @@ namespace WinUIApp.ViewModels
             }
             else
             {
-                List<Drink> drinks = _drinkService.getDrinks(
-                    searchedTerm: _searchedTerms,
-                    brandNameFilter: _brandFilter,
-                    categoryFilter: _categoryFilter,
-                    minAlcohol: _minAlcoholFilter,
-                    maxAlcohol: _maxAlcoholFilter,
-                    orderBy: null
+
+                List<Drink> drinks = _drinkService.GetDrinks(
+                    searchKeyword: _searchedTerms,
+                    drinkBrandNameFilter: _brandFilter,
+                    drinkCategoryFilter: _categoryFilter,
+                    minimumAlcoholPercentage: _minAlcoholFilter,
+                    maximumAlcoholPercentage: _maxAlcoholFilter,
+                    orderingCriteria: null
                 );
 
                 displayItems = new List<DrinkDisplayItem>();
@@ -188,7 +190,7 @@ namespace WinUIApp.ViewModels
         /// <returns>The list of drink categories.</returns>
         public IEnumerable<Category> GetCategories()
         {
-            return _drinkService.getDrinkCategories();
+            return _drinkService.GetDrinkCategories();
         }
 
         /// <summary>
@@ -197,7 +199,7 @@ namespace WinUIApp.ViewModels
         /// <returns>The list of drink brands.</returns>
         public IEnumerable<Brand> GetBrands()
         {
-            return _drinkService.getDrinkBrands();
+            return _drinkService.GetDrinkBrandNames();
         }
 
         /// <summary>

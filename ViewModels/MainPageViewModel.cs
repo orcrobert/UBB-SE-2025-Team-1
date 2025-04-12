@@ -124,7 +124,7 @@ namespace WinUIApp.ViewModels
 
         public void LoadDrinkOfTheDayData()
         {
-            var drink =  _drinkService.getDrinkOfTheDay();
+            var drink =  _drinkService.GetDrinkOfTheDay();
 
             ImageSource = drink.DrinkImageUrl;
             DrinkName = drink.DrinkName;

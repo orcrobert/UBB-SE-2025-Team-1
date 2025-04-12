@@ -32,18 +32,13 @@ namespace WinUIApp.Views.Components.HeaderComponents
             MainWindow.AppMainFrame.Navigate(typeof(MainPage));
         }
 
-        /// <summary>
-        /// Handles the search button click by navigating to the SearchPage with parameters
-        /// containing selected categories and search terms.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="routedEventArgs">Event data for the click event.</param>
+        // Update the property names to match the correct ones in SearchPageNavigationParameters
         private void SearchDrinksButton_Click(object sender, RoutedEventArgs routedEventArgs)
         {
             SearchPageNavigationParameters navigationParameters = new SearchPageNavigationParameters
             {
-                InitialCategories = CategoryMenu.SelectedCategories.ToList(),
-                SearchedTerms = DrinkSearchBox.Text
+                SelectedCategoryFilters = CategoryMenu.SelectedCategories.ToList(), // Corrected property name
+                InputSearchKeyword = DrinkSearchBox.Text // Corrected property name
             };
             MainWindow.AppMainFrame.Navigate(typeof(SearchPage), navigationParameters);
         }

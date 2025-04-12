@@ -11,7 +11,17 @@ namespace WinUIApp.Utils.Converters
         {
             if (imagePathSourceValue is string url && !string.IsNullOrEmpty(url))
             {
-                return new BitmapImage(new Uri(url));
+                BitmapImage bitmapImage = new BitmapImage();
+                try
+                {
+                    bitmapImage = new BitmapImage(new Uri(url));
+                    return bitmapImage;
+                }
+
+                catch (Exception ex)
+                {
+                    return new BitmapImage(new Uri(FallbackImagePath));
+                }
             }
             return new BitmapImage(new Uri(FallbackImagePath));
         }

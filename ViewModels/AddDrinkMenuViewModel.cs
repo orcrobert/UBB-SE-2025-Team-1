@@ -167,7 +167,7 @@ namespace WinUIApp.ViewModels
         /// <exception cref="ArgumentException">Thrown when the brand is not found.</exception>
         private Brand FindBrandByName(string brandName)
         {
-            var existingBrands = _drinkService.getDrinkBrands();
+            var existingBrands = _drinkService.GetDrinkBrandNames();
             var match = existingBrands.FirstOrDefault(currentBrand => currentBrand.BrandName.Equals(brandName, StringComparison.OrdinalIgnoreCase));
 
             if (match == null)

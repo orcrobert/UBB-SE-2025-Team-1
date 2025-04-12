@@ -15,7 +15,7 @@
                 <!-- Other merged dictionaries here -->
             </ResourceDictionary.MergedDictionaries>
             <!-- Other app resources here -->
-            <converters:ImageUrlConverter x:Key="ImageUrlConverter"/>
+            <converters:ImagePathConverter x:Key="ImageUrlConverter"/>
             <converters:CategoriesConverter x:Key="CategoriesConverter"/>
             <converters:AlcoholContentConverter x:Key="AlcoholContentConverter"/>
             <converters:ReviewScoreConverter x:Key="ReviewContentConverter"/>

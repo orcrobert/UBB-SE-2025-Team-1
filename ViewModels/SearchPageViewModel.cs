@@ -15,7 +15,7 @@ namespace WinUIApp.ViewModels
     /// </summary>
     /// <param name="drinkService">The drink service used to manage drinks.</param>
     /// <param name="reviewService">The review service used to manage reviews.</param>
-    public class SearchPageViewModel(DrinkService drinkService, ReviewService reviewService)
+    public class SearchPageViewModel(DrinkService drinkService, DrinkReviewService reviewService)
     {
         private const string nameField = "Name";
 
@@ -58,7 +58,7 @@ namespace WinUIApp.ViewModels
         /// <summary>
         /// ReviewService property to manage reviews.
         /// </summary>
-        public ReviewService ReviewService
+        public DrinkReviewService ReviewService
         {
             get => _reviewService;
             set => _reviewService = value;
@@ -115,13 +115,13 @@ namespace WinUIApp.ViewModels
                 {
                     { sortField, _isAscending }
                 };
-                List<Drink> drinks = _drinkService.getDrinks(
-                    searchedTerm: _searchedTerms,
-                    brandNameFilter: _brandFilter,
-                    categoryFilter: _categoryFilter,
-                    minAlcohol: _minAlcoholFilter,
-                    maxAlcohol: _maxAlcoholFilter,
-                    orderBy: orderBy
+                List<Drink> drinks = _drinkService.GetDrinks(
+                    searchKeyword: _searchedTerms,
+                    drinkBrandNameFilter: _brandFilter,
+                    drinkCategoryFilter: _categoryFilter,
+                    minimumAlcoholPercentage: _minAlcoholFilter,
+                    maximumAlcoholPercentage: _maxAlcoholFilter,
+                    orderingCriteria: orderBy
                 );
 
                 displayItems = new List<DrinkDisplayItem>();

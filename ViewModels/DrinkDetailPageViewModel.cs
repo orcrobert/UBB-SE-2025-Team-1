@@ -90,7 +90,7 @@ namespace WinUIApp.Views.ViewModels
         /// <param name="reviewService">The review service used to manage reviews.</param>
         /// <param name="userService">The user service used to manage users.</param>
         /// <param name="adminService">The admin service used to manage admin actions.</param>
-        public DrinkDetailPageViewModel(DrinkService drinkService, ReviewService reviewService, UserService userService, AdminService adminService)
+        public DrinkDetailPageViewModel(DrinkService drinkService, DrinkReviewService reviewService, UserService userService, AdminService adminService)
         {
             _drinkService = drinkService;
             _reviewService = reviewService;
@@ -141,11 +141,11 @@ namespace WinUIApp.Views.ViewModels
         {
             if (IsCurrentUserAdmin())
             {
-                _drinkService.deleteDrink(Drink.DrinkId);
+                _drinkService.DeleteDrink(Drink.DrinkId);
             }
             else
             {
-                _adminService.SendNotification(_userService.GetCurrentUserID(), "Removal of drink with id:"+Drink.DrinkId +" and name:"+Drink.DrinkName, "User requested removal of drink from database.");
+                _adminService.SendNotificationFromUserToAdmin(_userService.GetCurrentUserId(), "Removal of drink with id:"+Drink.DrinkId +" and name:"+Drink.DrinkName, "User requested removal of drink from database.");
             }
         }
         /// <summary>
@@ -157,7 +157,7 @@ namespace WinUIApp.Views.ViewModels
             int userId = _userService.GetCurrentUserId();
             try
             {
-                _drinkService.voteDrinkOfTheDay(Drink.DrinkId, userId);
+                _drinkService.VoteDrinkOfTheDAy(Drink.DrinkId, userId); // Corrected method name
             }
             catch (Exception VoteForDrinkException)
             {

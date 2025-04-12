@@ -200,7 +200,7 @@ namespace WinUIApp.ViewModels
         /// <exception cref="ArgumentException">Thrown when the brand is not found.</exception>
         private Brand FindBrandByName(string searchedBrandName)
         {
-            var existingBrands = _drinkService.getDrinkBrands();
+            var existingBrands = _drinkService.GetDrinkBrandNames();
             var match = existingBrands.FirstOrDefault(searchedBrand => searchedBrand.BrandName.Equals(searchedBrandName, StringComparison.OrdinalIgnoreCase));
 
             if (match == null)
@@ -219,7 +219,7 @@ namespace WinUIApp.ViewModels
             {
                 DrinkToUpdate.DrinkBrand = FindBrandByName(BrandName);
                 DrinkToUpdate.CategoryList = GetSelectedCategories();
-                _drinkService.updateDrink(DrinkToUpdate);
+                _drinkService.UpdateDrink(DrinkToUpdate);
                 Debug.WriteLine("Drink updated successfully (admin).");
             }
             catch (Exception InstantUpdateDrinkException)
@@ -236,12 +236,10 @@ namespace WinUIApp.ViewModels
         {
             try
             {
-                int userId = _userService.GetCurrentUserID();
-                _adminService.SendNotification(
-                    senderUserID: userId,
-                    title: "Drink Update Request",
-                    description: $"User requested to update drinkToUpdate: {DrinkToUpdate.DrinkName}"
-                );
+                _adminService.SendNotificationFromUserToAdmin(
+                senderUserId: _userService.CurrentUserId,
+                userModificationRequestType: "Drink Update Request",
+                userModificationRequestDetails: $"User requested to update drinkToUpdate: {DrinkToUpdate.DrinkName}");
                 Debug.WriteLine("Drink update request sent to admin.");
             }
             catch (Exception SendUpdateDrinkRequestException)

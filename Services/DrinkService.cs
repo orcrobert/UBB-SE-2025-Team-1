@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using WinUIApp.Models;
 
 
@@ -7,11 +8,11 @@ namespace WinUIApp.Services
 {
     public class DrinkService
     {
-        private DrinkModel _drinkModel;
+        private DrinkModel drinkModel;
         private const int DefaultPersonalDrinkCount = 1;
         public DrinkService()
         {
-            _drinkModel = new DrinkModel();
+            drinkModel = new DrinkModel();
         }
 
         public Drink? GetDrinkById(int drinkId)
@@ -29,9 +30,7 @@ namespace WinUIApp.Services
         {
             try
             {
-
-                return drinkModel.GetDrinks(searchedTerm, brandNameFilter, categoryFilter, minAlcohol, maxAlcohol, orderBy);
-
+                return DrinkModel.GetDrinks(searchKeyword, drinkBrandNameFilter, drinkCategoryFilter, minimumAlcoholPercentage, maximumAlcoholPercentage, orderingCriteria);
             }
             catch (Exception drinksRetrievalException)
             {
@@ -43,7 +42,7 @@ namespace WinUIApp.Services
         {
             try
             {
-                drinkModel.AddDrink(drinkName, drinkUrl, categories, brandName, alcoholContent);
+                drinkModel.AddDrink(inputedDrinkName, inputedDrinkPath, inputedDrinkCategories, inputedDrinkBrandName, inputedAlcoholPercentage);
             }
             catch (Exception addingDrinkException)
             {
@@ -67,7 +66,7 @@ namespace WinUIApp.Services
         {
             try
             {
-                drinkModel.DeleteDrink(drinkId);
+                DrinkModel.DeleteDrink(drinkId); 
             }
             catch (Exception deleteDrinkException)
             {
@@ -102,7 +101,7 @@ namespace WinUIApp.Services
         {
             try
             {
-                return _drinkModel.getPersonalDrinkList(userId, maximumDrinkCount);
+                return drinkModel.GetPersonalDrinkList(userId, maximumDrinkCount);
             }
             catch (Exception personalDrinkListRetrievalException)
             {
@@ -114,7 +113,7 @@ namespace WinUIApp.Services
         {
             try
             {
-                return drinkModel.GetPersonalDrinkList(userId, numberOfDrinks);
+                return drinkModel.IsDrinkInPersonalList(userId, drinkId);
             }
             catch (Exception checkingUserPersonalListException)
             {
@@ -126,7 +125,7 @@ namespace WinUIApp.Services
         {
             try
             {
-                return drinkModel.IsDrinkInPersonalList(userId, drinkId);
+                return drinkModel.AddToPersonalDrinkList(userId, drinkId);
             }
             catch (Exception addDrinkToUserPersonalListException)
             {
@@ -138,7 +137,7 @@ namespace WinUIApp.Services
         {
             try
             {
-                return drinkModel.AddToPersonalDrinkList(userId, drinkId);
+                return drinkModel.DeleteFromPersonalDrinkList(userId, drinkId);
             }
             catch (Exception deleteFromUserPersonalDrinkListException)
             {
@@ -146,27 +145,16 @@ namespace WinUIApp.Services
             }
         }
 
-        public void VoteDrinkOfTheDay(int drinkId, int userId)
-        {
-            try
-            {
-                return drinkModel.DeleteFromPersonalDrinkList(userId, drinkId);
-            }
-            catch (Exception voteDrinkOfTheDayException)
-            {
-                throw new Exception("Error voting drink:", voteDrinkOfTheDayException);
-            }
-        }
-
-        public Drink GetDrinkOfTheDay()
+        public Drink VoteDrinkOfTheDAy(int drinkId, int userId)
         {
             try
             {
                 drinkModel.VoteDrinkOfTheDay(drinkId, userId);
+                return drinkModel.GetDrinkById(drinkId) ?? throw new Exception("Drink not found after voting.");
             }
-            catch (Exception getDrinkOfTheDayException)
+            catch (Exception voteDrinkOfTheDayException)
             {
-                throw new Exception("Error voting drink:", e);
+                throw new Exception("Error voting drink:", voteDrinkOfTheDayException);
             }
         }
 

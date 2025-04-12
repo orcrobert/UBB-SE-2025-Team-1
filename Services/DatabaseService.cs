@@ -10,10 +10,10 @@ using Microsoft.Data.SqlClient; // Ensure you have the correct using directive f
 
 namespace WinUIApp.Services
 {
-    public class DatabaseService
+    public class DatabaseService : IDatabaseService
     {
         private static DatabaseService _databaseServiceInstance;
-        private static readonly object _databaseServiceInstanceLock = new ();
+        private static readonly object _databaseServiceInstanceLock = new();
         private readonly DatabaseConnection _databaseConnection;
 
 
@@ -53,9 +53,9 @@ namespace WinUIApp.Services
                 using var sqlSelectCommand = new SqlCommand(sqlSelectQuery, _databaseConnection.GetConnection());
                 if (sqlSelectQueryParameters != null)
                 {
-                    #pragma warning disable IDE0305
+#pragma warning disable IDE0305
                     sqlSelectCommand.Parameters.AddRange(sqlSelectQueryParameters.ToArray());
-                    #pragma warning restore IDE0305
+#pragma warning restore IDE0305
 
                 }
 
@@ -92,9 +92,9 @@ namespace WinUIApp.Services
                 using var dataModificationQueryCommand = new SqlCommand(sqlDataModificationQuery, _databaseConnection.GetConnection());
                 if (sqlDataModificationQueryParameters != null)
                 {
-                    #pragma warning disable IDE0305
+#pragma warning disable IDE0305
                     dataModificationQueryCommand.Parameters.AddRange(sqlDataModificationQueryParameters.ToArray());
-                    #pragma warning restore IDE0305
+#pragma warning restore IDE0305
 
                 }
                 numberOfRowsAffectedByQuery = dataModificationQueryCommand.ExecuteNonQuery();

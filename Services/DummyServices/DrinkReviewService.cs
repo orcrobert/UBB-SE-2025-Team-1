@@ -5,7 +5,7 @@ using WinUIApp.Models;
 
 namespace WinUIApp.Services.DummyServices
 {
-    public class DrinkReviewService
+    public class DrinkReviewService : IDrinkReviewService
     {
         private readonly HashSet<Review> dummyReviews =
 [

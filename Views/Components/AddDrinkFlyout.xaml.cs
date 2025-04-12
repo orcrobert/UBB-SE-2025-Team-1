@@ -25,7 +25,7 @@ namespace WinUIApp.Views.Components
     using Microsoft.UI.Xaml.Media;
     using WinUIApp.Models;
     using WinUIApp.Services;
-    using WinUIApp.Services.DummyServies;
+    using WinUIApp.Services.DummyServices;
     using WinUIApp.ViewModels;
 
     /// <summary>
@@ -80,7 +80,7 @@ namespace WinUIApp.Views.Components
             var drinkService = new DrinkService();
             var userService = new UserService();
             var adminService = new AdminService();
-            bool isAdmin = adminService.IsAdmin(this.UserId);
+            bool isAdmin = AdminService.IsAdmin(this.UserId);
 
             var allBrands = drinkService.GetDrinkBrandNames();
             var allCategories = drinkService.GetDrinkCategories();
@@ -134,10 +134,10 @@ namespace WinUIApp.Views.Components
         {
             try
             {
+
                 this.viewModel.ValidateUserDrinkInput();
 
-                var adminService = new AdminService();
-                bool isAdmin = adminService.IsAdmin(this.UserId);
+                bool isAdmin = AdminService.IsAdmin(this.UserId);
 
                 string message;
 

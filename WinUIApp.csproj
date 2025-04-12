@@ -13,13 +13,18 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="Views\Components\SharedComponents\**" />
+    <EmbeddedResource Remove="Views\Components\SharedComponents\**" />
+    <None Remove="Views\Components\SharedComponents\**" />
+    <Page Remove="Views\Components\SharedComponents\**" />
+  </ItemGroup>
+  <ItemGroup>
     <None Remove="Views\Components\SearchPageComponents\AlcoholContentFilterComponent.xaml" />
     <None Remove="Views\Components\SearchPageComponents\BrandFilterComponent.xaml" />
     <None Remove="Views\Components\SearchPageComponents\CategoryFilterComponent.xaml" />
     <None Remove="Views\Components\SearchPageComponents\RatingFilterComponent.xaml" />
     <None Remove="Views\Components\SearchPageComponents\SortSelectorComponent.xaml" />
     <None Remove="Views\Components\HeaderComponents\Header.xaml" />
-    <None Remove="Views\Components\SharedComponents\CategorySelectionMenu.xaml" />
     <None Remove="Views\Components\AddRemoveFromDrinkListButton.xaml" />
     <None Remove="Views\Components\VerticalDrinkList.xaml" />
     <None Remove="Views\Components\UpdateDrinkFlyout.xaml" />
@@ -93,9 +98,6 @@
     <Page Update="Views\Components\HeaderComponents\Header.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Update="Views\Components\SharedComponents\CategorySelectionMenu.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Update="Views\Components\VoteDrinkOfTheDayButton.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -128,7 +130,6 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Views\Components\SharedComponents\" />
     <Folder Include="Views\Windows\" />
   </ItemGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -157,4 +158,7 @@
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
 		<CodeAnalysisRuleSet>SE.ruleset</CodeAnalysisRuleSet>
 	</PropertyGroup>
+    <ItemGroup>
+      <PRIResource Remove="Views\Components\SharedComponents\**" />
+    </ItemGroup>
 </Project>

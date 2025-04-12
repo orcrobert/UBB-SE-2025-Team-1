@@ -8,10 +8,10 @@ using Windows.System;
 
 namespace WinUIApp.Services.DummyServices
 {
-    public class AdminService
+    public class AdminService : IAdminService
     {
         // Mock admin user IDs for development/testing purposes.
-        private static readonly HashSet<int> adminUserIds = [ 1, 42, 30, 10 ];
+        private static readonly HashSet<int> adminUserIds = [1, 42, 30, 10];
 
 
         public static bool IsAdmin(int userId)

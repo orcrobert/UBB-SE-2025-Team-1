@@ -29,7 +29,7 @@ namespace WinUIApp.Views.Components
     using Org.BouncyCastle.Asn1.Ocsp;
     using WinUIApp.Models;
     using WinUIApp.Services;
-    using WinUIApp.Services.DummyServies;
+    using WinUIApp.Services.DummyServices;
     using WinUIApp.ViewModels;
 
     /// <summary>
@@ -89,7 +89,7 @@ namespace WinUIApp.Views.Components
             var drinkService = new DrinkService();
             var userService = new UserService();
             var adminService = new AdminService();
-            bool isAdmin = adminService.IsAdmin(this.UserId);
+            bool isAdmin = AdminService.IsAdmin(this.UserId);
 
             var allBrands = drinkService.GetDrinkBrandNames();
             var allCategories = drinkService.GetDrinkCategories();
@@ -167,7 +167,7 @@ namespace WinUIApp.Views.Components
                 this.DrinkToUpdate.CategoryList = this.viewModel.GetSelectedCategories();
 
                 var adminService = new WinUIApp.Services.DummyServices.AdminService();
-                bool isAdmin = adminService.IsAdmin(UserId);
+                bool isAdmin = AdminService.IsAdmin(UserId);
 
                 string message;
 

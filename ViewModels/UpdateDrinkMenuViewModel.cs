@@ -14,13 +14,24 @@ namespace WinUIApp.ViewModels
     /// <summary>
     /// ViewModel for the UpdateDrinkMenu page. Displays a form for updating an existing drinkToUpdate, including name, image URL, brand, alcohol content, and categories.
     /// </summary>
-    public class UpdateDrinkMenuViewModel : INotifyPropertyChanged
+    /// <remarks>
+    /// Initializes a new instance of the <see cref="UpdateDrinkMenuViewModel"/> class.
+    /// </remarks>
+    /// <param name="drinkToUpdate">Drink to be updated.</param>
+    /// <param name="drinkService">Used to manage drinks.</param>
+    /// <param name="userService">Used to manage users.</param>
+    /// <param name="adminService">Used to manage admin actions.</param>
+    public partial class UpdateDrinkMenuViewModel(
+        Drink drinkToUpdate,
+        DrinkService drinkService,
+        UserService userService,
+        AdminService adminService) : INotifyPropertyChanged
     {
         private const float MaxAlcoholContent = 100.0f;
         private const float MinAlcoholContent = 0.0f;
-        private readonly DrinkService _drinkService;
-        private readonly UserService _userService;
-        private readonly AdminService _adminService;
+        private readonly DrinkService _drinkService = drinkService;
+        private readonly UserService _userService = userService;
+        private readonly AdminService _adminService = adminService;
 
         /// <summary>
         /// List of all available categories.
@@ -42,28 +53,9 @@ namespace WinUIApp.ViewModels
         /// </summary>
         public List<Brand> AllBrands { get; set; } = new();
 
-        private Drink _drinkToUpdate;
+        private Drink _drinkToUpdate = drinkToUpdate;
 
         public event PropertyChangedEventHandler PropertyChanged;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="UpdateDrinkMenuViewModel"/> class.
-        /// </summary>
-        /// <param name="drinkToUpdate">Drink to be updated.</param>
-        /// <param name="drinkService">Used to manage drinks.</param>
-        /// <param name="userService">Used to manage users.</param>
-        /// <param name="adminService">Used to manage admin actions.</param>
-        public UpdateDrinkMenuViewModel(
-            Drink drinkToUpdate,
-            DrinkService drinkService,
-            UserService userService,
-            AdminService adminService)
-        {
-            _drinkToUpdate = drinkToUpdate;
-            _drinkService = drinkService;
-            _userService = userService;
-            _adminService = adminService;
-        }
 
         /// <summary>
         /// Gets or sets the drinkToUpdate to be updated. This property is used for data binding in the UI.
@@ -236,7 +228,7 @@ namespace WinUIApp.ViewModels
         {
             try
             {
-                _adminService.SendNotificationFromUserToAdmin(
+                AdminService.SendNotificationFromUserToAdmin(
                 senderUserId: _userService.CurrentUserId,
                 userModificationRequestType: "Drink Update Request",
                 userModificationRequestDetails: $"User requested to update drinkToUpdate: {DrinkToUpdate.DrinkName}");
@@ -254,10 +246,7 @@ namespace WinUIApp.ViewModels
         /// <param name="propertyName">Name of the property that changed.</param>
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            if (PropertyChanged != null)
-            {
-                PropertyChanged.Invoke(this, new PropertyChangedEventArgs(propertyName));
-            }
+            PropertyChanged.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

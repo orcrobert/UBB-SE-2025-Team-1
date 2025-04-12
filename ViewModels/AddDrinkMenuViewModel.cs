@@ -13,13 +13,22 @@ namespace WinUIApp.ViewModels
 {   /// <summary>
     /// ViewModel for the AddDrinkMenu page. Displays a form for adding a new drink, including name, image URL, brand, alcohol content, and categories.
     /// </summary>
-    public class AddDrinkMenuViewModel : INotifyPropertyChanged
-    {   
+    /// <remarks>
+    /// initializes a new instance of the <see cref="AddDrinkMenuViewModel"/> class.
+    /// </remarks>
+    /// <param name="drinkService">The drink service used to manage drinks.</param>
+    /// <param name="userService">The user service used to manage users.</param>
+    /// <param name="adminService">The admin service used to manage admin actions.</param>
+    public partial class AddDrinkMenuViewModel(
+        DrinkService drinkService,
+        UserService userService,
+        AdminService adminService) : INotifyPropertyChanged
+    {
         private const float MaxAlcoholContent = 100.0f;
         private const float MinAlcoholContent = 0.0f;
-        private readonly DrinkService _drinkService;
-        private readonly UserService _userService;
-        private readonly AdminService _adminService;
+        private readonly DrinkService _drinkService = drinkService;
+        private readonly UserService _userService = userService;
+        private readonly AdminService _adminService = adminService;
 
         /// <summary>
         /// List of all available categories.
@@ -47,22 +56,6 @@ namespace WinUIApp.ViewModels
         private string _newDrinkAlcoholContent = String.Empty;
 
         public event PropertyChangedEventHandler PropertyChanged;
-
-        /// <summary>
-        /// initializes a new instance of the <see cref="AddDrinkMenuViewModel"/> class.
-        /// </summary>
-        /// <param name="drinkService">The drink service used to manage drinks.</param>
-        /// <param name="userService">The user service used to manage users.</param>
-        /// <param name="adminService">The admin service used to manage admin actions.</param>
-        public AddDrinkMenuViewModel(
-            DrinkService drinkService,
-            UserService userService,
-            AdminService adminService)
-        {
-            _drinkService = drinkService;
-            _userService = userService;
-            _adminService = adminService;
-        }
 
         /// <summary>
         /// Gets or sets the name of the drink to be added.
@@ -159,22 +152,6 @@ namespace WinUIApp.ViewModels
                 throw new ArgumentException("At least one drinkCategory must be selected");
         }
 
-        /// <summary>
-        /// Searches for a brand by its name in the list of available brands.
-        /// </summary>
-        /// <param name="brandName">The name of the brand to search for.</param>
-        /// <returns>The matching brand object, if found; null otherwise.</returns>
-        /// <exception cref="ArgumentException">Thrown when the brand is not found.</exception>
-        private Brand FindBrandByName(string brandName)
-        {
-            var existingBrands = _drinkService.GetDrinkBrandNames();
-            var match = existingBrands.FirstOrDefault(currentBrand => currentBrand.BrandName.Equals(brandName, StringComparison.OrdinalIgnoreCase));
-
-            if (match == null)
-                throw new ArgumentException("The brand you tried to add was not found.");
-
-            return match;
-        }
 
         /// <summary>
         /// Adds a new drink to the system.
@@ -191,11 +168,11 @@ namespace WinUIApp.ViewModels
 
 
                 _drinkService.AddDrink(
-                    inputedDrinkName: DrinkName,
-                    inputedDrinkPath: DrinkURL,
-                    inputedDrinkCategories: categories,
-                    inputedDrinkBrandName: BrandName,
-                    inputedAlcoholPercentage: alcoholContent
+                    inputtedDrinkName: DrinkName,
+                    inputtedDrinkPath: DrinkURL,
+                    inputtedDrinkCategories: categories,
+                    inputtedDrinkBrandName: BrandName,
+                    inputtedAlcoholPercentage: alcoholContent
                 );
                 Debug.WriteLine("Drink added successfully (admin).");
             }
@@ -216,7 +193,7 @@ namespace WinUIApp.ViewModels
             try
             {
                 int userId = _userService.GetCurrentUserId();
-                _adminService.SendNotificationFromUserToAdmin(
+                AdminService.SendNotificationFromUserToAdmin(
                     senderUserId: userId,
                     userModificationRequestType: "New Drink Request",
                     userModificationRequestDetails: $"User requested to add new drink: {DrinkName}"
@@ -247,10 +224,7 @@ namespace WinUIApp.ViewModels
         /// </summary>
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            if (PropertyChanged != null)
-            {
-                PropertyChanged.Invoke(this, new PropertyChangedEventArgs(propertyName));
-            }
+            PropertyChanged.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

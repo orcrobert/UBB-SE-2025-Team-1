@@ -16,16 +16,23 @@ namespace WinUIApp.Views.ViewModels
     /// <summary>
     /// ViewModel for the DrinkDetailPage. Shows detailed information about a drink, including name, image, alcohol content, categories, and reviews.
     /// </summary>
-    public class DrinkDetailPageViewModel : INotifyPropertyChanged
+    /// <remarks>
+    /// Initializes a new instance of the <see cref="DrinkDetailPageViewModel"/> class.
+    /// </remarks>
+    /// <param name="drinkService">The drink service used to manage drinks.</param>
+    /// <param name="reviewService">The review service used to manage reviews.</param>
+    /// <param name="userService">The user service used to manage users.</param>
+    /// <param name="adminService">The admin service used to manage admin actions.</param>
+    public partial class DrinkDetailPageViewModel(DrinkService drinkService, DrinkReviewService reviewService, UserService userService, AdminService adminService) : INotifyPropertyChanged
     {
         private const string CategorySeparator = ", ";
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private readonly DrinkService _drinkService;
-        private readonly DrinkReviewService _reviewService;
-        private readonly UserService _userService;
-        private readonly AdminService _adminService;
+        private readonly DrinkService _drinkService = drinkService;
+        private readonly DrinkReviewService _reviewService = reviewService;
+        private readonly UserService _userService = userService;
+        private readonly AdminService _adminService = adminService;
 
 
         private Drink _drink;
@@ -84,21 +91,6 @@ namespace WinUIApp.Views.ViewModels
         public ObservableCollection<Review> Reviews { get; set; } = new ObservableCollection<Review>();
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DrinkDetailPageViewModel"/> class.
-        /// </summary>
-        /// <param name="drinkService">The drink service used to manage drinks.</param>
-        /// <param name="reviewService">The review service used to manage reviews.</param>
-        /// <param name="userService">The user service used to manage users.</param>
-        /// <param name="adminService">The admin service used to manage admin actions.</param>
-        public DrinkDetailPageViewModel(DrinkService drinkService, DrinkReviewService reviewService, UserService userService, AdminService adminService)
-        {
-            _drinkService = drinkService;
-            _reviewService = reviewService;
-            _userService = userService;
-            _adminService = adminService;
-        }
-
-        /// <summary>
         /// Loads the drink details and reviews based on the provided drink ID.
         /// </summary>
         /// <param name="drinkId">The ID of the drink to load.</param>
@@ -131,7 +123,7 @@ namespace WinUIApp.Views.ViewModels
         /// <returns>True if the user is an admin; otherwise, false.</returns>
         public bool IsCurrentUserAdmin()
         {
-            return _adminService.IsAdmin(_userService.GetCurrentUserId());
+            return AdminService.IsAdmin(_userService.GetCurrentUserId());
         }
 
         /// <summary>
@@ -145,7 +137,7 @@ namespace WinUIApp.Views.ViewModels
             }
             else
             {
-                _adminService.SendNotificationFromUserToAdmin(_userService.GetCurrentUserId(), "Removal of drink with id:"+Drink.DrinkId +" and name:"+Drink.DrinkName, "User requested removal of drink from database.");
+                AdminService.SendNotificationFromUserToAdmin(_userService.GetCurrentUserId(), "Removal of drink with id:"+Drink.DrinkId +" and name:"+Drink.DrinkName, "User requested removal of drink from database.");
             }
         }
         /// <summary>

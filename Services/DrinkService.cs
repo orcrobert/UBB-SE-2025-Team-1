@@ -6,7 +6,7 @@ using WinUIApp.Models;
 
 namespace WinUIApp.Services
 {
-    public class DrinkService
+    public class DrinkService : IDrinkService
     {
         private readonly DrinkModel drinkModel;
         private const int DefaultPersonalDrinkCount = 1;
@@ -66,7 +66,7 @@ namespace WinUIApp.Services
         {
             try
             {
-                drinkModel.DeleteDrink(drinkId); 
+                drinkModel.DeleteDrink(drinkId);
             }
             catch (Exception deleteDrinkException)
             {

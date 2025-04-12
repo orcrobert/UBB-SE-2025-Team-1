@@ -133,7 +133,7 @@ namespace WinUIApp.Views.Components
 
             try
             {
-                _viewModel.Validate();
+                _viewModel.ValidateUpdatedDrinkDetails();
                 DrinkToUpdate.CategoryList = _viewModel.GetSelectedCategories();
 
                 var adminService = new WinUIApp.Services.DummyServies.AdminService();

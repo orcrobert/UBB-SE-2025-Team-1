@@ -10,97 +10,122 @@ using WinUIApp.Services;
 using WinUIApp.Services.DummyServices;
 using WinUIApp.ViewModels;
 
+// <copyright file="AddDrinkFlyout.xaml.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
+
 namespace WinUIApp.Views.Components
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using Microsoft.UI;
+    using Microsoft.UI.Xaml;
+    using Microsoft.UI.Xaml.Controls;
+    using Microsoft.UI.Xaml.Media;
+    using WinUIApp.Models;
+    using WinUIApp.Services;
+    using WinUIApp.Services.DummyServies;
+    using WinUIApp.ViewModels;
+
+    /// <summary>
+    /// A flyout control for adding a new drink. It includes fields for entering the drink's name, image URL, brand, alcohol content, and categories.
+    /// </summary>
     public sealed partial class AddDrinkFlyout : UserControl
     {
-        private AddDrinkMenuViewModel _viewModel;
+        private AddDrinkMenuViewModel viewModel;
 
-        private const object defaultObjectValue = null;
-
-        public int UserId { get; set; }
-
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AddDrinkFlyout"/> class.
+        /// </summary>
         public AddDrinkFlyout()
         {
             this.InitializeComponent();
-            this.Loaded += AddDrinkFlyout_Loaded;
-            CategoryList.SelectionChanged += CategoryList_SelectionChanged;
+            this.Loaded += this.AddDrinkFlyout_Loaded;
+            this.CategoryList.SelectionChanged += this.CategoryList_SelectionChanged;
 
-            SearchBox.TextChanged += (sender, eventArguments) =>
+            this.SearchBox.TextChanged += (sender, eventArguments) =>
             {
-                string query = SearchBox.Text.ToLower();
+                string query = this.SearchBox.Text.ToLower();
 
-                var filteredCategories = _viewModel.AllCategories
+                var filteredCategories = this.viewModel.AllCategories
                     .Where(category => category.ToLower().Contains(query))
                     .ToList();
 
-                CategoryList.SelectionChanged -= CategoryList_SelectionChanged;
-                CategoryList.ItemsSource = filteredCategories;
+                this.CategoryList.SelectionChanged -= this.CategoryList_SelectionChanged;
+                this.CategoryList.ItemsSource = filteredCategories;
 
-                DispatcherQueue.TryEnqueue(() =>
+                this.DispatcherQueue.TryEnqueue(() =>
                 {
                     foreach (var category in filteredCategories)
                     {
-                        if (_viewModel.SelectedCategoryNames.Contains(category))
+                        if (this.viewModel.SelectedCategoryNames.Contains(category))
                         {
-                            CategoryList.SelectedItems.Add(category);
+                            this.CategoryList.SelectedItems.Add(category);
                         }
                     }
 
-                    CategoryList.SelectionChanged += CategoryList_SelectionChanged;
+                    this.CategoryList.SelectionChanged += this.CategoryList_SelectionChanged;
                 });
             };
         }
+
+        /// <summary>
+        /// Gets or sets for the ID of the user who is adding the drink. This is used to determine if the user is an admin or not.
+        /// </summary>
+        public int UserId { get; set; }
 
         private void AddDrinkFlyout_Loaded(object sender, RoutedEventArgs eventArguments)
         {
             var drinkService = new DrinkService();
             var userService = new UserService();
             var adminService = new AdminService();
-            bool isAdmin = adminService.IsAdmin(UserId);
+            bool isAdmin = adminService.IsAdmin(this.UserId);
 
             var allBrands = drinkService.GetDrinkBrandNames();
             var allCategories = drinkService.GetDrinkCategories();
 
-            _viewModel = new AddDrinkMenuViewModel(
+            this.viewModel = new AddDrinkMenuViewModel(
                 drinkService,
                 userService,
-                adminService
-            )
+                adminService)
             {
                 AllBrands = allBrands,
                 AllCategoryObjects = allCategories,
-                AllCategories = allCategories.Select(category => category.CategoryName).ToList()
+                AllCategories = allCategories.Select(category => category.CategoryName).ToList(),
             };
 
-            this.DataContext = _viewModel;
+            this.DataContext = this.viewModel;
 
-            if(isAdmin)
+            if (isAdmin)
             {
-                SaveButton.Content = "Add Drink";
+                this.SaveButton.Content = "Add Drink";
             }
             else
             {
-                SaveButton.Content = "Send Request to Admin";
+                this.SaveButton.Content = "Send Request to Admin";
             }
 
-            CategoryList.ItemsSource = _viewModel.AllCategories;
+            this.CategoryList.ItemsSource = this.viewModel.AllCategories;
         }
 
         private void CategoryList_SelectionChanged(object sender, SelectionChangedEventArgs eventArguments)
         {
-            if (_viewModel == defaultObjectValue) return;
+            if (this.viewModel == null)
+            {
+                return;
+            }
 
             foreach (var removedCategory in eventArguments.RemovedItems.Cast<string>())
             {
-                _viewModel.SelectedCategoryNames.Remove(removedCategory);
+                this.viewModel.SelectedCategoryNames.Remove(removedCategory);
             }
 
             foreach (var addedCategory in eventArguments.AddedItems.Cast<string>())
             {
-                if (!_viewModel.SelectedCategoryNames.Contains(addedCategory))
+                if (!this.viewModel.SelectedCategoryNames.Contains(addedCategory))
                 {
-                    _viewModel.SelectedCategoryNames.Add(addedCategory);
+                    this.viewModel.SelectedCategoryNames.Add(addedCategory);
                 }
             }
         }
@@ -109,21 +134,21 @@ namespace WinUIApp.Views.Components
         {
             try
             {
-                _viewModel.ValidateUserDrinkInput();
+                this.viewModel.ValidateUserDrinkInput();
 
                 var adminService = new AdminService();
-                bool isAdmin = adminService.IsAdmin(UserId);
+                bool isAdmin = adminService.IsAdmin(this.UserId);
 
                 string message;
 
                 if (isAdmin)
                 {
-                    _viewModel.InstantAddDrink();
+                    this.viewModel.InstantAddDrink();
                     message = "Drink added successfully.";
                 }
                 else
                 {
-                    _viewModel.SendAddDrinkRequest();
+                    this.viewModel.SendAddDrinkRequest();
                     message = "A request was sent to the admin.";
                 }
 
@@ -132,11 +157,11 @@ namespace WinUIApp.Views.Components
                     Title = "Success",
                     Content = message,
                     CloseButtonText = "OK",
-                    XamlRoot = this.XamlRoot
+                    XamlRoot = this.XamlRoot,
                 };
                 _ = dialog.ShowAsync();
 
-                _viewModel.ClearForm();
+                this.viewModel.ClearForm();
             }
             catch (Exception exception)
             {
@@ -145,10 +170,10 @@ namespace WinUIApp.Views.Components
                     Title = "Error",
                     Content = exception.Message,
                     CloseButtonText = "OK",
-                    XamlRoot = this.XamlRoot
+                    XamlRoot = this.XamlRoot,
                 };
                 _ = dialog.ShowAsync();
             }
         }
     }
-} 
+}

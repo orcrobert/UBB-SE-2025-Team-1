@@ -14,8 +14,7 @@ namespace WinUIApp.Database
 
         static DatabaseConnection()
         {
-            _connectionString = "Data Source=DESKTOP-TE49281;Initial Catalog=DrinkDB;Integrated Security=True;TrustServerCertificate=True";
-        }
+            _connectionString = "Data Source=DESKTOP-TE49281;Initial Catalog=DrinkDB;Integrated Security=True;TrustServerCertificate=True";        }
 
 
 

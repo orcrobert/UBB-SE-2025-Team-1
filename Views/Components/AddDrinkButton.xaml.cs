@@ -1,12 +1,18 @@
-using System;
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
-using WinUIApp.Services;
-
 namespace WinUIApp.Views.Components
 {
+    using System;
+    using Microsoft.UI.Xaml;
+    using Microsoft.UI.Xaml.Controls;
+    using WinUIApp.Services;
+
+    /// <summary>
+    /// A button that opens a flyout for adding a new drink.
+    /// </summary>
     public sealed partial class AddDrinkButton : UserControl
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AddDrinkButton"/> class.
+        /// </summary>
         public AddDrinkButton()
         {
             this.InitializeComponent();
@@ -19,11 +25,11 @@ namespace WinUIApp.Views.Components
             {
                 Content = new AddDrinkFlyout
                 {
-                    UserId = userService.GetCurrentUserId()
-                }
+                    UserId = userService.GetCurrentUserId(),
+                },
             };
 
-            flyout.ShowAt(AddButton);
+            flyout.ShowAt(this.AddButton);
         }
     }
-} 
+}

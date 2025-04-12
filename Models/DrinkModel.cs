@@ -771,7 +771,6 @@ namespace WinUIApp.Models
         {
             try
             {
-                // SQL Server uses NEWID() for random ordering
                 string getRandomDrinkIdQuery = "SELECT TOP 1 DrinkId FROM Drink ORDER BY NEWID();";
                 var selectResult = dataBaseService.ExecuteSelectQuery(getRandomDrinkIdQuery);
                 if (selectResult.Count > 0)
@@ -794,12 +793,11 @@ namespace WinUIApp.Models
         {
             try
             {
-                //Temporarily removed WHERE CONVERT(date, VoteTime) = CONVERT(date, GETDATE()) from query due to
-                // the fact that it runs on flawed logic and can cause the application to not run.
                 string insertQuery = @"
                     INSERT INTO DrinkOfTheDay (DrinkId, DrinkTime)
                     SELECT TOP 1 DrinkId, GETDATE()
                     FROM Vote
+                    WHERE CONVERT(date, VoteTime) = CONVERT(date, GETDATE())
                     GROUP BY DrinkId
                     ORDER BY COUNT(*) DESC;";
 

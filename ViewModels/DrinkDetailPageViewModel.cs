@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using Windows.Management.Deployment;
 using WinUIApp.Models;
 using WinUIApp.Services;
-using WinUIApp.Services.DummyServies;
+using WinUIApp.Services.DummyServices;
 using WinUIApp.Views.Pages;
 
 namespace WinUIApp.Views.ViewModels

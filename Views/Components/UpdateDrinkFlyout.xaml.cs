@@ -9,7 +9,7 @@ using System.Diagnostics;
 using System.Linq;
 using WinUIApp.Models;
 using WinUIApp.Services;
-using WinUIApp.Services.DummyServies;
+using WinUIApp.Services.DummyServices;
 using WinUIApp.ViewModels;
 
 namespace WinUIApp.Views.Components
@@ -136,7 +136,7 @@ namespace WinUIApp.Views.Components
                 _viewModel.ValidateUpdatedDrinkDetails();
                 DrinkToUpdate.CategoryList = _viewModel.GetSelectedCategories();
 
-                var adminService = new WinUIApp.Services.DummyServies.AdminService();
+                var adminService = new WinUIApp.Services.DummyServices.AdminService();
                 bool isAdmin = adminService.IsAdmin(UserId);
 
                 string message;

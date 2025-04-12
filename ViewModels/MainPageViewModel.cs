@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using WinUIApp.Models;
 using WinUIApp.Services;
-using WinUIApp.Services.DummyServies;
+using WinUIApp.Services.DummyServices;
 
 namespace WinUIApp.ViewModels
 {
@@ -124,7 +124,7 @@ namespace WinUIApp.ViewModels
 
         public void LoadDrinkOfTheDayData()
         {
-            var drink =  _drinkService.getDrinkOfTheDay();
+            var drink =  _drinkService.GetDrinkOfTheDay();
 
             ImageSource = drink.DrinkImageUrl;
             DrinkName = drink.DrinkName;
@@ -140,7 +140,7 @@ namespace WinUIApp.ViewModels
 
         public int getDrinkOfTheDayId()
         {
-            return _drinkService.getDrinkOfTheDay().DrinkId;
+            return _drinkService.GetDrinkOfTheDay().DrinkId;
         }
 
         /// <summary>

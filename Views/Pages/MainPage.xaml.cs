@@ -2,7 +2,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
 using WinUIApp.Services;
-using WinUIApp.Services.DummyServies;
+using WinUIApp.Services.DummyServices;
 using WinUIApp.ViewModels;
 namespace WinUIApp.Views.Pages
 {

@@ -26,11 +26,11 @@ namespace WinUIApp.Models
             set => _drinkImageUrl = value ?? string.Empty;
         }
 
-        private List<Category> _categoryList = new();
+        private List<Category> _categoryList;
         public List<Category> CategoryList
         {
             get => _categoryList;
-            set => _categoryList = value ?? new List<Category>();
+            set => _categoryList = value;
         }
 
         public Brand DrinkBrand { get; set; }
@@ -64,7 +64,7 @@ namespace WinUIApp.Models
             DrinkId = id;
             DrinkName = drinkName;
             DrinkImageUrl = imageUrl;
-            CategoryList = categories ?? new List<Category>();
+            CategoryList = categories;
             DrinkBrand = brand ?? throw new ArgumentNullException(nameof(brand), "Brand cannot be null");
             AlcoholContent = alcoholContent;
         }

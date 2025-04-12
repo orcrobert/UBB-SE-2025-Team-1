@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WinUIApp.Services.DummyServies
+namespace WinUIApp.Services.DummyServices
 {
     public class UserService
     {

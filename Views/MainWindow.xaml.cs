@@ -4,7 +4,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System;
 using WinUIApp.Services;
-using WinUIApp.Services.DummyServies;
+using WinUIApp.Services.DummyServices;
 using WinUIApp.Views.Pages;
 namespace WinUIApp.Views
 {
@@ -20,11 +20,7 @@ namespace WinUIApp.Views
             SetFixedSize(1440, 900);
             AppMainFrame = MainFrame;
 
-            DrinkService drinkService = new DrinkService();
-            DrinkReviewService reviewService = new DrinkReviewService();
-            UserService userService = new UserService();
-            MainPage mainPage = new MainPage();
-
+            // Removed unnecessary assignments to local variables
             MainFrame.Navigate(typeof(MainPage));
         }
 

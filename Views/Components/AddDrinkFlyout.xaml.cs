@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using WinUIApp.Models;
 using WinUIApp.Services;
-using WinUIApp.Services.DummyServies;
+using WinUIApp.Services.DummyServices;
 using WinUIApp.ViewModels;
 
 namespace WinUIApp.Views.Components

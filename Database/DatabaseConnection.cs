@@ -8,50 +8,35 @@ namespace WinUIApp.Database
     public class DatabaseConnection
     {
         private static DatabaseConnection _instance;
-        private static readonly object _lock = new object();
+        private static readonly object _lock = new();
         private SqlConnection _connection;
-        private static string _connectionString;
+        private static readonly string _connectionString = "Data Source=DESKTOP-TE49281;Initial Catalog=DrinkDB;Integrated Security=True;TrustServerCertificate=True";
 
         static DatabaseConnection()
         {
             _connectionString = "Data Source=DESKTOP-TE49281;Initial Catalog=DrinkDB;Integrated Security=True;TrustServerCertificate=True";
         }
 
-        private DatabaseConnection()
-        {
-            try
-            {
-                _connection = new SqlConnection(_connectionString);
-                Debug.WriteLine("DatabaseConnection constructor: Connection created.");
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"DatabaseConnection constructor error: {ex.Message}");
-            }
-        }
 
 
         public static DatabaseConnection Instance
         {
             get
             {
-                lock (_lock)
+                if (_instance == null)
                 {
-                    if (_instance == null) 
-                    {   
-                        lock(_lock)
-                        {
-                            _instance = new DatabaseConnection();
-                        }
+                    lock (_lock)
+                    {
+                        _instance ??= new DatabaseConnection();
                     }
-                    return _instance;
                 }
+                return _instance;
             }
         }
 
         public SqlConnection GetConnection()
         {
-            if (_connection == null)
+            if (_connection == null || _connection.State == System.Data.ConnectionState.Broken)
             {
                 _connection = new SqlConnection(_connectionString);
             }

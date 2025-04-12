@@ -8,7 +8,7 @@ namespace WinUIApp.Services
 {
     public class DrinkService
     {
-        private DrinkModel drinkModel;
+        private readonly DrinkModel drinkModel;
         private const int DefaultPersonalDrinkCount = 1;
         public DrinkService()
         {
@@ -30,7 +30,7 @@ namespace WinUIApp.Services
         {
             try
             {
-                return DrinkModel.GetDrinks(searchKeyword, drinkBrandNameFilter, drinkCategoryFilter, minimumAlcoholPercentage, maximumAlcoholPercentage, orderingCriteria);
+                return drinkModel.GetDrinks(searchKeyword, drinkBrandNameFilter, drinkCategoryFilter, minimumAlcoholPercentage, maximumAlcoholPercentage, orderingCriteria);
             }
             catch (Exception drinksRetrievalException)
             {
@@ -38,11 +38,11 @@ namespace WinUIApp.Services
             }
         }
 
-        public void AddDrink(string inputedDrinkName, string inputedDrinkPath, List<Category> inputedDrinkCategories, string inputedDrinkBrandName, float inputedAlcoholPercentage)
+        public void AddDrink(string inputtedDrinkName, string inputtedDrinkPath, List<Category> inputtedDrinkCategories, string inputtedDrinkBrandName, float inputtedAlcoholPercentage)
         {
             try
             {
-                drinkModel.AddDrink(inputedDrinkName, inputedDrinkPath, inputedDrinkCategories, inputedDrinkBrandName, inputedAlcoholPercentage);
+                drinkModel.AddDrink(inputtedDrinkName, inputtedDrinkPath, inputtedDrinkCategories, inputtedDrinkBrandName, inputtedAlcoholPercentage);
             }
             catch (Exception addingDrinkException)
             {
@@ -66,7 +66,7 @@ namespace WinUIApp.Services
         {
             try
             {
-                DrinkModel.DeleteDrink(drinkId); 
+                drinkModel.DeleteDrink(drinkId); 
             }
             catch (Exception deleteDrinkException)
             {
@@ -158,7 +158,7 @@ namespace WinUIApp.Services
             }
         }
 
-        public Drink getDrinkOfTheDay()
+        public Drink GetDrinkOfTheDay()
         {
             try
             {

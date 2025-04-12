@@ -1,17 +1,20 @@
-using Microsoft.UI;
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Media;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using WinUIApp.Models;
-using WinUIApp.Services;
-using WinUIApp.Services.DummyServies;
-using WinUIApp.ViewModels;
-
 namespace WinUIApp.Views.Components
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using Microsoft.UI;
+    using Microsoft.UI.Xaml;
+    using Microsoft.UI.Xaml.Controls;
+    using Microsoft.UI.Xaml.Media;
+    using WinUIApp.Models;
+    using WinUIApp.Services;
+    using WinUIApp.Services.DummyServies;
+    using WinUIApp.ViewModels;
+
+    /// <summary>
+    /// A flyout control for adding a new drink. It includes fields for entering the drink's name, image URL, brand, alcohol content, and categories.
+    /// </summary>
     public sealed partial class AddDrinkFlyout : UserControl
     {
         private AddDrinkMenuViewModel _viewModel;

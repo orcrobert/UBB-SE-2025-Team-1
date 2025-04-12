@@ -88,8 +88,8 @@ namespace WinUIApp.Models
             string? searchTerm,
             List<string>? brandNameFilters,
             List<string>? categoryFilters,
-            float? minAlcohol,
-            float? maxAlcohol,
+            float? minimumAlcohool,
+            float? maximumAlcohool,
             Dictionary<string, bool>? orderBy)
         {
             var drinks = new List<Drink>();
@@ -122,8 +122,8 @@ namespace WinUIApp.Models
 
                 if (brandNameFilters?.Count > 0)
                 {
-                    var brandParams = brandNameFilters.Select((b, i) => "@Brand" + i).ToList();
-                    conditions.Add("LOWER(LTRIM(RTRIM(B.BrandName))) IN (" + string.Join(", ", brandParams) + ")");
+                    var brandParameters = brandNameFilters.Select((b, i) => "@Brand" + i).ToList();
+                    conditions.Add("LOWER(LTRIM(RTRIM(B.BrandName))) IN (" + string.Join(", ", brandParameters) + ")");
                     for (int i = 0; i < brandNameFilters.Count; i++)
                     {
                         parameters.Add(new SqlParameter("@Brand" + i, SqlDbType.VarChar) { Value = brandNameFilters[i].Trim().ToLower() });
@@ -132,24 +132,24 @@ namespace WinUIApp.Models
 
                 if (categoryFilters?.Count > 0)
                 {
-                    var categoryParams = categoryFilters.Select((c, i) => "@Category" + i).ToList();
-                    conditions.Add("LOWER(LTRIM(RTRIM(C.CategoryName))) IN (" + string.Join(", ", categoryParams) + ")");
+                    var categoryParameters = categoryFilters.Select((c, i) => "@Category" + i).ToList();
+                    conditions.Add("LOWER(LTRIM(RTRIM(C.CategoryName))) IN (" + string.Join(", ", categoryParameters) + ")");
                     for (int i = 0; i < categoryFilters.Count; i++)
                     {
                         parameters.Add(new SqlParameter("@Category" + i, SqlDbType.VarChar) { Value = categoryFilters[i].Trim().ToLower() });
                     }
                 }
 
-                if (minAlcohol.HasValue)
+                if (minimumAlcohool.HasValue)
                 {
                     conditions.Add("D.AlcoholContent >= @MinAlcohol");
-                    parameters.Add(new SqlParameter("@MinAlcohol", SqlDbType.Float) { Value = minAlcohol.Value });
+                    parameters.Add(new SqlParameter("@MinAlcohol", SqlDbType.Float) { Value = minimumAlcohool.Value });
                 }
 
-                if (maxAlcohol.HasValue)
+                if (maximumAlcohool.HasValue)
                 {
                     conditions.Add("D.AlcoholContent <= @MaxAlcohol");
-                    parameters.Add(new SqlParameter("@MaxAlcohol", SqlDbType.Float) { Value = maxAlcohol.Value });
+                    parameters.Add(new SqlParameter("@MaxAlcohol", SqlDbType.Float) { Value = maximumAlcohool.Value });
                 }
 
                 if (conditions.Count > 0)
@@ -306,11 +306,11 @@ namespace WinUIApp.Models
             {
             // Fetch brand ID
             const string brandIdQuery = @"SELECT BrandId FROM Brand WHERE BrandName = @BrandName";
-            var brandParams = new List<SqlParameter>
+            var brandParameters = new List<SqlParameter>
             {
                 new ("@BrandName", SqlDbType.VarChar) { Value = drink.DrinkBrand.BrandName }
             };
-            var brandResult = dataBaseService.ExecuteSelectQuery(brandIdQuery, brandParams);
+            var brandResult = dataBaseService.ExecuteSelectQuery(brandIdQuery, brandParameters);
             int brandId = brandResult.Count > 0 ? Convert.ToInt32(brandResult[0]["BrandId"]) : -1;
             if (brandId == -1)
             {
@@ -326,7 +326,7 @@ namespace WinUIApp.Models
                 DrinkUrl = @DrinkUrl
                 WHERE DrinkId = @DrinkId;";
 
-            var drinkParams = new List<SqlParameter>
+            var updateDrinkQuerryParameters = new List<SqlParameter>
             {
                 new ("@DrinkName", SqlDbType.VarChar) { Value = drink.DrinkName },
                 new ("@DrinkUrl", SqlDbType.VarChar) { Value = drink.DrinkImageUrl },
@@ -334,15 +334,15 @@ namespace WinUIApp.Models
                 new ("@BrandId", SqlDbType.Int) { Value = brandId },
                 new ("@DrinkId", SqlDbType.Int) { Value = drink.DrinkId }
             };
-            dataBaseService.ExecuteDataModificationQuery(updateDrinkQuery, drinkParams);
+            dataBaseService.ExecuteDataModificationQuery(updateDrinkQuery, updateDrinkQuerryParameters);
 
             // Fetch existing categories
-            const string getExistingCategoriesQuery = @"SELECT CategoryId FROM DrinkCategory WHERE DrinkId = @DrinkId";
-            var categoryParams = new List<SqlParameter>
+            const string getExistingCategoriesForADrinkQuery = @"SELECT CategoryId FROM DrinkCategory WHERE DrinkId = @DrinkId";
+            var getAllCategoriesForADrinkQuerryParameters = new List<SqlParameter>
             {
                 new ("@DrinkId", SqlDbType.Int) { Value = drink.DrinkId }
             };
-            var existingCategoriesResult = dataBaseService.ExecuteSelectQuery(getExistingCategoriesQuery, categoryParams);
+            var existingCategoriesResult = dataBaseService.ExecuteSelectQuery(getExistingCategoriesForADrinkQuery, getAllCategoriesForADrinkQuerryParameters);
             var existingCategoryIds = new HashSet<int>(existingCategoriesResult.Select(row => Convert.ToInt32(row["CategoryId"])));
             var newCategoryIds = new HashSet<int>(drink.CategoryList.Select(c => c.CategoryId));
 
@@ -366,12 +366,12 @@ namespace WinUIApp.Models
             foreach (var categoryId in categoriesToDelete)
             {
                 const string deleteCategoryQuery = @"DELETE FROM DrinkCategory WHERE DrinkId = @DrinkId AND CategoryId = @CategoryId";
-                var deleteParams = new List<SqlParameter>
+                var deleteCatergoryForADrinkQueryParameters = new List<SqlParameter>
                 {
                     new ("@DrinkId", SqlDbType.Int) { Value = drink.DrinkId },
                     new ("@CategoryId", SqlDbType.Int) { Value = categoryId }
                 };
-                dataBaseService.ExecuteDataModificationQuery(deleteCategoryQuery, deleteParams);
+                dataBaseService.ExecuteDataModificationQuery(deleteCategoryQuery, deleteCatergoryForADrinkQueryParameters);
             }
             }
             catch (Exception ex)

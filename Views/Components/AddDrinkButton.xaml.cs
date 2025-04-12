@@ -32,4 +32,4 @@ namespace WinUIApp.Views.Components
             flyout.ShowAt(this.AddButton);
         }
     }
-} 
+}

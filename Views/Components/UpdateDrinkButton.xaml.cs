@@ -1,40 +1,58 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using Microsoft.UI;
-using Microsoft.UI.Text;
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Media;
-using WinUIApp.Models;
-using WinUIApp.Services;
-using static System.Net.WebRequestMethods;
+// <copyright file="UpdateDrinkButton.xaml.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
 
 namespace WinUIApp.Views.Components
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Diagnostics;
+    using System.Linq;
+    using Microsoft.UI;
+    using Microsoft.UI.Text;
+    using Microsoft.UI.Xaml;
+    using Microsoft.UI.Xaml.Controls;
+    using Microsoft.UI.Xaml.Media;
+    using WinUIApp.Models;
+    using WinUIApp.Services;
+    using static System.Net.WebRequestMethods;
+
+    /// <summary>
+    /// A user control that represents a button for updating a drink in the application.
+    /// </summary>
     public sealed partial class UpdateDrinkButton : UserControl
     {
-        private const object defaultObjectValue = null;
-
+        /// <summary>
+        /// DrinkProperty is a dependency property that represents the drink to be updated.
+        /// </summary>
         public static readonly DependencyProperty DrinkProperty =
         DependencyProperty.Register(
         nameof(Drink),
         typeof(Drink),
         typeof(UpdateDrinkButton),
-        new PropertyMetadata(defaultObjectValue));
-        public Action OnDrinkUpdated { get; set; }
+        new PropertyMetadata(null));
 
-        public Drink Drink
-        {
-            get => (Drink)GetValue(DrinkProperty);
-            set => SetValue(DrinkProperty, value);
-        }
-
+        /// <summary>
+        /// Initializes a new instance of the <see cref="UpdateDrinkButton"/> class.
+        /// </summary>
         public UpdateDrinkButton()
         {
             this.InitializeComponent();
 
+        }
+
+        /// <summary>
+        /// Gets or sets the drink to be updated. This property is used to bind the drink object to the button.
+        /// </summary>
+        public Action OnDrinkUpdated { get; set; }
+
+        /// <summary>
+        /// Gets or sets the drink to be updated. This property is used to bind the drink object to the button.
+        /// </summary>
+        public Drink Drink
+        {
+            get => (Drink)this.GetValue(DrinkProperty);
+            set => this.SetValue(DrinkProperty, value);
         }
 
         private void UpdateDrinkButton_Click(object sender, RoutedEventArgs eventArguments)
@@ -44,18 +62,17 @@ namespace WinUIApp.Views.Components
             {
                 Content = new UpdateDrinkFlyout
                 {
-                    DrinkToUpdate = Drink,
-                    UserId = userService.GetCurrentUserId()
-                }
+                    DrinkToUpdate = this.Drink,
+                    UserId = userService.GetCurrentUserId(),
+                },
             };
 
-            flyout.Closed += (sender, Arguments) =>
+            flyout.Closed += (sender, arguments) =>
             {
-                OnDrinkUpdated?.Invoke();
+                this.OnDrinkUpdated?.Invoke();
             };
 
-            flyout.ShowAt(UpdateButton);
-
+            flyout.ShowAt(this.UpdateButton);
         }
     }
 }

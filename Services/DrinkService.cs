@@ -18,7 +18,7 @@ namespace WinUIApp.Services
         {
             try
             {
-                return _drinkModel.getDrinkById(drinkId);
+                return drinkModel.GetDrinkById(drinkId);
             }
             catch (Exception drinkRetrievalException)
             {
@@ -29,7 +29,8 @@ namespace WinUIApp.Services
         {
             try
             {
-                return _drinkModel.getDrinks(searchKeyword, drinkBrandNameFilter, drinkCategoryFilter, minimumAlcoholPercentage, maximumAlcoholPercentage, orderingCriteria);
+
+                return drinkModel.GetDrinks(searchedTerm, brandNameFilter, categoryFilter, minAlcohol, maxAlcohol, orderBy);
 
             }
             catch (Exception drinksRetrievalException)
@@ -42,7 +43,7 @@ namespace WinUIApp.Services
         {
             try
             {
-                _drinkModel.addDrink(inputedDrinkName, inputedDrinkPath, inputedDrinkCategories, inputedDrinkBrandName, inputedAlcoholPercentage);
+                drinkModel.AddDrink(drinkName, drinkUrl, categories, brandName, alcoholContent);
             }
             catch (Exception addingDrinkException)
             {
@@ -54,7 +55,7 @@ namespace WinUIApp.Services
         {
             try
             {
-                _drinkModel.updateDrink(drink);
+                drinkModel.UpdateDrink(drink);
             }
             catch (Exception updateDrinkException)
             {
@@ -66,7 +67,7 @@ namespace WinUIApp.Services
         {
             try
             {
-                _drinkModel.deleteDrink(drinkId);
+                drinkModel.DeleteDrink(drinkId);
             }
             catch (Exception deleteDrinkException)
             {
@@ -78,7 +79,7 @@ namespace WinUIApp.Services
         {
             try
             {
-                return _drinkModel.getDrinkCategories();
+                return drinkModel.GetDrinkCategories();
             }
             catch (Exception drinkCategoriesRetrievalException)
             {
@@ -90,7 +91,7 @@ namespace WinUIApp.Services
         {
             try
             {
-                return _drinkModel.getDrinkBrands();
+                return drinkModel.GetDrinkBrands();
             }
             catch (Exception drinkBrandNamesRetrievalException)
             {
@@ -113,7 +114,7 @@ namespace WinUIApp.Services
         {
             try
             {
-                return _drinkModel.isDrinkInPersonalList(userId, drinkId);
+                return drinkModel.GetPersonalDrinkList(userId, numberOfDrinks);
             }
             catch (Exception checkingUserPersonalListException)
             {
@@ -125,7 +126,7 @@ namespace WinUIApp.Services
         {
             try
             {
-                return _drinkModel.addToPersonalDrinkList(userId, drinkId);
+                return drinkModel.IsDrinkInPersonalList(userId, drinkId);
             }
             catch (Exception addDrinkToUserPersonalListException)
             {
@@ -137,7 +138,7 @@ namespace WinUIApp.Services
         {
             try
             {
-                return _drinkModel.deleteFromPersonalDrinkList(userId, drinkId);
+                return drinkModel.AddToPersonalDrinkList(userId, drinkId);
             }
             catch (Exception deleteFromUserPersonalDrinkListException)
             {
@@ -149,7 +150,7 @@ namespace WinUIApp.Services
         {
             try
             {
-                _drinkModel.voteDrinkOfTheDay(drinkId, userId);
+                return drinkModel.DeleteFromPersonalDrinkList(userId, drinkId);
             }
             catch (Exception voteDrinkOfTheDayException)
             {
@@ -161,11 +162,23 @@ namespace WinUIApp.Services
         {
             try
             {
-                return _drinkModel.getDrinkOfTheDay();
+                drinkModel.VoteDrinkOfTheDay(drinkId, userId);
             }
             catch (Exception getDrinkOfTheDayException)
             {
-                throw new Exception("Error getting drink of the day:", getDrinkOfTheDayException);
+                throw new Exception("Error voting drink:", e);
+            }
+        }
+
+        public Drink getDrinkOfTheDay()
+        {
+            try
+            {
+                return drinkModel.GetDrinkOfTheDay();
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Error getting drink of the day:" + e.Message, e);
             }
         }
     }

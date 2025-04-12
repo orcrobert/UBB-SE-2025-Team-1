@@ -19,44 +19,72 @@ namespace WinUIApp.Views.Components.HeaderComponents
 {
     public sealed partial class CategorySelectionMenu : UserControl
     {
-
-        private List<Category> _originalCategories = new List<Category>();
-        private HashSet<Category> _selectedCategories = new HashSet<Category>();
+        private List<Category> originalCategories = new List<Category>();
+        private HashSet<Category> selectedCategories = new HashSet<Category>();
         public ObservableCollection<Category> CurrentCategories { get; set; } = new ObservableCollection<Category>();
-        public HashSet<Category> SelectedCategories => _selectedCategories;
+        public HashSet<Category> SelectedCategories => selectedCategories;
 
+        /// <summary>
+        /// Initializes a new instance of the CategorySelectionMenu control.
+        /// </summary>
         public CategorySelectionMenu()
         {
             this.InitializeComponent();
         }
 
+        /// <summary>
+        /// Populates the menu with the provided list of categories and stores them for filtering operations.
+        /// </summary>
+        /// <param name="categories">The list of categories to populate the menu with.</param>
         public void PopulateCategories(List<Category> categories)
         {
-            _originalCategories = categories;
+            originalCategories = categories;
             CurrentCategories = new ObservableCollection<Category>(categories);
         }
 
-        private void CategoryList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        /// <summary>
+        /// Handles selection changes in the category list by updating the selectedCategories collection.
+        /// Adds newly selected categories and removes deselected ones.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="selectionChangedEventArgs">Event data containing removed and added items.</param>
+        private void CategoryList_SelectionChanged(object sender, SelectionChangedEventArgs selectionChangedEventArgs)
         {
-            foreach (Category removedCategory in e.RemovedItems)
-                _selectedCategories.Remove(removedCategory);
-            foreach (Category addedCategory in e.AddedItems)
-                _selectedCategories.Add(addedCategory);
+            foreach (Category removedCategory in selectionChangedEventArgs.RemovedItems)
+            {
+                selectedCategories.Remove(removedCategory);
+            }
+            foreach (Category addedCategory in selectionChangedEventArgs.AddedItems)
+            {
+                selectedCategories.Add(addedCategory);
+            }
         }
 
-        private void CategorySearchBox_TextChanged(object sender, TextChangedEventArgs e)
+        /// <summary>
+        /// Filters the category list based on user input in the search box.
+        /// Temporarily detaches the selection event handler to preserve selected items during filtering.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="textChangedEventArgs">Event data for the text changed event.</param>
+        private void CategorySearchBox_TextChanged(object sender, TextChangedEventArgs textChangedEventArgs)
         {
-            string query = CategorySearchBox.Text.ToLower();
-            List<Category> filteredCategories = _originalCategories.Where(category => category.Name.ToLower().Contains(query)).ToList();
+            string searchQuery = CategorySearchBox.Text.ToLower();
+            List<Category> filteredCategories = originalCategories
+                .Where(category => category.CategoryName.ToLower().Contains(searchQuery))
+                .ToList();
             CategoryList.SelectionChanged -= CategoryList_SelectionChanged;
             CurrentCategories.Clear();
             foreach (Category category in filteredCategories)
+            {
                 CurrentCategories.Add(category);
+            }
             CategoryList.SelectedItems.Clear();
             foreach (Category category in filteredCategories)
             {
-                if (_selectedCategories.Contains(category))
+                if (selectedCategories.Contains(category))
+                {
                     CategoryList.SelectedItems.Add(category);
+                }
             }
             CategoryList.SelectionChanged += CategoryList_SelectionChanged;
         }

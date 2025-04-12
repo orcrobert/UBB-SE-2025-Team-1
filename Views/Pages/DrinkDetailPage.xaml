@@ -18,11 +18,11 @@
                    x:Name="Name" 
                    FontSize="18" 
                    FontWeight="Bold"/>
-            <Image Source="{Binding Drink.DrinkURL}"
+            <Image Source="{Binding Drink.DrinkImageUrl}"
                x:Name="DrinkImage"
                Height="180"/>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0 5 0 0">
-                <components:AddRemoveFromDrinkListButton DrinkId="{Binding Drink.Id}" />
+                <components:AddRemoveFromDrinkListButton DrinkId="{Binding Drink.DrinkId}" />
                 <components:UpdateDrinkButton x:Name="UpdateButton" Drink="{Binding Drink}" />
                 <Button>
                     <Button.Flyout>
@@ -35,11 +35,11 @@
                     </Button.Flyout>
                     <TextBlock x:Name="RemoveButtonText" Foreground="Black"/>
                 </Button>
-                <votebutton:VoteDrinkOfTheDayButton Tapped="VoteButton_Click"  DrinkId="{Binding Drink.Id}" />
+                <votebutton:VoteDrinkOfTheDayButton Tapped="VoteButton_Click"  DrinkId="{Binding Drink.DrinkId}" />
             </StackPanel>
             <StackPanel HorizontalAlignment="Center">
                 <TextBlock Text="Brand" FontSize="18" FontWeight="Bold"/>
-                <TextBlock Text="{Binding Drink.Brand.Name}" FontSize="14"/>
+                <TextBlock Text="{Binding Drink.DrinkBrand.BrandName}" FontSize="14"/>
                 <TextBlock Text="Alcohol percentage" FontSize="18" FontWeight="Bold"/>
                 <TextBlock Text="{Binding Drink.AlcoholContent}" FontSize="14"/>
                 <TextBlock Text="Categories" FontSize="18" FontWeight="Bold"/>
@@ -56,12 +56,12 @@
                         <DataTemplate>
                             <Border BorderThickness="1" BorderBrush="Goldenrod" Padding="10" Margin="0 0 0 10">
                                 <StackPanel>
-                                    <TextBlock Text="{Binding Title}" FontWeight="Bold" FontSize="16"/>
-                                    <TextBlock Text="{Binding Description}" TextWrapping="WrapWholeWords"/>
-                                    <TextBlock Text="{Binding PostedDateTime}" FontSize="12" Foreground="Gray"/>
+                                    <TextBlock Text="{Binding ReviewTitle}" FontWeight="Bold" FontSize="16"/>
+                                    <TextBlock Text="{Binding ReviewDescription}" TextWrapping="WrapWholeWords"/>
+                                    <TextBlock Text="{Binding ReviewPostedDateTime}" FontSize="12" Foreground="Gray"/>
                                     <TextBlock>
                                     <Run Text="⭐ " />
-                                    <Run Text="{Binding Score}" />
+                                    <Run Text="{Binding ReviewScore}" />
                                     <Run Text="/5" />
                                     </TextBlock>
                                 </StackPanel>

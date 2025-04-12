@@ -41,7 +41,7 @@
                         <!-- Image -->
                         <Image Grid.Row="0" Grid.Column="0" Grid.RowSpan="4"
                                Width="120" Height="120" Margin="0,0,10,0"
-                               Source="{x:Bind Drink.DrinkURL, Mode=OneWay, Converter={StaticResource ImageUrlConverter}}"
+                               Source="{x:Bind Drink.DrinkImageUrl, Mode=OneWay, Converter={StaticResource ImageUrlConverter}}"
                                Stretch="Uniform"
                                HorizontalAlignment="Center"
                                VerticalAlignment="Center"/>
@@ -49,7 +49,7 @@
                         <!-- Brand -->
                         <TextBlock Grid.Row="0" Grid.Column="1" Margin="0,0,0,5">
                             <Run Text="Brand: " FontWeight="Bold" FontSize="16"/>
-                            <Run Text="{x:Bind Drink.Brand.Name, Mode=OneWay}" FontSize="16"/>
+                            <Run Text="{x:Bind Drink.DrinkBrand.BrandName, Mode=OneWay}" FontSize="16"/>
                         </TextBlock>
 
                         <!-- Name -->
@@ -61,7 +61,7 @@
                         <!-- Categories -->
                         <TextBlock Grid.Row="2" Grid.Column="1" Margin="0,0,0,5">
                             <Run Text="Categories: " FontWeight="Bold" FontSize="16"/>
-                            <Run Text="{x:Bind Drink.Categories, Mode=OneWay, Converter={StaticResource CategoriesConverter}}" FontSize="16"/>
+                            <Run Text="{x:Bind Drink.CategoryList, Mode=OneWay, Converter={StaticResource CategoriesConverter}}" FontSize="16"/>
                         </TextBlock>
 
                         <!-- Alcohol Content -->

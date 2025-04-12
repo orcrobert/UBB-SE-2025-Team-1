@@ -59,14 +59,14 @@ namespace WinUIApp.Services.DummyServies
 
         public List<Review> GetReviewsByID(int drinkID)
         {
-            return dummyReviews.Where(r => r.DrinkID == drinkID).ToList();
+            return dummyReviews.Where(r => r.DrinkId == drinkID).ToList();
         }
 
         public float GetReviewAverageByID(int drinkID)
         {
             var reviews = GetReviewsByID(drinkID);
             if (reviews.Count == 0) return 0;
-            return reviews.Average(r => r.Score);
+            return reviews.Average(r => r.ReviewScore);
         }
     }
 }

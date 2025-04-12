@@ -11,34 +11,55 @@ namespace WinUIApp.Views.Components.SearchPageComponents
 {
     public sealed partial class CategoryFilterComponent : UserControl
     {
-        private List<Category> _originalCategories = new List<Category>();
-        private HashSet<Category> _selectedCategories = new HashSet<Category>();
+        private List<Category> originalCategories = new List<Category>();
+        private HashSet<Category> selectedCategories = new HashSet<Category>();
+        private const int SelectionDelayMilliseconds = 50;
         public ObservableCollection<Category> CurrentCategories { get; set; } = new ObservableCollection<Category>();
 
+        /// <summary>
+        /// Event that fires when the selected categories change, providing a list of selected category names.
+        /// </summary>
         public event EventHandler<List<string>> CategoryChanged;
 
+        /// <summary>
+        /// Initializes a new instance of the CategoryFilterComponent control and outputs debug information.
+        /// </summary>
         public CategoryFilterComponent()
         {
             this.InitializeComponent();
             Debug.WriteLine("selected in component" + CategoryList.SelectedItems.Count);
         }
 
-        public void CategoryListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        /// <summary>
+        /// Handles selection changes in the category list by updating the selectedCategories collection
+        /// and triggering the CategoryChanged event with the updated list of category names.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="selectionChangedEventArgs">Event data containing removed and added items.</param>
+        public void CategoryListView_SelectionChanged(object sender, SelectionChangedEventArgs selectionChangedEventArgs)
         {
-            foreach (Category removedCategory in e.RemovedItems)
-                _selectedCategories.Remove(removedCategory);
-
-            foreach (Category addedCategory in e.AddedItems)
-                _selectedCategories.Add(addedCategory);
-            CategoryChanged?.Invoke(this, _selectedCategories.Select(c => c.Name).ToList());
+            foreach (Category removedCategory in selectionChangedEventArgs.RemovedItems)
+            {
+                selectedCategories.Remove(removedCategory);
+            }
+            foreach (Category addedCategory in selectionChangedEventArgs.AddedItems)
+            {
+                selectedCategories.Add(addedCategory);
+            }
+            CategoryChanged?.Invoke(this, selectedCategories.Select(category => category.CategoryName).ToList());
         }
 
-        private void SearchBox_TextChanged(object sender, TextChangedEventArgs e)
+        /// <summary>
+        /// Filters the category list based on user input in the search box while preserving selections.
+        /// Temporarily detaches the selection event handler during the update process.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="textChangedEventArgs">Event data for the text changed event.</param>
+        private void SearchBox_TextChanged(object sender, TextChangedEventArgs textChangedEventArgs)
         {
-            string query = SearchBox.Text.ToLower();
-
-            List<Category> filteredCategories = _originalCategories
-                .Where(category => category.Name.ToLower().Contains(query))
+            string searchQuery = SearchBox.Text.ToLower();
+            List<Category> filteredCategories = originalCategories
+                .Where(category => category.CategoryName.ToLower().Contains(searchQuery))
                 .ToList();
 
             CategoryList.SelectionChanged -= CategoryListView_SelectionChanged;
@@ -52,7 +73,7 @@ namespace WinUIApp.Views.Components.SearchPageComponents
             CategoryList.SelectedItems.Clear();
             foreach (Category category in filteredCategories)
             {
-                if (_selectedCategories.Contains(category))
+                if (selectedCategories.Contains(category))
                 {
                     CategoryList.SelectedItems.Add(category);
                 }
@@ -61,40 +82,47 @@ namespace WinUIApp.Views.Components.SearchPageComponents
             CategoryList.SelectionChanged += CategoryListView_SelectionChanged;
         }
 
+        /// <summary>
+        /// Updates the available categories for filtering and sets initial selections based on provided categories.
+        /// Uses a short delay to ensure UI can update properly before setting selections.
+        /// </summary>
+        /// <param name="categories">The collection of categories to be used for filtering.</param>
+        /// <param name="initialCategories">The collection of categories that should be initially selected.</param>
         public async void SetCategoriesFilter(IEnumerable<Category> categories, IEnumerable<Category> initialCategories)
         {
-            _originalCategories = categories.ToList();
+            originalCategories = categories.ToList();
             CurrentCategories.Clear();
-            foreach (Category category in _originalCategories)
+            foreach (Category category in originalCategories)
             {
                 CurrentCategories.Add(category);
             }
-
-            HashSet<int> ids = new HashSet<int>();
+            HashSet<int> categoryIdentifiers = new HashSet<int>();
             if (initialCategories != null)
             {
                 foreach (Category category in initialCategories)
                 {
-                    ids.Add(category.Id);
+                    categoryIdentifiers.Add(category.CategoryId);
                 }
             }
             CategoryList.SelectedItems.Clear();
-
-            await Task.Delay(50);
-            foreach (Category category in _originalCategories)
+            await Task.Delay(SelectionDelayMilliseconds);
+            foreach (Category category in originalCategories)
             {
-                if (ids.Contains(category.Id))
+                if (categoryIdentifiers.Contains(category.CategoryId))
                 {
                     CategoryList.SelectedItems.Add(category);
-                    _selectedCategories.Add(category);
+                    selectedCategories.Add(category);
                 }
             }
         }
 
+        /// <summary>
+        /// Clears all selected categories and triggers the CategoryChanged event with an empty list.
+        /// </summary>
         public void ClearSelection()
         {
             CategoryList.SelectedItems.Clear();
-            _selectedCategories.Clear();
+            selectedCategories.Clear();
             CategoryChanged?.Invoke(this, new List<string>());
         }
     }

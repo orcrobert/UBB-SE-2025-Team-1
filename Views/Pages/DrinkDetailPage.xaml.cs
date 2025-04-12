@@ -24,7 +24,7 @@ namespace WinUIApp.Views.Pages
 
             UpdateButton.OnDrinkUpdated = () =>
             {
-                ViewModel.LoadDrink(ViewModel.Drink.Id);
+                ViewModel.LoadDrink(ViewModel.Drink.DrinkId);
             };
         }
 

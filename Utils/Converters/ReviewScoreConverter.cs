@@ -5,18 +5,21 @@ namespace WinUIApp.Utils.Converters
 {
     public class ReviewScoreConverter : IValueConverter
     {
-        public object Convert(object value, Type targetType, object parameter, string language)
+        private const string ScoreFormat = "{0:F1}/5";
+        private const string DefaultScoreDisplay = "N/A";
+        public object Convert(object reviewScoreSourceValue, Type destinationType, object converterParameter, string formattingCulture)
         {
-            if (value is float score)
+            if (reviewScoreSourceValue is float score)
+
             {
-                return $"{score:F1}/5"; // e.g., "4.5/5"
+                return string.Format(ScoreFormat, score);
             }
-            return "N/A";
+            return DefaultScoreDisplay;
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, string language)
+        public object ConvertBack(object displayedreviewScoreValue, Type sourcePropertyType, object converterParameter, string formattingCulture)
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException("Converting from string to review score is not supported.");
         }
     }
 }

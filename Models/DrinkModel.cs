@@ -55,7 +55,23 @@ namespace WinUIApp.Models
                     var categoryIds = row["CategoryIds"].ToString().Split(',');
                     var categoryNames = row["CategoryNames"].ToString().Split(',');
 
-                    for (int i = 0; i < categoryIds.Length; i++)
+                var drinkQueryResult = dbService.ExecuteSelectQuery(getDrinkQuery, queryParameters);
+
+                if (drinkQueryResult != null && drinkQueryResult.Count > 0)
+                {
+                    var row = drinkQueryResult[0];
+                    int fetchedDrinkId = Convert.ToInt32(row["DrinkId"]);
+                    float alcoholContent = Convert.ToSingle(row["AlcoholContent"]);
+                    string drinkName = row["DrinkName"].ToString();
+                    string drinkURL = row["DrinkURL"].ToString();
+
+                    int brandId = Convert.ToInt32(row["BrandId"]);
+                    string brandName = row["BrandName"].ToString();
+                    Brand brand = new Brand(brandId, brandName);
+
+                    List<Category> categories = new List<Category>();
+                    if (row["CategoryIds"] != DBNull.Value && row["CategoryNames"] != DBNull.Value)
+
                     {
                         if (int.TryParse(categoryIds[i], out int categoryId))
                         {
@@ -158,8 +174,9 @@ namespace WinUIApp.Models
                     query += " ORDER BY " + string.Join(", ", orderClauses);
                 }
 
-                var results = dbService.ExecuteSelect(query, parameters);
-                foreach (var row in results)
+                var drinkQueryResult = dbService.ExecuteSelectQuery(getDrinksQuery, queryParameters);
+
+                foreach (var row in drinkQueryResult)
                 {
                     int drinkId = Convert.ToInt32(row["DrinkId"]);
                     float alcoholContent = Convert.ToSingle(row["AlcoholContent"]);
@@ -226,6 +243,21 @@ namespace WinUIApp.Models
 
                     var newBrandResult = dbService.ExecuteSelect(addBrandQuery, brandParameters);
                     brandId = Convert.ToInt32(newBrandResult[0]["BrandId"]);
+                ];
+                var brandIdResult = dbService.ExecuteSelectQuery(brandIdQuery, brandNameParameter);
+                int brandId = brandIdResult.Count > 0 ? Convert.ToInt32(brandIdResult[0]["BrandId"]) : -1;
+
+                if (brandId == -1)
+                {
+                    string addBrandQuery = @"INSERT INTO Brand (BrandName) VALUES (@BrandName);
+                                          SELECT SCOPE_IDENTITY() AS BrandId;";
+                    List<SqlParameter> brandParameters =
+                    [
+                        new SqlParameter("@BrandName", SqlDbType.VarChar) { Value = brandName }
+                    ];
+
+                    var newBrandResult = dbService.ExecuteSelectQuery(addBrandQuery, brandParameters);
+                    brandId = Convert.ToInt32(newBrandResult[0]["BrandId"]);
                 }
 
                 string addDrinkQuery = @"INSERT INTO Drink (DrinkName, DrinkUrl, AlcoholContent, BrandId) 
@@ -249,6 +281,7 @@ namespace WinUIApp.Models
                                                VALUES (@DrinkId, @CategoryId);";
                     List<SqlParameter> categoryParameters =
                     [
+
                         new SqlParameter("@DrinkId", SqlDbType.Int) { Value = drinkId },
                         new SqlParameter("@CategoryId", SqlDbType.Int) { Value = category.CategoryId }
                     ];
@@ -277,9 +310,8 @@ namespace WinUIApp.Models
                 var parameters = new List<SqlParameter>
                 {
                     new SqlParameter("@DrinkId", SqlDbType.Int) { Value = drinkId }
-                };
-
-                dbService.ExecuteQuery(deleteQuery, parameters);
+                ];
+                dbService.ExecuteDataModificationQuery(deleteDrinkQuery, drinkIdParameter);
             }
             catch (Exception ex)
             {
@@ -298,14 +330,14 @@ namespace WinUIApp.Models
 
             try
             {
-                const string getBrandIdQuery = "SELECT BrandId FROM Brand WHERE BrandName = @BrandName";
-                var brandParams = new List<SqlParameter>
-                {
-                    new SqlParameter("@BrandName", SqlDbType.VarChar) { Value = drink.DrinkBrand.BrandName }
-                };
-                var brandResult = dbService.ExecuteSelect(getBrandIdQuery, brandParams);
-                int brandId = brandResult.Count > 0 ? Convert.ToInt32(brandResult[0]["BrandId"]) : -1;
-
+                string brandIdQuery = @"SELECT BrandId FROM Brand 
+                                        WHERE BrandName = @BrandName";
+                List<SqlParameter> brandNameParameter =
+                [
+                    new SqlParameter("@BrandName", SqlDbType.VarChar) { Value = drink.Brand.Name }
+                ];
+                var brandIdResult = dbService.ExecuteSelectQuery(brandIdQuery, brandNameParameter);
+                int brandId = brandIdResult.Count > 0 ? Convert.ToInt32(brandIdResult[0]["BrandId"]) : -1;
                 if (brandId == -1)
                 {
                     throw new Exception("Brand does not exist.");
@@ -325,10 +357,19 @@ namespace WinUIApp.Models
                     new SqlParameter("@DrinkUrl", SqlDbType.VarChar) { Value = drink.DrinkImageUrl },
                     new SqlParameter("@AlcoholContent", SqlDbType.Float) { Value = drink.AlcoholContent },
                     new SqlParameter("@BrandId", SqlDbType.Int) { Value = brandId },
-                    new SqlParameter("@DrinkId", SqlDbType.Int) { Value = drink.DrinkId }
-                };
+                    new SqlParameter("@DrinkId", SqlDbType.Int) { Value = drink.Id }
+                ];
+                dbService.ExecuteDataModificationQuery(updateDrinkQuery, drinkParameters);
 
-                dbService.ExecuteQuery(updateDrinkQuery, drinkParams);
+                string getExistingCategoriesQuery = @"SELECT CategoryId FROM DrinkCategory 
+                                                    WHERE DrinkId = @DrinkId";
+                List<SqlParameter> drinkIdParam =
+                [
+                    new SqlParameter("@DrinkId", SqlDbType.Int) { Value = drink.Id }
+                ];
+                var existingCategoriesResult = dbService.ExecuteSelectQuery(getExistingCategoriesQuery, drinkIdParam);
+                HashSet<int> existingCategories = [.. existingCategoriesResult.Select(row => Convert.ToInt32(row["CategoryId"]))];
+                HashSet<int> newCategories = [.. drink.Categories.Select(c => c.Id)];
 
                 const string getExistingCategoriesQuery = "SELECT CategoryId FROM DrinkCategory WHERE DrinkId = @DrinkId";
                 var existingParams = new List<SqlParameter>
@@ -349,8 +390,8 @@ namespace WinUIApp.Models
                     {
                         new SqlParameter("@DrinkId", SqlDbType.Int) { Value = drink.DrinkId },
                         new SqlParameter("@CategoryId", SqlDbType.Int) { Value = categoryId }
-                    };
-                    dbService.ExecuteQuery(insertCategoryQuery, insertParams);
+                    ];
+                    dbService.ExecuteDataModificationQuery(addCategoriesQuery, categoryParameters);
                 }
 
                 foreach (var categoryId in categoriesToDelete)
@@ -360,8 +401,8 @@ namespace WinUIApp.Models
                     {
                         new SqlParameter("@DrinkId", SqlDbType.Int) { Value = drink.DrinkId },
                         new SqlParameter("@CategoryId", SqlDbType.Int) { Value = categoryId }
-                    };
-                    dbService.ExecuteQuery(deleteCategoryQuery, deleteParams);
+                    ];
+                    dbService.ExecuteDataModificationQuery(deleteCategoriesQuery, categoryParameters);
                 }
             }
             catch (Exception ex)
@@ -381,9 +422,8 @@ namespace WinUIApp.Models
 
             try
             {
-                const string query = "SELECT * FROM Category ORDER BY CategoryId;";
-                var result = dbService.ExecuteSelect(query);
-                var categories = new List<Category>();
+                string getCategoriesQuery = "SELECT * FROM Category ORDER BY CategoryId;";
+                var selectResult = dbService.ExecuteSelectQuery(getCategoriesQuery);
 
                 foreach (var row in result)
                 {
@@ -410,11 +450,10 @@ namespace WinUIApp.Models
 
             try
             {
-                const string query = "SELECT * FROM Brand ORDER BY BrandId;";
-                var result = dbService.ExecuteSelect(query);
-                var brands = new List<Brand>();
-
-                foreach (var row in result)
+                string getBrandsQuery = "SELECT * FROM Brand ORDER BY BrandId;";
+                var selectResult = dbService.ExecuteSelectQuery(getBrandsQuery);
+                List<Brand> brands = [];
+                foreach (var row in selectResult)
                 {
                     int id = Convert.ToInt32(row["BrandId"]);
                     string name = row["BrandName"].ToString();
@@ -462,7 +501,7 @@ namespace WinUIApp.Models
 
             try
             {
-                var result = dbService.ExecuteSelect(query, parameters);
+                var selectResult = dbService.ExecuteSelectQuery(query, parameters);
                 var drinks = new List<Drink>();
 
                 foreach (var row in result)
@@ -518,9 +557,14 @@ namespace WinUIApp.Models
                     new SqlParameter("@DrinkId", SqlDbType.Int) { Value = drinkId }
                 };
 
-                var result = dbService.ExecuteSelect(query, parameters);
-                int count = Convert.ToInt32(result[0]["DrinkCount"]);
-                return count > 0;
+                var result = dbService.ExecuteSelectQuery(checkQuery, parameters);
+
+                if (result != null && result.Count > 0)
+                {
+                    int count = Convert.ToInt32(result[0]["DrinkCount"]);
+                    return count > 0;
+                }
+                return false;
             }
             catch (Exception ex)
             {
@@ -549,7 +593,9 @@ namespace WinUIApp.Models
                     new SqlParameter("@DrinkId", SqlDbType.Int) { Value = drinkId }
                 };
 
-                int rowsAffected = dbService.ExecuteQuery(insertQuery, parameters);
+                int rowsAffected = dbService.ExecuteDataModificationQuery(insertQuery, parameters);
+
+
                 return rowsAffected > 0;
             }
             catch (Exception ex)
@@ -578,7 +624,8 @@ namespace WinUIApp.Models
                     new SqlParameter("@DrinkId", SqlDbType.Int) { Value = drinkId }
                 };
 
-                int rowsAffected = dbService.ExecuteQuery(deleteQuery, parameters);
+                int rowsAffected = dbService.ExecuteDataModificationQuery(deleteQuery, parameters);
+
                 return rowsAffected > 0;
             }
             catch (Exception ex)
@@ -611,7 +658,7 @@ namespace WinUIApp.Models
                     new SqlParameter("@VoteTime", SqlDbType.DateTime) { Value = voteTime }
                 };
 
-                var result = dbService.ExecuteSelect(checkQuery, checkParams);
+                var result = dbService.ExecuteSelectQuery(checkQuery, checkParams);
                 int count = Convert.ToInt32(result[0]["VoteCount"]);
 
                 if (count > 0)
@@ -628,7 +675,7 @@ namespace WinUIApp.Models
                         new SqlParameter("@VoteTime", SqlDbType.DateTime) { Value = voteTime }
                     };
 
-                    dbService.ExecuteQuery(updateQuery, updateParams);
+                    dbService.ExecuteDataModificationQuery(updateQuery, updateParams);
                 }
                 else
                 {
@@ -643,7 +690,7 @@ namespace WinUIApp.Models
                         new SqlParameter("@VoteTime", SqlDbType.DateTime) { Value = voteTime }
                     };
 
-                    dbService.ExecuteQuery(insertQuery, insertParams);
+                    dbService.ExecuteDataModificationQuery(insertQuery, insertParams);
                 }
             }
             catch (Exception ex)
@@ -662,13 +709,13 @@ namespace WinUIApp.Models
 
             try
             {
-                const string getDrinkOfTheDayQuery = "SELECT * FROM DrinkOfTheDay;";
-                var result = dbService.ExecuteSelect(getDrinkOfTheDayQuery);
+                string getDrinkOfTheDayQuery = "SELECT * FROM DrinkOfTheDay;";
+                var drinkQueryResult = dbService.ExecuteSelectQuery(getDrinkOfTheDayQuery);
 
                 if (result.Count == 0)
                 {
-                    SetDrinkOfTheDay();
-                    result = dbService.ExecuteSelect(getDrinkOfTheDayQuery);
+                    setDrinkOfTheDay();
+                    drinkQueryResult = dbService.ExecuteSelectQuery(getDrinkOfTheDayQuery);
                 }
 
                 int drinkId = Convert.ToInt32(result[0]["DrinkId"]);
@@ -676,27 +723,29 @@ namespace WinUIApp.Models
 
                 if (drinkTime.Date != DateTime.UtcNow.Date)
                 {
-                    ResetDrinkOfTheDay();
-                    result = dbService.ExecuteSelect(getDrinkOfTheDayQuery);
-                    drinkId = Convert.ToInt32(result[0]["DrinkId"]);
+                    resetDrinkOfTheDay();
+                    drinkQueryResult = dbService.ExecuteSelectQuery(getDrinkOfTheDayQuery);
+                    drinkId = Convert.ToInt32(drinkQueryResult[0]["DrinkId"]);
                 }
 
                 const string getDrinkQuery = "SELECT D.BrandId, D.DrinkName, D.DrinkURL, D.AlcoholContent FROM Drink AS D WHERE D.DrinkId = @DrinkId;";
                 var drinkParams = new List<SqlParameter>
                 {
                     new SqlParameter("@DrinkId", SqlDbType.Int) { Value = drinkId }
-                };
-                var drinkResult = dbService.ExecuteSelect(getDrinkQuery, drinkParams);
+                ];
+                drinkQueryResult = dbService.ExecuteSelectQuery(getDrinkQuery, drinkIdParameter);
 
                 if (drinkResult.Count == 0)
                 {
                     throw new Exception($"No drink of the day with id {drinkId} found.");
                 }
 
-                int brandId = Convert.ToInt32(drinkResult[0]["BrandId"]);
-                string drinkName = drinkResult[0]["DrinkName"].ToString();
-                string drinkUrl = drinkResult[0]["DrinkURL"].ToString();
-                float alcoholContent = Convert.ToSingle(drinkResult[0]["AlcoholContent"]);
+                int brandId = Convert.ToInt32(drinkQueryResult[0]["BrandId"]);
+                string drinkName = drinkQueryResult[0]["DrinkName"].ToString();
+                string drinkURL = drinkQueryResult[0]["DrinkURL"].ToString();
+                float alcoholContent = (float)Convert.ToDouble(drinkQueryResult[0]["AlcoholContent"]);
+                string getCategoriesQuery = "SELECT C.CategoryId, C.CategoryName FROM Category AS C JOIN DrinkCategory AS DC ON DC.CategoryId = C.CategoryId WHERE DC.DrinkId = @DrinkId;";
+                var categoryQueryResult = dbService.ExecuteSelectQuery(getCategoriesQuery, drinkIdParameter);
 
                 const string getCategoriesQuery = "SELECT C.CategoryId, C.CategoryName FROM Category AS C JOIN DrinkCategory AS DC ON DC.CategoryId = C.CategoryId WHERE DC.DrinkId = @DrinkId;";
                 var categoryResult = dbService.ExecuteSelect(getCategoriesQuery, drinkParams);
@@ -713,8 +762,8 @@ namespace WinUIApp.Models
                 var brandParams = new List<SqlParameter>
                 {
                     new SqlParameter("@BrandId", SqlDbType.Int) { Value = brandId }
-                };
-                var brandResult = dbService.ExecuteSelect(getBrandQuery, brandParams);
+                ];
+                var brandQueryResult = dbService.ExecuteSelectQuery(getBrandQuery, brandIdParameter);
 
                 string brandName = brandResult[0]["BrandName"].ToString();
                 var brand = new Brand(brandId, brandName);
@@ -735,17 +784,30 @@ namespace WinUIApp.Models
         {
             var dbService = DatabaseService.Instance;
 
+            List<SqlParameter> voteDayParameter =
+            [
+                new SqlParameter("@VoteTime", SqlDbType.DateTime) { Value = DateTime.UtcNow.Date.AddDays(-1) }
+            ];
+
+            var topVoteCountResult = dbService.ExecuteSelectQuery(topVoteCountQuery, voteDayParameter);
+
+            if (topVoteCountResult.Count == 0)
+            {
+                return getRandomDrinkId();
+            }
+
+            return Convert.ToInt32(topVoteCountResult[0]["DrinkId"]);
+        }
+
+        public int getRandomDrinkId()
+        {
+            var dbService = DatabaseService.Instance;
             try
             {
-                const string query = @"
-                    SELECT TOP 1 DrinkId
-                    FROM Vote
-                    WHERE CONVERT(date, VoteTime) = CONVERT(date, GETDATE())
-                    GROUP BY DrinkId
-                    ORDER BY COUNT(*) DESC;";
-
-                var result = dbService.ExecuteSelect(query);
-                if (result.Count > 0)
+                // SQL Server uses NEWID() for random ordering
+                string getRandomDrinkIdQuery = "SELECT TOP 1 DrinkId FROM Drink ORDER BY NEWID();";
+                var selectResult = dbService.ExecuteSelectQuery(getRandomDrinkIdQuery);
+                if (selectResult.Count > 0)
                 {
                     return Convert.ToInt32(result[0]["DrinkId"]);
                 }
@@ -777,7 +839,7 @@ namespace WinUIApp.Models
                     return Convert.ToInt32(result[0]["DrinkId"]);
                 }
 
-                throw new Exception("No drinks found in the database.");
+                dbService.ExecuteDataModificationQuery(insertDrinkOfTheDayQuery, parameters);
             }
             catch (Exception ex)
             {
@@ -802,7 +864,7 @@ namespace WinUIApp.Models
                     GROUP BY DrinkId
                     ORDER BY COUNT(*) DESC;";
 
-                dbService.ExecuteQuery(insertQuery);
+                dbService.ExecuteDataModificationQuery(updateDrinkOfTheDayQuery, parameters);
             }
             catch (Exception ex)
             {

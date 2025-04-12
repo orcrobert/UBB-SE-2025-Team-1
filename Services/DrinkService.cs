@@ -7,151 +7,164 @@ namespace WinUIApp.Services
 {
     public class DrinkService
     {
-        private DrinkModel drinkModel;
+        private DrinkModel _drinkModel;
+        private const int DefaultPersonalDrinkCount = 1;
         public DrinkService()
         {
-            drinkModel = new DrinkModel();
+            _drinkModel = new DrinkModel();
         }
 
-        public Drink? getDrinkById(int drinkId)
+        public Drink? GetDrinkById(int drinkId)
         {
             try
             {
                 return drinkModel.GetDrinkById(drinkId);
             }
-            catch (Exception e)
+            catch (Exception drinkRetrievalException)
             {
-                throw new Exception($"Error happened while getting drink with ID {drinkId}:", e);
+                throw new Exception($"Error happened while getting drink with ID {drinkId}:", drinkRetrievalException);
             }
         }
-        public List<Drink> getDrinks(string? searchedTerm, List<string>? brandNameFilter, List<string>? categoryFilter, float? minAlcohol, float? maxAlcohol, Dictionary<string, bool>? orderBy)
+        public List<Drink> GetDrinks(string? searchKeyword, List<string>? drinkBrandNameFilter, List<string>? drinkCategoryFilter, float? minimumAlcoholPercentage, float? maximumAlcoholPercentage, Dictionary<string, bool>? orderingCriteria)
         {
             try
             {
+
                 return drinkModel.GetDrinks(searchedTerm, brandNameFilter, categoryFilter, minAlcohol, maxAlcohol, orderBy);
 
             }
-            catch (Exception e)
+            catch (Exception drinksRetrievalException)
             {
-                throw new Exception("Error happened while getting drinks:", e);
+                throw new Exception("Error happened while getting drinks:", drinksRetrievalException);
             }
         }
 
-        public void addDrink(string drinkName, string drinkUrl, List<Category> categories, string brandName, float alcoholContent)
+        public void AddDrink(string inputedDrinkName, string inputedDrinkPath, List<Category> inputedDrinkCategories, string inputedDrinkBrandName, float inputedAlcoholPercentage)
         {
             try
             {
                 drinkModel.AddDrink(drinkName, drinkUrl, categories, brandName, alcoholContent);
             }
-            catch (Exception e)
+            catch (Exception addingDrinkException)
             {
-                throw new Exception("Error happened while adding a drink:", e);
+                throw new Exception("Error happened while adding a drink:", addingDrinkException);
             }
         }
 
-        public void updateDrink(Drink drink)
+        public void UpdateDrink(Drink drink)
         {
             try
             {
                 drinkModel.UpdateDrink(drink);
             }
-            catch (Exception e)
+            catch (Exception updateDrinkException)
             {
-                throw new Exception("Error happened while updating a drink:", e);
+                throw new Exception("Error happened while updating a drink:", updateDrinkException);
             }
         }
 
-        public void deleteDrink(int drinkId)
+        public void DeleteDrink(int drinkId)
         {
             try
             {
                 drinkModel.DeleteDrink(drinkId);
             }
-            catch (Exception e)
+            catch (Exception deleteDrinkException)
             {
-                throw new Exception("Error happened while deleting a drink:", e);
+                throw new Exception("Error happened while deleting a drink:", deleteDrinkException);
             }
         }
 
-        public List<Category> getDrinkCategories()
+        public List<Category> GetDrinkCategories()
         {
             try
             {
                 return drinkModel.GetDrinkCategories();
             }
-            catch (Exception e)
+            catch (Exception drinkCategoriesRetrievalException)
             {
-                throw new Exception("Error happened while getting drink categories:", e);
+                throw new Exception("Error happened while getting drink categories:", drinkCategoriesRetrievalException);
             }
         }
 
-        public List<Brand> getDrinkBrands()
+        public List<Brand> GetDrinkBrandNames()
         {
             try
             {
                 return drinkModel.GetDrinkBrands();
             }
-            catch (Exception e)
+            catch (Exception drinkBrandNamesRetrievalException)
             {
-                throw new Exception("Error happened while getting drink brands:", e);
+                throw new Exception("Error happened while getting drink brands:", drinkBrandNamesRetrievalException);
+            }
+        }
+        public List<Drink> GetUserPersonalDrinkList(int userId, int maximumDrinkCount = DefaultPersonalDrinkCount)
+        {
+            try
+            {
+                return _drinkModel.getPersonalDrinkList(userId, maximumDrinkCount);
+            }
+            catch (Exception personalDrinkListRetrievalException)
+            {
+                throw new Exception("Error getting personal drink list:", personalDrinkListRetrievalException);
             }
         }
 
-        public List<Drink> getPersonalDrinkList(int userId, int numberOfDrinks = 1)
+        public bool IsDrinkInUserPersonalList(int userId, int drinkId)
         {
             try
             {
                 return drinkModel.GetPersonalDrinkList(userId, numberOfDrinks);
             }
-            catch (Exception e)
+            catch (Exception checkingUserPersonalListException)
             {
-                throw new Exception("Error getting personal drink list:", e);
+                throw new Exception("Error checking if the drink is in the user's personal list.", checkingUserPersonalListException);
             }
         }
 
-        public bool isDrinkInPersonalList(int userId, int drinkId)
+        public bool AddToUserPersonalDrinkList(int userId, int drinkId)
         {
             try
             {
                 return drinkModel.IsDrinkInPersonalList(userId, drinkId);
             }
-            catch (Exception e)
+            catch (Exception addDrinkToUserPersonalListException)
             {
-                throw new Exception("Error adding drink to personal list:", e);
+                throw new Exception("Error adding drink to personal list:", addDrinkToUserPersonalListException);
             }
         }
 
-        public bool addToPersonalDrinkList(int userId, int drinkId)
+        public bool DeleteFromUserPersonalDrinkList(int userId, int drinkId)
         {
             try
             {
                 return drinkModel.AddToPersonalDrinkList(userId, drinkId);
             }
-            catch (Exception e)
+            catch (Exception deleteFromUserPersonalDrinkListException)
             {
-                throw new Exception("Error adding drink to personal list:", e);
+                throw new Exception("Error deleting drink from personal list:", deleteFromUserPersonalDrinkListException);
             }
         }
 
-        public bool deleteFromPersonalDrinkList(int userId, int drinkId)
+        public void VoteDrinkOfTheDay(int drinkId, int userId)
         {
             try
             {
                 return drinkModel.DeleteFromPersonalDrinkList(userId, drinkId);
             }
-            catch (Exception e)
+            catch (Exception voteDrinkOfTheDayException)
             {
-                throw new Exception("Error deleting drink from personal list:", e);
+                throw new Exception("Error voting drink:", voteDrinkOfTheDayException);
             }
         }
 
-        public void voteDrinkOfTheDay(int drinkId, int userId)
+        public Drink GetDrinkOfTheDay()
         {
             try
             {
                 drinkModel.VoteDrinkOfTheDay(drinkId, userId);
             }
-            catch (Exception e)
+            catch (Exception getDrinkOfTheDayException)
             {
                 throw new Exception("Error voting drink:", e);
             }
@@ -165,7 +178,7 @@ namespace WinUIApp.Services
             }
             catch (Exception e)
             {
-                throw new Exception("Error getting drink of the day:", e);
+                throw new Exception("Error getting drink of the day:" + e.Message, e);
             }
         }
     }

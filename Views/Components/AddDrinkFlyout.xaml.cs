@@ -1,3 +1,15 @@
+using Microsoft.UI;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using WinUIApp.Models;
+using WinUIApp.Services;
+using WinUIApp.Services.DummyServices;
+using WinUIApp.ViewModels;
+
 // <copyright file="AddDrinkFlyout.xaml.cs" company="PlaceholderCompany">
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>

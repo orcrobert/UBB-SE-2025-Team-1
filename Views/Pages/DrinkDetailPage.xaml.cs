@@ -3,7 +3,7 @@ using Microsoft.UI.Xaml.Navigation;
 using WinUIApp.Models;
 using WinUIApp.Views.ViewModels;
 using WinUIApp.Views.Components;
-using WinUIApp.Services.DummyServies;
+using WinUIApp.Services.DummyServices;
 using WinUIApp.Services;
 using Microsoft.UI.Xaml;
 using WinUIApp.Models;
@@ -11,7 +11,7 @@ namespace WinUIApp.Views.Pages
 {
     public sealed partial class DrinkDetailPage : Page
     {
-        public DrinkDetailPageViewModel ViewModel { get; } = new DrinkDetailPageViewModel(new Services.DrinkService(), new Services.DummyServies.DrinkReviewService(), new Services.DummyServies.UserService(), new Services.DummyServies.AdminService());
+        public DrinkDetailPageViewModel ViewModel { get; } = new DrinkDetailPageViewModel(new Services.DrinkService(), new Services.DummyServices.DrinkReviewService(), new Services.DummyServices.UserService(), new Services.DummyServices.AdminService());
 
         public DrinkDetailPage()
         {

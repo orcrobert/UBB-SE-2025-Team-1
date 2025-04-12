@@ -1,3 +1,16 @@
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
+using Microsoft.UI.Xaml.Media;
+using WinUIApp.Models;
+using WinUIApp.Services;
+using WinUIApp.Services.DummyServices;
+using WinUIApp.ViewModels;
+using WinUIApp.Views.Pages;
+
 // <copyright file="DrinkListComponent.xaml.cs" company="PlaceholderCompany">
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>

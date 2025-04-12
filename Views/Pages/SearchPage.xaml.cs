@@ -22,7 +22,7 @@ namespace WinUIApp.Views.Pages
         {
             base.OnNavigatedTo(e);
             MainWindow.PreviousPage = typeof(SearchPage);
-            _searchPageViewModel = new SearchPageViewModel(new Services.DrinkService(), new Services.DummyServies.DrinkReviewService());
+            _searchPageViewModel = new SearchPageViewModel(new Services.DrinkService(), new Services.DummyServices.DrinkReviewService());
             SortSelectorControl.SetSortOrder(_searchPageViewModel.IsAscending);
             if (e.Parameter is SearchPageNavigationParameters parameters)
             {
@@ -88,7 +88,7 @@ namespace WinUIApp.Views.Pages
         private void LoadCategoriesFilter()
         {
             IEnumerable<Category> categories = _searchPageViewModel.GetCategories();
-            IEnumerable<Category> initialCategories = getInitialCategories();
+            IEnumerable<Category> initialCategories = GetInitialCategories();
             CategoryFilterControl.SetCategoriesFilter(categories, initialCategories);
         }
 
@@ -97,12 +97,11 @@ namespace WinUIApp.Views.Pages
             _searchPageViewModel.SetCategoryFilter(categories);
         }
 
-        private List<Category> getInitialCategories()
+        private List<Category> GetInitialCategories()
         {
             return _searchPageViewModel.InitialCategories;
         }
 
-        // Brand filter
 
         private void LoadBrandsFilter()
         {

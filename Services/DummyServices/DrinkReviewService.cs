@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using WinUIApp.Models;
 
-namespace WinUIApp.Services.DummyServies
+namespace WinUIApp.Services.DummyServices
 {
     public class DrinkReviewService
     {
-        private HashSet<Review> dummyReviews = new HashSet<Review>
-{
+        private readonly HashSet<Review> dummyReviews =
+[
     new Review(1, 4.5f, 1, "Fantastic!", "Absolutely loved it!", DateTime.Now.AddDays(-3)),
     new Review(2, 3.0f, 1, "Average", "Not the best, not the worst.", DateTime.Now.AddDays(-2)),
     new Review(3, 5.0f, 1, "Perfection", "Best drink ever!", DateTime.Now.AddDays(-1)),
@@ -54,7 +54,7 @@ namespace WinUIApp.Services.DummyServies
     new Review(9, 1.5f, 13, "Horrible", "Worst drink ever.", DateTime.Now.AddDays(-6)),
     new Review(8, 4.2f, 13, "Pleasantly surprised", "Really nice drink.", DateTime.Now.AddDays(-3)),
     new Review(7, 4.0f, 13, "Pretty good", "Would have it again.", DateTime.Now.AddDays(-1))
-};
+];
 
 
         public List<Review> GetReviewsByID(int drinkID)

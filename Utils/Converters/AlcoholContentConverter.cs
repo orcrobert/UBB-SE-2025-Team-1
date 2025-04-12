@@ -3,7 +3,7 @@ using System;
 
 namespace WinUIApp.Utils.Converters
 {
-    public class AlcoholContentConverter : IValueConverter
+    public partial class AlcoholContentConverter : IValueConverter
     {
         private const string DefaultAlcoholPercentage = "0%";
         private const string AlcoholPercentageFormat = "{0}%";

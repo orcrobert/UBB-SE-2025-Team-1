@@ -13,7 +13,7 @@ namespace WinUIApp.Services
     public class DatabaseService
     {
         private static DatabaseService _databaseServiceInstance;
-        private static readonly object _databaseServiceInstanceLock = new object();
+        private static readonly object _databaseServiceInstanceLock = new ();
         private readonly DatabaseConnection _databaseConnection;
 
 
@@ -50,25 +50,24 @@ namespace WinUIApp.Services
             try
             {
                 _databaseConnection.OpenConnection();
-                using (var sqlSelectCommand = new SqlCommand(sqlSelectQuery, _databaseConnection.GetConnection()))
+                using var sqlSelectCommand = new SqlCommand(sqlSelectQuery, _databaseConnection.GetConnection());
+                if (sqlSelectQueryParameters != null)
                 {
-                    if (sqlSelectQueryParameters != null)
-                    {
-                        sqlSelectCommand.Parameters.AddRange(sqlSelectQueryParameters.ToArray());
-                    }
+                    #pragma warning disable IDE0305
+                    sqlSelectCommand.Parameters.AddRange(sqlSelectQueryParameters.ToArray());
+                    #pragma warning restore IDE0305
 
-                    using (var sqlDataReader = sqlSelectCommand.ExecuteReader())
+                }
+
+                using var sqlDataReader = sqlSelectCommand.ExecuteReader();
+                while (sqlDataReader.Read())
+                {
+                    var queryResultRowData = new Dictionary<string, object>();
+                    for (int currentColumnIndex = 0; currentColumnIndex < sqlDataReader.FieldCount; currentColumnIndex++)
                     {
-                        while (sqlDataReader.Read())
-                        {
-                            var queryResultRowData = new Dictionary<string, object>();
-                            for (int currentColumnIndex = 0; currentColumnIndex < sqlDataReader.FieldCount; currentColumnIndex++)
-                            {
-                                queryResultRowData[sqlDataReader.GetName(currentColumnIndex)] = sqlDataReader.GetValue(currentColumnIndex);
-                            }
-                            selectQueryResults.Add(queryResultRowData);
-                        }
+                        queryResultRowData[sqlDataReader.GetName(currentColumnIndex)] = sqlDataReader.GetValue(currentColumnIndex);
                     }
+                    selectQueryResults.Add(queryResultRowData);
                 }
             }
             catch (Exception executeSelectQueryException)
@@ -90,15 +89,15 @@ namespace WinUIApp.Services
             try
             {
                 _databaseConnection.OpenConnection();
-                using (var dataModificationQueryCommand = new SqlCommand(sqlDataModificationQuery, _databaseConnection.GetConnection()))
+                using var dataModificationQueryCommand = new SqlCommand(sqlDataModificationQuery, _databaseConnection.GetConnection());
+                if (sqlDataModificationQueryParameters != null)
                 {
-                      if (sqlDataModificationQueryParameters != null)
-                        {
-                            dataModificationQueryCommand.Parameters.AddRange(sqlDataModificationQueryParameters.ToArray());
-                        }
-                    numberOfRowsAffectedByQuery = dataModificationQueryCommand.ExecuteNonQuery();
+                    #pragma warning disable IDE0305
+                    dataModificationQueryCommand.Parameters.AddRange(sqlDataModificationQueryParameters.ToArray());
+                    #pragma warning restore IDE0305
 
                 }
+                numberOfRowsAffectedByQuery = dataModificationQueryCommand.ExecuteNonQuery();
             }
             catch (Exception dataModificationQueryExecutionException)
             {

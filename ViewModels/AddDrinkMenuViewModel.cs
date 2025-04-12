@@ -7,7 +7,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using WinUIApp.Models;
 using WinUIApp.Services;
-using WinUIApp.Services.DummyServies;
+using WinUIApp.Services.DummyServices;
 
 namespace WinUIApp.ViewModels
 {   /// <summary>

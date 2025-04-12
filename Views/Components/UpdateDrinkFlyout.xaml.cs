@@ -1,3 +1,17 @@
+using Microsoft.UI;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media;
+using Org.BouncyCastle.Asn1.Ocsp;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using WinUIApp.Models;
+using WinUIApp.Services;
+using WinUIApp.Services.DummyServices;
+using WinUIApp.ViewModels;
+
 // <copyright file="UpdateDrinkFlyout.xaml.cs" company="PlaceholderCompany">
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
@@ -152,8 +166,8 @@ namespace WinUIApp.Views.Components
                 this.viewModel.ValidateUpdatedDrinkDetails();
                 this.DrinkToUpdate.CategoryList = this.viewModel.GetSelectedCategories();
 
-                var adminService = new WinUIApp.Services.DummyServies.AdminService();
-                bool isAdmin = adminService.IsAdmin(this.UserId);
+                var adminService = new WinUIApp.Services.DummyServices.AdminService();
+                bool isAdmin = adminService.IsAdmin(UserId);
 
                 string message;
 

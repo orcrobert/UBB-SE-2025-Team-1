@@ -57,7 +57,7 @@ namespace WinUIApp.Views.Components
 
         private void UpdateDrinkButton_Click(object sender, RoutedEventArgs eventArguments)
         {
-            var userService = new WinUIApp.Services.DummyServies.UserService();
+            var userService = new WinUIApp.Services.DummyServices.UserService();
             var flyout = new Flyout
             {
                 Content = new UpdateDrinkFlyout

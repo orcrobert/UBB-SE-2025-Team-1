@@ -14,13 +14,7 @@ namespace WinUIApp.Database
 
         static DatabaseConnection()
         {
-            _connectionString = "Data Source=sql6032.site4now.net;" +
-        "Initial Catalog=db_aaae7e_beatrice;" +
-        "User ID=db_aaae7e_beatrice_admin;" +
-        "Password=bea12345;" +
-        "Encrypt=True;" +
-        "TrustServerCertificate=True;";
-        }
+            _connectionString = "Data Source=DESKTOP-TE49281;Initial Catalog=DrinkData;Integrated Security=True;TrustServerCertificate=True";        }
 
 
 

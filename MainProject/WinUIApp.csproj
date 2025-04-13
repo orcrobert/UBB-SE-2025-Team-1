@@ -75,10 +75,12 @@
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.6.250205002" />
     <PackageReference Include="MySql.Data" Version="9.2.0" />
     <PackageReference Include="MySqlConnector" Version="2.4.0" />
+    <PackageReference Include="NUnit" Version="4.3.2" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="xunit.extensibility.core" Version="2.9.3" />
   </ItemGroup>
   <ItemGroup>
     <None Update="Styles\GlobalStyles.xaml">

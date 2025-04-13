@@ -153,11 +153,11 @@ namespace WinUIApp.Services
             }
         }
 
-        public Drink VoteDrinkOfTheDAy(int drinkId, int userId)
+        public Drink VoteDrinkOfTheDAy(int userId, int drinkId)
         {
             try
             {
-                this._drinkModel.VoteDrinkOfTheDay(drinkId, userId);
+                this._drinkModel.VoteDrinkOfTheDay(userId, drinkId);
                 return this._drinkModel.GetDrinkById(drinkId) ?? throw new Exception("Drink not found after voting.");
             }
             catch (Exception voteDrinkOfTheDayException)

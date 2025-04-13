@@ -623,10 +623,10 @@ namespace WinUIApp.Models
                 var checkParams = new List<SqlParameter>
                 {
                     new ("@UserId", SqlDbType.Int) { Value = userId },
-                    new ("@VoteTime", SqlDbType.DateTime) { Value = voteTime }
+                    new ("@VoteTime", SqlDbType.DateTime) { Value = voteTime },
                 };
 
-                var result = dataBaseService.ExecuteSelectQuery(checkQuery, checkParams);
+                var result = this.dataBaseService.ExecuteSelectQuery(checkQuery, checkParams);
                 int count = Convert.ToInt32(result[0]["VoteCount"]);
 
                 if (count > 0)
@@ -640,10 +640,10 @@ namespace WinUIApp.Models
                     {
                         new ("@DrinkId", SqlDbType.Int) { Value = drinkId },
                         new ("@UserId", SqlDbType.Int) { Value = userId },
-                        new ("@VoteTime", SqlDbType.DateTime) { Value = voteTime }
+                        new ("@VoteTime", SqlDbType.DateTime) { Value = voteTime },
                     };
 
-                    dataBaseService.ExecuteDataModificationQuery(updateQuery, updateParams);
+                    this.dataBaseService.ExecuteDataModificationQuery(updateQuery, updateParams);
                 }
                 else
                 {
@@ -655,10 +655,10 @@ namespace WinUIApp.Models
                     {
                         new ("@UserId", SqlDbType.Int) { Value = userId },
                         new ("@DrinkId", SqlDbType.Int) { Value = drinkId },
-                        new ("@VoteTime", SqlDbType.DateTime) { Value = voteTime }
+                        new ("@VoteTime", SqlDbType.DateTime) { Value = voteTime },
                     };
 
-                    dataBaseService.ExecuteDataModificationQuery(insertQuery, insertParams);
+                    this.dataBaseService.ExecuteDataModificationQuery(insertQuery, insertParams);
                 }
             }
             catch (Exception ex)

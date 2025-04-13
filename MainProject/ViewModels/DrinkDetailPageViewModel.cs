@@ -149,7 +149,7 @@ namespace WinUIApp.Views.ViewModels
             int userId = _userService.GetCurrentUserId();
             try
             {
-                _drinkService.VoteDrinkOfTheDAy(Drink.DrinkId, userId); // Corrected method name
+                _drinkService.VoteDrinkOfTheDAy(userId, Drink.DrinkId);
             }
             catch (Exception VoteForDrinkException)
             {

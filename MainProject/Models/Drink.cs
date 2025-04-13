@@ -8,7 +8,8 @@ namespace WinUIApp.Models
     /// </summary>
     public class Drink
     {
-        private const float MaxAlcoholContent = 100.0f;
+        private const float MaximumAlcoholContent = 100.0f;
+        private const int MinimumAlcohoolContent = 0;
 
         public int DrinkId { get; set; }
 
@@ -41,10 +42,10 @@ namespace WinUIApp.Models
             get => _alcoholContent;
             set
             {
-                if (value < 0)
+                if (value < MinimumAlcohoolContent)
                     throw new ArgumentOutOfRangeException(nameof(AlcoholContent), "Alcohol content must be a positive value.");
-                if (value > MaxAlcoholContent)
-                    throw new ArgumentOutOfRangeException(nameof(AlcoholContent), $"Alcohol content must not exceed {MaxAlcoholContent}.");
+                if (value > MaximumAlcoholContent)
+                    throw new ArgumentOutOfRangeException(nameof(AlcoholContent), $"Alcohol content must not exceed {MaximumAlcoholContent}.");
                 _alcoholContent = value;
             }
         }

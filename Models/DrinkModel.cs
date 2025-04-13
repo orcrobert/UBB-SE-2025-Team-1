@@ -668,8 +668,6 @@ namespace WinUIApp.Models
         /// <returns>The Drink of the Day.</returns>
         public Drink GetDrinkOfTheDay()
         {
-            var dataBaseService = DatabaseService.Instance;
-
             try
             {
                 string getDrinkOfTheDayQuery = "SELECT * FROM DrinkOfTheDay;";
@@ -694,7 +692,7 @@ namespace WinUIApp.Models
                 const string getDrinkQuery = "SELECT D.BrandId, D.DrinkName, D.DrinkURL, D.AlcoholContent FROM Drink AS D WHERE D.DrinkId = @DrinkId;";
                 var drinkParams = new List<SqlParameter>
                 {
-                    new ("@DrinkId", SqlDbType.Int) { Value = drinkId }
+                    new("@DrinkId", SqlDbType.Int) { Value = drinkId }
                 };
                 drinkQueryResult = dataBaseService.ExecuteSelectQuery(getDrinkQuery, drinkParams);
 
@@ -722,7 +720,7 @@ namespace WinUIApp.Models
                 const string getBrandQuery = "SELECT BrandName FROM Brand WHERE BrandId = @BrandId;";
                 var brandParams = new List<SqlParameter>
                 {
-                    new ("@BrandId", SqlDbType.Int) { Value = brandId }
+                    new("@BrandId", SqlDbType.Int) { Value = brandId }
                 };
                 var brandQueryResult = dataBaseService.ExecuteSelectQuery(getBrandQuery, brandParams);
 
@@ -733,7 +731,7 @@ namespace WinUIApp.Models
             }
             catch (Exception ex)
             {
-                throw new Exception("Failed to retrieve drink of the day." + ex.Message, ex);
+                throw new Exception("Failed to retrieve drink of the day.", ex);
             }
         }
 
@@ -743,8 +741,6 @@ namespace WinUIApp.Models
         /// <returns>The drink ID with the most votes.</returns>
         public int GetCurrentTopVotedDrink()
         {
-            var dataBaseService = DatabaseService.Instance;
-
             const string topVoteCountQuery = @"
                 SELECT TOP 1 DrinkId, COUNT(*) AS VoteCount
                 FROM Vote
@@ -752,10 +748,10 @@ namespace WinUIApp.Models
                 GROUP BY DrinkId
                 ORDER BY COUNT(*) DESC;";
 
-            List<SqlParameter> voteDayParameter =
-            [
-                new SqlParameter("@VoteTime", SqlDbType.DateTime) { Value = DateTime.UtcNow.Date.AddDays(-1) }
-            ];
+            var voteDayParameter = new List<SqlParameter>
+            {
+                new("@VoteTime", SqlDbType.DateTime) { Value = DateTime.UtcNow.Date.AddDays(-1) }
+            };
 
             var topVoteCountResult = dataBaseService.ExecuteSelectQuery(topVoteCountQuery, voteDayParameter);
 
@@ -767,11 +763,15 @@ namespace WinUIApp.Models
             return Convert.ToInt32(topVoteCountResult[0]["DrinkId"]);
         }
 
+        /// <summary>
+        /// Gets a random drink ID from the database.
+        /// </summary>
+        /// <returns>A random drink ID or -1 if no drinks are available.</returns>
         public int GetRandomDrinkId()
         {
             try
             {
-                string getRandomDrinkIdQuery = "SELECT TOP 1 DrinkId FROM Drink ORDER BY NEWID();";
+                const string getRandomDrinkIdQuery = "SELECT TOP 1 DrinkId FROM Drink ORDER BY NEWID();";
                 var selectResult = dataBaseService.ExecuteSelectQuery(getRandomDrinkIdQuery);
                 if (selectResult.Count > 0)
                 {
@@ -782,26 +782,29 @@ namespace WinUIApp.Models
             }
             catch (Exception ex)
             {
-                throw new Exception("Failed to retrieve top-voted drink.", ex);
+                throw new Exception("Failed to retrieve random drink ID.", ex);
             }
         }
 
         /// <summary>
         /// Sets the Drink of the Day to the top-voted drink.
         /// </summary>
-        public void SetDrinkOfTheDay()
+        private void SetDrinkOfTheDay()
         {
             try
             {
-                string insertQuery = @"
-                    INSERT INTO DrinkOfTheDay (DrinkId, DrinkTime)
-                    SELECT TOP 1 DrinkId, GETDATE()
-                    FROM Vote
-                    WHERE CONVERT(date, VoteTime) = CONVERT(date, GETDATE())
-                    GROUP BY DrinkId
-                    ORDER BY COUNT(*) DESC;";
+                int topVotedDrinkId = GetCurrentTopVotedDrink();
 
-                dataBaseService.ExecuteDataModificationQuery(insertQuery, null);
+                    const string insertQuery = @"
+                        INSERT INTO DrinkOfTheDay (DrinkId, DrinkTime)
+                        VALUES (@DrinkId, GETDATE());";
+
+                    var parameters = new List<SqlParameter>
+                    {
+                        new("@DrinkId", SqlDbType.Int) { Value = topVotedDrinkId }
+                    };
+
+                    dataBaseService.ExecuteDataModificationQuery(insertQuery, parameters);
             }
             catch (Exception ex)
             {
@@ -811,10 +814,8 @@ namespace WinUIApp.Models
         /// <summary>
         /// Resets the Drink of the Day to the new top-voted drink for today.
         /// </summary>
-        public void ResetDrinkOfTheDay()
+        private void ResetDrinkOfTheDay()
         {
-            var dataBaseService = DatabaseService.Instance;
-
             try
             {
                 const string deleteQuery = "DELETE FROM DrinkOfTheDay;";

@@ -1,25 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using WinUIApp.Models;
-
 
 namespace WinUIApp.Services
 {
     public class DrinkService : IDrinkService
     {
-        private readonly DrinkModel drinkModel;
+        private IDrinkModel _drinkModel;
         private const int DefaultPersonalDrinkCount = 1;
+
+
+
+
         public DrinkService()
         {
-            drinkModel = new DrinkModel();
+            this._drinkModel = new DrinkModel();
         }
+
+        public DrinkService(IDrinkModel drinkModel)
+        {
+            this._drinkModel = drinkModel;
+        }
+
 
         public Drink? GetDrinkById(int drinkId)
         {
             try
             {
-                return drinkModel.GetDrinkById(drinkId);
+                return this._drinkModel.GetDrinkById(drinkId);
             }
             catch (Exception drinkRetrievalException)
             {
@@ -30,7 +38,7 @@ namespace WinUIApp.Services
         {
             try
             {
-                return drinkModel.GetDrinks(searchKeyword, drinkBrandNameFilter, drinkCategoryFilter, minimumAlcoholPercentage, maximumAlcoholPercentage, orderingCriteria);
+                return this._drinkModel.GetDrinks(searchKeyword, drinkBrandNameFilter, drinkCategoryFilter, minimumAlcoholPercentage, maximumAlcoholPercentage, orderingCriteria);
             }
             catch (Exception drinksRetrievalException)
             {
@@ -42,7 +50,7 @@ namespace WinUIApp.Services
         {
             try
             {
-                drinkModel.AddDrink(inputtedDrinkName, inputtedDrinkPath, inputtedDrinkCategories, inputtedDrinkBrandName, inputtedAlcoholPercentage);
+                this._drinkModel.AddDrink(inputtedDrinkName, inputtedDrinkPath, inputtedDrinkCategories, inputtedDrinkBrandName, inputtedAlcoholPercentage);
             }
             catch (Exception addingDrinkException)
             {
@@ -54,7 +62,7 @@ namespace WinUIApp.Services
         {
             try
             {
-                drinkModel.UpdateDrink(drink);
+                this._drinkModel.UpdateDrink(drink);
             }
             catch (Exception updateDrinkException)
             {
@@ -66,7 +74,7 @@ namespace WinUIApp.Services
         {
             try
             {
-                drinkModel.DeleteDrink(drinkId);
+                this._drinkModel.DeleteDrink(drinkId);
             }
             catch (Exception deleteDrinkException)
             {
@@ -78,7 +86,7 @@ namespace WinUIApp.Services
         {
             try
             {
-                return drinkModel.GetDrinkCategories();
+                return this._drinkModel.GetDrinkCategories();
             }
             catch (Exception drinkCategoriesRetrievalException)
             {
@@ -90,7 +98,7 @@ namespace WinUIApp.Services
         {
             try
             {
-                return drinkModel.GetDrinkBrands();
+                return this._drinkModel.GetDrinkBrands();
             }
             catch (Exception drinkBrandNamesRetrievalException)
             {
@@ -101,7 +109,7 @@ namespace WinUIApp.Services
         {
             try
             {
-                return drinkModel.GetPersonalDrinkList(userId, maximumDrinkCount);
+                return this._drinkModel.GetPersonalDrinkList(userId, maximumDrinkCount);
             }
             catch (Exception personalDrinkListRetrievalException)
             {
@@ -113,7 +121,7 @@ namespace WinUIApp.Services
         {
             try
             {
-                return drinkModel.IsDrinkInPersonalList(userId, drinkId);
+                return this._drinkModel.IsDrinkInPersonalList(userId, drinkId);
             }
             catch (Exception checkingUserPersonalListException)
             {
@@ -125,7 +133,7 @@ namespace WinUIApp.Services
         {
             try
             {
-                return drinkModel.AddToPersonalDrinkList(userId, drinkId);
+                return this._drinkModel.AddToPersonalDrinkList(userId, drinkId);
             }
             catch (Exception addDrinkToUserPersonalListException)
             {
@@ -137,7 +145,7 @@ namespace WinUIApp.Services
         {
             try
             {
-                return drinkModel.DeleteFromPersonalDrinkList(userId, drinkId);
+                return this._drinkModel.DeleteFromPersonalDrinkList(userId, drinkId);
             }
             catch (Exception deleteFromUserPersonalDrinkListException)
             {
@@ -149,8 +157,8 @@ namespace WinUIApp.Services
         {
             try
             {
-                drinkModel.VoteDrinkOfTheDay(drinkId, userId);
-                return drinkModel.GetDrinkById(drinkId) ?? throw new Exception("Drink not found after voting.");
+                this._drinkModel.VoteDrinkOfTheDay(drinkId, userId);
+                return this._drinkModel.GetDrinkById(drinkId) ?? throw new Exception("Drink not found after voting.");
             }
             catch (Exception voteDrinkOfTheDayException)
             {
@@ -162,7 +170,7 @@ namespace WinUIApp.Services
         {
             try
             {
-                return drinkModel.GetDrinkOfTheDay();
+                return this._drinkModel.GetDrinkOfTheDay();
             }
             catch (Exception e)
             {

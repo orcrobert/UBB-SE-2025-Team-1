@@ -4,14 +4,13 @@ using System.Data;
 using Microsoft.Data.SqlClient;
 using System.Linq;
 using WinUIApp.Services;
-using Microsoft.IdentityModel.Tokens;
 
 namespace WinUIApp.Models
 {
     /// <summary>
     /// Handles all database operations related to drinks.
     /// </summary>
-    class DrinkModel : IDrinkModel1
+    class DrinkModel : IDrinkModel
     {
         private const float MaxAlcoholContent = 100f;
 
@@ -20,6 +19,12 @@ namespace WinUIApp.Models
         {
             dataBaseService = DatabaseService.Instance;
         }
+
+        public DrinkModel(DatabaseService databaseService)
+        {
+            dataBaseService = databaseService;
+        }
+
         public Drink? GetDrinkById(int drinkId)
         {
             try
@@ -354,12 +359,12 @@ namespace WinUIApp.Models
                 foreach (var categoryId in categoriesToInsert)
                 {
                     const string insertCategoryQuery = @"INSERT INTO DrinkCategory (DrinkId, CategoryId) VALUES (@DrinkId, @CategoryId);";
-                    var insertParams = new List<SqlParameter>
+                    var insertCategoryQueryParameters = new List<SqlParameter>
                 {
                 new ("@DrinkId", SqlDbType.Int) { Value = drink.DrinkId },
                 new ("@CategoryId", SqlDbType.Int) { Value = categoryId }
                 };
-                    dataBaseService.ExecuteDataModificationQuery(insertCategoryQuery, insertParams);
+                    dataBaseService.ExecuteDataModificationQuery(insertCategoryQuery, insertCategoryQueryParameters);
                 }
 
                 // Delete removed categories

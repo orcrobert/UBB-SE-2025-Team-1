@@ -9,7 +9,7 @@ namespace WinUIApp.Views.Components.HeaderComponents
 {
     public sealed partial class Header : UserControl
     {
-        private HeaderViewModel viewModel;
+        private readonly HeaderViewModel viewModel;
 
         /// <summary>
         /// Initializes a new instance of the Header control, sets up the view model,

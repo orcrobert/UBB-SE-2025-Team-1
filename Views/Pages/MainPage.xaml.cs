@@ -8,7 +8,7 @@ namespace WinUIApp.Views.Pages
 {
     public sealed partial class MainPage : Page
     {
-        MainPageViewModel _viewModel;
+        readonly MainPageViewModel _viewModel;
         public MainPage()
         {
             this.InitializeComponent();

@@ -2,7 +2,7 @@
 
 namespace WinUIApp.Models
 {
-    internal interface IDrinkModel
+    public interface IDrinkModel
     {
         void AddDrink(string drinkName, string drinkUrl, List<Category> categories, string brandName, float alcoholContent);
         bool AddToPersonalDrinkList(int userId, int drinkId);
@@ -17,8 +17,6 @@ namespace WinUIApp.Models
         List<Drink> GetPersonalDrinkList(int userId, int numberOfDrinks = 1);
         int GetRandomDrinkId();
         bool IsDrinkInPersonalList(int userId, int drinkId);
-        void ResetDrinkOfTheDay();
-        void SetDrinkOfTheDay();
         void UpdateDrink(Drink drink);
         void VoteDrinkOfTheDay(int userId, int drinkId);
     }

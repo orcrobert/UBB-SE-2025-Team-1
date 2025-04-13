@@ -23,16 +23,16 @@ namespace WinUIApp.Views.ViewModels
     /// <param name="reviewService">The review service used to manage reviews.</param>
     /// <param name="userService">The user service used to manage users.</param>
     /// <param name="adminService">The admin service used to manage admin actions.</param>
-    public partial class DrinkDetailPageViewModel(DrinkService drinkService, DrinkReviewService reviewService, UserService userService, AdminService adminService) : INotifyPropertyChanged
+    public partial class DrinkDetailPageViewModel(IDrinkService drinkService, IDrinkReviewService reviewService, IUserService userService, IAdminService adminService) : INotifyPropertyChanged
     {
         private const string CategorySeparator = ", ";
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private readonly DrinkService _drinkService = drinkService;
-        private readonly DrinkReviewService _reviewService = reviewService;
-        private readonly UserService _userService = userService;
-        private readonly AdminService _adminService = adminService;
+        private readonly IDrinkService _drinkService = drinkService;
+        private readonly IDrinkReviewService _reviewService = reviewService;
+        private readonly IUserService _userService = userService;
+        private readonly IAdminService _adminService = adminService;
 
 
         private Drink _drink;

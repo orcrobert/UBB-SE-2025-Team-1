@@ -35,11 +35,13 @@ namespace WinUIApp.Views.Components
     {
         private AddDrinkMenuViewModel viewModel;
 
+        private readonly AdminService adminService;
         /// <summary>
         /// Initializes a new instance of the <see cref="AddDrinkFlyout"/> class.
         /// </summary>
         public AddDrinkFlyout()
         {
+            adminService = new AdminService();
             this.InitializeComponent();
             this.Loaded += this.AddDrinkFlyout_Loaded;
             this.CategoryList.SelectionChanged += this.CategoryList_SelectionChanged;
@@ -79,8 +81,7 @@ namespace WinUIApp.Views.Components
         {
             var drinkService = new DrinkService();
             var userService = new UserService();
-            var adminService = new AdminService();
-            bool isAdmin = AdminService.IsAdmin(this.UserId);
+            bool isAdmin = adminService.IsAdmin(this.UserId);
 
             var allBrands = drinkService.GetDrinkBrandNames();
             var allCategories = drinkService.GetDrinkCategories();
@@ -137,7 +138,7 @@ namespace WinUIApp.Views.Components
 
                 this.viewModel.ValidateUserDrinkInput();
 
-                bool isAdmin = AdminService.IsAdmin(this.UserId);
+                bool isAdmin = adminService.IsAdmin(this.UserId);
 
                 string message;
 

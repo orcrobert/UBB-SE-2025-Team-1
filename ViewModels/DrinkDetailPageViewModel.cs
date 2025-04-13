@@ -123,7 +123,7 @@ namespace WinUIApp.Views.ViewModels
         /// <returns>True if the user is an admin; otherwise, false.</returns>
         public bool IsCurrentUserAdmin()
         {
-            return AdminService.IsAdmin(_userService.GetCurrentUserId());
+            return adminService.IsAdmin(_userService.GetCurrentUserId());
         }
 
         /// <summary>
@@ -137,7 +137,7 @@ namespace WinUIApp.Views.ViewModels
             }
             else
             {
-                AdminService.SendNotificationFromUserToAdmin(_userService.GetCurrentUserId(), "Removal of drink with id:"+Drink.DrinkId +" and name:"+Drink.DrinkName, "User requested removal of drink from database.");
+                adminService.SendNotificationFromUserToAdmin(_userService.GetCurrentUserId(), "Removal of drink with id:"+Drink.DrinkId +" and name:"+Drink.DrinkName, "User requested removal of drink from database.");
             }
         }
         /// <summary>

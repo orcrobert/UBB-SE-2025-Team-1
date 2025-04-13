@@ -1,5 +1,10 @@
 ﻿-- Disable safe updates (not applicable in SQL Server, ignore this line)
+create database DrinkData
+go
+use DrinkData
 
+
+go
 -- Drop tables if they exist
 IF OBJECT_ID('DrinkOfTheDay', 'U') IS NOT NULL DROP TABLE DrinkOfTheDay;
 IF OBJECT_ID('Vote', 'U') IS NOT NULL DROP TABLE Vote;

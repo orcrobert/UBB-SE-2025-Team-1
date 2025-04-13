@@ -193,7 +193,7 @@ namespace WinUIApp.ViewModels
             try
             {
                 int userId = _userService.GetCurrentUserId();
-                AdminService.SendNotificationFromUserToAdmin(
+                adminService.SendNotificationFromUserToAdmin(
                     senderUserId: userId,
                     userModificationRequestType: "New Drink Request",
                     userModificationRequestDetails: $"User requested to add new drink: {DrinkName}"

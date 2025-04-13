@@ -89,7 +89,7 @@ namespace WinUIApp.Views.Components
             var drinkService = new DrinkService();
             var userService = new UserService();
             var adminService = new AdminService();
-            bool isAdmin = AdminService.IsAdmin(this.UserId);
+            bool isAdmin = adminService.IsAdmin(this.UserId);
 
             var allBrands = drinkService.GetDrinkBrandNames();
             var allCategories = drinkService.GetDrinkCategories();
@@ -167,7 +167,7 @@ namespace WinUIApp.Views.Components
                 this.DrinkToUpdate.CategoryList = this.viewModel.GetSelectedCategories();
 
                 var adminService = new WinUIApp.Services.DummyServices.AdminService();
-                bool isAdmin = AdminService.IsAdmin(UserId);
+                bool isAdmin = adminService.IsAdmin(UserId);
 
                 string message;
 

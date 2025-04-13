@@ -14,9 +14,13 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Remove="Views\Components\SharedComponents\**" />
+    <Compile Remove="Views\Windows\**" />
     <EmbeddedResource Remove="Views\Components\SharedComponents\**" />
+    <EmbeddedResource Remove="Views\Windows\**" />
     <None Remove="Views\Components\SharedComponents\**" />
+    <None Remove="Views\Windows\**" />
     <Page Remove="Views\Components\SharedComponents\**" />
+    <Page Remove="Views\Windows\**" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="Views\Components\SearchPageComponents\AlcoholContentFilterComponent.xaml" />
@@ -129,9 +133,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Views\Windows\" />
-  </ItemGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
 		<CodeAnalysisRuleSet>SE.ruleset</CodeAnalysisRuleSet>
 	</PropertyGroup>
@@ -160,5 +161,8 @@
 	</PropertyGroup>
     <ItemGroup>
       <PRIResource Remove="Views\Components\SharedComponents\**" />
+    </ItemGroup>
+    <ItemGroup>
+      <PRIResource Remove="Views\Windows\**" />
     </ItemGroup>
 </Project>

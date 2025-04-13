@@ -23,15 +23,15 @@ namespace WinUIApp.ViewModels
     /// <param name="adminService">Used to manage admin actions.</param>
     public partial class UpdateDrinkMenuViewModel(
         Drink drinkToUpdate,
-        DrinkService drinkService,
-        UserService userService,
-        AdminService adminService) : INotifyPropertyChanged
+        IDrinkService drinkService,
+        IUserService userService,
+        IAdminService adminService) : INotifyPropertyChanged
     {
         private const float MaxAlcoholContent = 100.0f;
         private const float MinAlcoholContent = 0.0f;
-        private readonly DrinkService _drinkService = drinkService;
-        private readonly UserService _userService = userService;
-        private readonly AdminService _adminService = adminService;
+        private readonly IDrinkService _drinkService = drinkService;
+        private readonly IUserService _userService = userService;
+        private readonly IAdminService _adminService = adminService;
 
         /// <summary>
         /// List of all available categories.
@@ -228,7 +228,7 @@ namespace WinUIApp.ViewModels
         {
             try
             {
-                AdminService.SendNotificationFromUserToAdmin(
+                adminService.SendNotificationFromUserToAdmin(
                 senderUserId: _userService.CurrentUserId,
                 userModificationRequestType: "Drink Update Request",
                 userModificationRequestDetails: $"User requested to update drinkToUpdate: {DrinkToUpdate.DrinkName}");

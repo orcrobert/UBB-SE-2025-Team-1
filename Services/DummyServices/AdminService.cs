@@ -11,15 +11,15 @@ namespace WinUIApp.Services.DummyServices
     public class AdminService : IAdminService
     {
         // Mock admin user IDs for development/testing purposes.
-        private static readonly HashSet<int> adminUserIds = [1, 42, 30, 10];
+        private  readonly HashSet<int> adminUserIds = [1, 42, 30, 10];
 
 
-        public static bool IsAdmin(int userId)
+        public bool IsAdmin(int userId)
         {
             return adminUserIds.Contains(userId);
         }
 
-        public static void SendNotificationFromUserToAdmin(int senderUserId, string userModificationRequestType, string userModificationRequestDetails)
+        public void SendNotificationFromUserToAdmin(int senderUserId, string userModificationRequestType, string userModificationRequestDetails)
         {
             Debug.WriteLine($"[Notification]\nFrom User: {senderUserId}\nTitle: {userModificationRequestType}\nDescription: {userModificationRequestDetails}");
 

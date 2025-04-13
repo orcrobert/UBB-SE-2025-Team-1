@@ -2,7 +2,7 @@
 {
     public interface IAdminService
     {
-        static abstract bool IsAdmin(int userId);
-        static abstract void SendNotificationFromUserToAdmin(int senderUserId, string userModificationRequestType, string userModificationRequestDetails);
+         abstract bool IsAdmin(int userId);
+         abstract void SendNotificationFromUserToAdmin(int senderUserId, string userModificationRequestType, string userModificationRequestDetails);
     }
 }

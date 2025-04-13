@@ -35,13 +35,13 @@ namespace WinUIApp.Views.Components
     {
         private AddDrinkMenuViewModel viewModel;
 
-        private readonly AdminService adminService;
+        private AdminService adminService;
         /// <summary>
         /// Initializes a new instance of the <see cref="AddDrinkFlyout"/> class.
         /// </summary>
         public AddDrinkFlyout()
         {
-            adminService = new AdminService();
+            this.adminService = new AdminService();
             this.InitializeComponent();
             this.Loaded += this.AddDrinkFlyout_Loaded;
             this.CategoryList.SelectionChanged += this.CategoryList_SelectionChanged;

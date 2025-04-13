@@ -20,15 +20,15 @@ namespace WinUIApp.ViewModels
     /// <param name="userService">The user service used to manage users.</param>
     /// <param name="adminService">The admin service used to manage admin actions.</param>
     public partial class AddDrinkMenuViewModel(
-        DrinkService drinkService,
-        UserService userService,
-        AdminService adminService) : INotifyPropertyChanged
+        IDrinkService drinkService,
+        IUserService userService,
+        IAdminService adminService) : INotifyPropertyChanged
     {
         private const float MaxAlcoholContent = 100.0f;
         private const float MinAlcoholContent = 0.0f;
-        private readonly DrinkService _drinkService = drinkService;
-        private readonly UserService _userService = userService;
-        private readonly AdminService _adminService = adminService;
+        private readonly IDrinkService _drinkService = drinkService;
+        private readonly IUserService _userService = userService;
+        private readonly IAdminService _adminService = adminService;
 
         /// <summary>
         /// List of all available categories.

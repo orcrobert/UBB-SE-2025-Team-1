@@ -17,15 +17,15 @@ namespace WinUIApp.ViewModels
     class MainPageViewModel 
     {
         private const int HardCodedNumberOfDrinks = 5; // Number of drinks to display in the personal drink list.
-        private DrinkService _drinkService;
-        private UserService _userService;
+        private IDrinkService _drinkService;
+        private IUserService _userService;
 
         /// <summary>
         /// Constructor for the MainPageViewModel. Initializes the drink service and user service.
         /// </summary>
         /// <param name="drinkService"></param>
         /// <param name="userService"></param>
-        public MainPageViewModel(DrinkService drinkService, UserService userService)
+        public MainPageViewModel(IDrinkService drinkService, IUserService userService)
         {
             _drinkService = drinkService;
             _userService = userService;

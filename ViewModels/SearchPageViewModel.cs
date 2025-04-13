@@ -15,12 +15,12 @@ namespace WinUIApp.ViewModels
     /// </summary>
     /// <param name="drinkService">The drink service used to manage drinks.</param>
     /// <param name="reviewService">The review service used to manage reviews.</param>
-    public class SearchPageViewModel(DrinkService drinkService, DrinkReviewService reviewService)
+    public class SearchPageViewModel(IDrinkService drinkService, IDrinkReviewService reviewService)
     {
         private const string nameField = "Name";
 
-        private readonly DrinkService _drinkService = drinkService;
-        private DrinkReviewService _reviewService = reviewService;
+        private readonly IDrinkService _drinkService = drinkService;
+        private IDrinkReviewService _reviewService = reviewService;
 
         private bool _isAscending = true;
         private string _fieldToSortBy = nameField;
@@ -55,14 +55,7 @@ namespace WinUIApp.ViewModels
             set => _fieldToSortBy = value;
         }
 
-        /// <summary>
-        /// ReviewService property to manage reviews.
-        /// </summary>
-        public DrinkReviewService ReviewService
-        {
-            get => _reviewService;
-            set => _reviewService = value;
-        }
+
 
         /// <summary>
         /// Opens the drink detail page for a specific drink ID.

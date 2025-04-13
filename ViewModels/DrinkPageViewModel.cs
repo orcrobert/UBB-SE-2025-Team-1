@@ -16,8 +16,8 @@ namespace WinUIApp.ViewModels
     /// </summary>
     public class DrinkPageViewModel : INotifyPropertyChanged
     {
-        private readonly DrinkService _drinkService;
-        private readonly UserService _userService;
+        private readonly IDrinkService _drinkService;
+        private readonly IUserService _userService;
         private int _userId;
         private int _drinkId;
         private bool _isInUserDrinksList;

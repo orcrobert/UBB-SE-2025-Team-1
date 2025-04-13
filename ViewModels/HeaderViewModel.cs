@@ -13,13 +13,13 @@ namespace WinUIApp.Views.ViewModels
     /// </summary>
     class HeaderViewModel
     {
-        private DrinkService _drinkService;
+        private IDrinkService _drinkService;
 
         /// <summary>
         /// Constructor for the HeaderViewModel. Initializes the drink service.
         /// </summary>
         /// <param name="drinkService">The drink service used to manage drinks.</param>
-        public HeaderViewModel(DrinkService drinkService)
+        public HeaderViewModel(IDrinkService drinkService)
         {
             _drinkService = drinkService;
         }

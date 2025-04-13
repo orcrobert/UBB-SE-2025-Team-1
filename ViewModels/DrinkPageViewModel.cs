@@ -28,10 +28,10 @@ namespace WinUIApp.ViewModels
         /// <summary>
         /// Default constructor for the DrinkPageViewModel. Initializes the drink service and user service.
         /// </summary>
-        public DrinkPageViewModel()
+        public DrinkPageViewModel(IDrinkService drinkService,IUserService userService)
         {
-            _drinkService = new DrinkService();
-            _userService = new UserService();
+            _drinkService = drinkService;
+            _userService = userService;
             ButtonText = "\U0001F5A4";
             Debug.WriteLine("DrinkPageViewModel: Default constructor called");
         }
@@ -40,10 +40,10 @@ namespace WinUIApp.ViewModels
         /// Constructor for a specific drink ID. Initializes the drink service and user service, and sets the drink ID.
         /// </summary>
         /// <param name="drinkId">The ID of the drink to be managed.</param>
-        public DrinkPageViewModel(int drinkId)
+        public DrinkPageViewModel(int drinkId, IDrinkService drinkService, IUserService userService)
         {
-            _drinkService = new DrinkService();
-            _userService = new UserService();
+            _drinkService = drinkService;
+            _userService = userService;
             _drinkId = drinkId;
             ButtonText = "\U0001F5A4";
             Debug.WriteLine($"DrinkPageViewModel: Constructor called with DrinkId {drinkId}");

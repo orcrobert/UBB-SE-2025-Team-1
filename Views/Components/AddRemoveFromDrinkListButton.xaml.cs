@@ -4,9 +4,11 @@
 
 namespace WinUIApp.Views.Components
 {
-    using System.Diagnostics;
     using Microsoft.UI.Xaml;
     using Microsoft.UI.Xaml.Controls;
+    using System.Diagnostics;
+    using WinUIApp.Services;
+    using WinUIApp.Services.DummyServices;
     using WinUIApp.ViewModels;
 
     /// <summary>
@@ -14,6 +16,29 @@ namespace WinUIApp.Views.Components
     /// </summary>
     public sealed partial class AddRemoveFromDrinkListButton : UserControl
     {
+        private readonly IDrinkService _drinkService;
+        private readonly IUserService _userService;
+
+
+        public AddRemoveFromDrinkListButton()
+        {
+            _drinkService = new DrinkService();
+            _userService = new UserService();
+            this.InitializeComponent();
+            this.Loaded += this.AddRemoveFromDrinkListButton_Loaded;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AddRemoveFromDrinkListButton"/> class.
+        /// </summary>
+        public AddRemoveFromDrinkListButton(IDrinkService drinkService, IUserService userService)
+        {
+            this.InitializeComponent();
+            _drinkService = drinkService;
+            _userService = userService;
+            this.Loaded += this.AddRemoveFromDrinkListButton_Loaded;
+
+        }
         /// <summary>
         /// DrinkIdProperty is a dependency property that represents the ID of the drink.
         /// </summary>
@@ -22,7 +47,7 @@ namespace WinUIApp.Views.Components
                 "DrinkId",
                 typeof(int),
                 typeof(AddRemoveFromDrinkListButton),
-                new PropertyMetadata(DefaultIntValue, OnDrinkIdChanged));
+                new PropertyMetadata(DefaultIntValue, new PropertyChangedCallback(OnDrinkIdChanged)));
 
         /// <summary>
         /// ViewModelProperty is a dependency property that represents the ViewModel for the button.
@@ -36,14 +61,6 @@ namespace WinUIApp.Views.Components
 
         private const int DefaultIntValue = 0;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="AddRemoveFromDrinkListButton"/> class.
-        /// </summary>
-        public AddRemoveFromDrinkListButton()
-        {
-            this.InitializeComponent();
-            this.Loaded += this.AddRemoveFromDrinkListButton_Loaded;
-        }
 
         /// <summary>
         /// Gets or sets the ID of the drink. This property is used to identify which drink the button is associated with.
@@ -70,7 +87,7 @@ namespace WinUIApp.Views.Components
                 Debug.WriteLine($"AddRemoveFromDrinkListButton: DrinkId changed to {(int)eventArguments.NewValue}");
                 if (button.ViewModel == null)
                 {
-                    button.ViewModel = new DrinkPageViewModel((int)eventArguments.NewValue);
+                    button.ViewModel = new DrinkPageViewModel((int)eventArguments.NewValue, button._drinkService, button._userService);
                     Debug.WriteLine($"AddRemoveFromDrinkListButton: ViewModel created with DrinkId {(int)eventArguments.NewValue}");
                 }
                 else
@@ -95,7 +112,7 @@ namespace WinUIApp.Views.Components
             Debug.WriteLine($"AddRemoveFromDrinkListButton: Loaded. DrinkId: {this.DrinkId}, ViewModel is {(this.ViewModel == null ? "null" : "not null")}");
             if (this.ViewModel == null && this.DrinkId > DefaultIntValue)
             {
-                this.ViewModel = new DrinkPageViewModel(this.DrinkId);
+                this.ViewModel = new DrinkPageViewModel(this.DrinkId,_drinkService,this._userService);
                 Debug.WriteLine($"AddRemoveFromDrinkListButton: ViewModel created in Loaded with DrinkId {this.DrinkId}");
             }
 

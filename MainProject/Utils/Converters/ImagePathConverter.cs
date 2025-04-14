@@ -1,23 +1,17 @@
 ﻿using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Media.Imaging;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using WinUIApp.Models;
 
 namespace WinUIApp.Utils.Converters
 {
-    public class ImagePathConverter : IValueConverter
+    public partial class ImagePathConverter(IBitmapImageFactory bitmapImageFactory) : IValueConverter
     {
         private const string FallbackImagePath = "ms-appx:///Assets/DefaultDrink.jpg";
-        private readonly IBitmapImageFactory _bitmapImageFactory;
+        private readonly IBitmapImageFactory _bitmapImageFactory = bitmapImageFactory;
 
+        // Default constructor that injects the default implementation
         public ImagePathConverter() : this(new DefaultBitmapImageFactory()) { }
-
-        public ImagePathConverter(IBitmapImageFactory bitmapImageFactory)
-        {
-            _bitmapImageFactory = bitmapImageFactory;
-        }
 
         public object Convert(object imagePathSourceValue, Type destinationType, object converterParameter, string formattingCulture)
         {
@@ -27,9 +21,8 @@ namespace WinUIApp.Utils.Converters
                 {
                     return _bitmapImageFactory.Create(url);
                 }
-                catch (Exception)
+                catch
                 {
-                    // If creation fails, fallback to the default image.
                     return _bitmapImageFactory.Create(FallbackImagePath);
                 }
             }

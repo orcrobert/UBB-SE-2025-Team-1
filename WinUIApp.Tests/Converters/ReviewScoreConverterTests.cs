@@ -56,7 +56,7 @@ namespace WinUIApp.Tests.Converters
         public void ConvertBack_ThrowsNotImplementedException()
         {
             object displayedReviewScoreValue = "4.5/5";
-.
+
             var exception = Assert.Throws<NotImplementedException>(() =>
                 _converter.ConvertBack(displayedReviewScoreValue, typeof(float), null, "en-US")
             );

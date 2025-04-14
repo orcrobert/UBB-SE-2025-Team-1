@@ -21,7 +21,7 @@ namespace WinUIApp.Tests.Converters
 
             _factoryMock
                 .Setup(f => f.Create(It.IsAny<string>()))
-                .Returns(() => default(BitmapImage)); // This avoids COM exception
+                .Returns(() => default);            // This avoids COM exception
 
             //Injects the mock into the converter
             _converter = new ImagePathConverter(_factoryMock.Object);

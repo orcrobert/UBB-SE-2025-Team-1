@@ -20,10 +20,11 @@ namespace WinUIApp.Tests.Converters
         {
             var sampleCategories = new List<Category>
             {
-                new Category(1, "Fruit"),
-                new Category(2, "Soda"),
-                new Category(3, "Juice")
+                new(1, "Fruit"),
+                new(2, "Soda"),
+                new(3, "Juice")
             };
+
             string expectedOutput = "Fruit, Soda, Juice";
 
             object conversionResult = _converter.Convert(sampleCategories, typeof(string), null, "en-US");

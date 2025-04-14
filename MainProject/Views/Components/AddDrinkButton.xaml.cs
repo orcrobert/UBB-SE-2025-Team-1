@@ -1,3 +1,7 @@
+// <copyright file="AddDrinkButton.xaml.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
+
 namespace WinUIApp.Views.Components
 {
     using System;

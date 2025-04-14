@@ -4,9 +4,9 @@
 
 namespace WinUIApp.Views.Components
 {
+    using System.Diagnostics;
     using Microsoft.UI.Xaml;
     using Microsoft.UI.Xaml.Controls;
-    using System.Diagnostics;
     using WinUIApp.Services;
     using WinUIApp.Services.DummyServices;
     using WinUIApp.ViewModels;
@@ -16,29 +16,6 @@ namespace WinUIApp.Views.Components
     /// </summary>
     public sealed partial class AddRemoveFromDrinkListButton : UserControl
     {
-        private readonly IDrinkService _drinkService;
-        private readonly IUserService _userService;
-
-
-        public AddRemoveFromDrinkListButton()
-        {
-            _drinkService = new DrinkService();
-            _userService = new UserService();
-            this.InitializeComponent();
-            this.Loaded += this.AddRemoveFromDrinkListButton_Loaded;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="AddRemoveFromDrinkListButton"/> class.
-        /// </summary>
-        public AddRemoveFromDrinkListButton(IDrinkService drinkService, IUserService userService)
-        {
-            this.InitializeComponent();
-            _drinkService = drinkService;
-            _userService = userService;
-            this.Loaded += this.AddRemoveFromDrinkListButton_Loaded;
-
-        }
         /// <summary>
         /// DrinkIdProperty is a dependency property that represents the ID of the drink.
         /// </summary>
@@ -60,7 +37,32 @@ namespace WinUIApp.Views.Components
                 new PropertyMetadata(null, OnViewModelPropertyChanged));
 
         private const int DefaultIntValue = 0;
+        private readonly IDrinkService drinkService;
+        private readonly IUserService userService;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AddRemoveFromDrinkListButton"/> class.
+        /// </summary>
+        public AddRemoveFromDrinkListButton()
+        {
+            this.drinkService = new DrinkService();
+            this.userService = new UserService();
+            this.InitializeComponent();
+            this.Loaded += this.AddRemoveFromDrinkListButton_Loaded;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AddRemoveFromDrinkListButton"/> class with specified services.
+        /// </summary>
+        /// <param name="drinkService">Drink service.</param>
+        /// <param name="userService">user service.</param>
+        public AddRemoveFromDrinkListButton(IDrinkService drinkService, IUserService userService)
+        {
+            this.InitializeComponent();
+            this.drinkService = drinkService;
+            this.userService = userService;
+            this.Loaded += this.AddRemoveFromDrinkListButton_Loaded;
+        }
 
         /// <summary>
         /// Gets or sets the ID of the drink. This property is used to identify which drink the button is associated with.
@@ -87,7 +89,7 @@ namespace WinUIApp.Views.Components
                 Debug.WriteLine($"AddRemoveFromDrinkListButton: DrinkId changed to {(int)eventArguments.NewValue}");
                 if (button.ViewModel == null)
                 {
-                    button.ViewModel = new DrinkPageViewModel((int)eventArguments.NewValue, button._drinkService, button._userService);
+                    button.ViewModel = new DrinkPageViewModel((int)eventArguments.NewValue, button.drinkService, button.userService);
                     Debug.WriteLine($"AddRemoveFromDrinkListButton: ViewModel created with DrinkId {(int)eventArguments.NewValue}");
                 }
                 else
@@ -112,7 +114,7 @@ namespace WinUIApp.Views.Components
             Debug.WriteLine($"AddRemoveFromDrinkListButton: Loaded. DrinkId: {this.DrinkId}, ViewModel is {(this.ViewModel == null ? "null" : "not null")}");
             if (this.ViewModel == null && this.DrinkId > DefaultIntValue)
             {
-                this.ViewModel = new DrinkPageViewModel(this.DrinkId,_drinkService,this._userService);
+                this.ViewModel = new DrinkPageViewModel(this.DrinkId, this.drinkService, this.userService);
                 Debug.WriteLine($"AddRemoveFromDrinkListButton: ViewModel created in Loaded with DrinkId {this.DrinkId}");
             }
 

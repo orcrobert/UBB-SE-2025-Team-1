@@ -17,6 +17,6 @@ namespace WinUIApp.Services
         List<Drink> GetUserPersonalDrinkList(int userId, int maximumDrinkCount = 1);
         bool IsDrinkInUserPersonalList(int userId, int drinkId);
         void UpdateDrink(Drink drink);
-        Drink VoteDrinkOfTheDAy(int userId,int drinkId);
+        Drink VoteDrinkOfTheDay(int userId,int drinkId);
     }
 }

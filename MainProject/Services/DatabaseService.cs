@@ -1,62 +1,74 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Configuration;
-using System.Diagnostics;
-using WinUIApp.Database;
-using Microsoft.Data.SqlClient; // Ensure you have the correct using directive for SQL Server
+﻿// <copyright file="DatabaseService.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
 
 namespace WinUIApp.Services
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Diagnostics;
+    using Microsoft.Data.SqlClient;
+    using WinUIApp.Database;
+
+    /// <summary>
+    /// Service for managing database operations.
+    /// </summary>
     public class DatabaseService : IDatabaseService
     {
-        private static DatabaseService _databaseServiceInstance;
-        private static readonly object _databaseServiceInstanceLock = new();
-        private readonly DatabaseConnection _databaseConnection;
+        private static readonly object DatabaseServiceInstanceLock = new ();
+        private static DatabaseService databaseServiceInstance;
+        private readonly DatabaseConnection databaseConnection;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DatabaseService"/> class.
+        /// </summary>
+        private DatabaseService()
+        {
+            this.databaseConnection = DatabaseConnection.Instance;
+        }
 
+        /// <summary>
+        /// Gets the singleton instance of the DatabaseService class.
+        /// </summary>
         public static DatabaseService Instance
         {
             get
             {
-                if (_databaseServiceInstance == null)
+                if (databaseServiceInstance == null)
                 {
-                    lock (_databaseServiceInstanceLock)
+                    lock (DatabaseServiceInstanceLock)
                     {
-                        if (_databaseServiceInstance == null)
+                        if (databaseServiceInstance == null)
                         {
-                            lock (_databaseServiceInstanceLock)
+                            lock (DatabaseServiceInstanceLock)
                             {
-                                _databaseServiceInstance = new DatabaseService();
+                                databaseServiceInstance = new DatabaseService();
                             }
                         }
                     }
                 }
-                return _databaseServiceInstance;
+
+                return databaseServiceInstance;
             }
         }
 
-        private DatabaseService()
-        {
-            _databaseConnection = DatabaseConnection.Instance;
-        }
-
+        /// <summary>
+        /// Executes a SQL SELECT query and returns the results as a list of dictionaries.
+        /// </summary>
+        /// <param name="sqlSelectQuery"> Query. </param>
+        /// <param name="sqlSelectQueryParameters"> Parameters. </param>
+        /// <returns> Result. </returns>
         public List<Dictionary<string, object>> ExecuteSelectQuery(string sqlSelectQuery, List<SqlParameter> sqlSelectQueryParameters = null)
         {
             var selectQueryResults = new List<Dictionary<string, object>>();
 
             try
             {
-                _databaseConnection.OpenConnection();
-                using var sqlSelectCommand = new SqlCommand(sqlSelectQuery, _databaseConnection.GetConnection());
+                this.databaseConnection.OpenConnection();
+                using var sqlSelectCommand = new SqlCommand(sqlSelectQuery, this.databaseConnection.GetConnection());
                 if (sqlSelectQueryParameters != null)
                 {
-#pragma warning disable IDE0305
                     sqlSelectCommand.Parameters.AddRange(sqlSelectQueryParameters.ToArray());
-#pragma warning restore IDE0305
-
                 }
 
                 using var sqlDataReader = sqlSelectCommand.ExecuteReader();
@@ -67,6 +79,7 @@ namespace WinUIApp.Services
                     {
                         queryResultRowData[sqlDataReader.GetName(currentColumnIndex)] = sqlDataReader.GetValue(currentColumnIndex);
                     }
+
                     selectQueryResults.Add(queryResultRowData);
                 }
             }
@@ -76,7 +89,7 @@ namespace WinUIApp.Services
             }
             finally
             {
-                _databaseConnection.CloseConnection();
+                this.databaseConnection.CloseConnection();
             }
 
             return selectQueryResults;
@@ -88,15 +101,13 @@ namespace WinUIApp.Services
 
             try
             {
-                _databaseConnection.OpenConnection();
-                using var dataModificationQueryCommand = new SqlCommand(sqlDataModificationQuery, _databaseConnection.GetConnection());
+                this.databaseConnection.OpenConnection();
+                using var dataModificationQueryCommand = new SqlCommand(sqlDataModificationQuery, this.databaseConnection.GetConnection());
                 if (sqlDataModificationQueryParameters != null)
                 {
-#pragma warning disable IDE0305
                     dataModificationQueryCommand.Parameters.AddRange(sqlDataModificationQueryParameters.ToArray());
-#pragma warning restore IDE0305
-
                 }
+
                 numberOfRowsAffectedByQuery = dataModificationQueryCommand.ExecuteNonQuery();
             }
             catch (Exception dataModificationQueryExecutionException)
@@ -105,7 +116,7 @@ namespace WinUIApp.Services
             }
             finally
             {
-                _databaseConnection.CloseConnection();
+                this.databaseConnection.CloseConnection();
             }
 
             return numberOfRowsAffectedByQuery;

@@ -83,7 +83,7 @@ namespace WinUIApp.Tests.Services.DrinkServiceTests
             var votedDrink = new Drink(10, "Iced Tea", "tea.jpg", _testCategories, _testBrand, 0);
             _mockModel.Setup(m => m.GetDrinkById(10)).Returns(votedDrink);
 
-            var result = _drinkService.VoteDrinkOfTheDAy(2, 10);
+            var result = _drinkService.VoteDrinkOfTheDay(2, 10);
 
             _mockModel.Verify(m => m.VoteDrinkOfTheDay(2, 10), Times.Once);
             Assert.Equal("Iced Tea", result.DrinkName);

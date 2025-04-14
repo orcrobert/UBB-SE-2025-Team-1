@@ -19,7 +19,7 @@ namespace WinUIApp.Views.Pages
 
         private void DrinkOfTheDayComponent_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            MainWindow.AppMainFrame.Navigate(typeof(DrinkDetailPage), _viewModel.getDrinkOfTheDayId());
+            MainWindow.AppMainFrame.Navigate(typeof(DrinkDetailPage), _viewModel.GetDrinkOfTheDayId());
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)

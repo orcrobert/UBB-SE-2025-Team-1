@@ -95,6 +95,12 @@ namespace WinUIApp.Services
             return selectQueryResults;
         }
 
+        /// <summary>
+        /// Executes a SQL data modification query (INSERT, UPDATE, DELETE) and returns the number of rows affected.
+        /// </summary>
+        /// <param name="sqlDataModificationQuery"> Query. </param>
+        /// <param name="sqlDataModificationQueryParameters"> Parameters. </param>
+        /// <returns> Result. </returns>
         public int ExecuteDataModificationQuery(string sqlDataModificationQuery, List<SqlParameter> sqlDataModificationQueryParameters = null)
         {
             int numberOfRowsAffectedByQuery = 0;

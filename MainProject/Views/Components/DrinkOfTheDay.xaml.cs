@@ -26,16 +26,6 @@ namespace WinUIApp.Views.Components
     /// </summary>
     public sealed partial class DrinkOfTheDayComponent : UserControl
     {
-        private const float DefaultFloatValue = 0.0f;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DrinkOfTheDayComponent"/> class.
-        /// </summary>
-        public DrinkOfTheDayComponent()
-        {
-            this.InitializeComponent();
-        }
-
         /// <summary>
         /// DrinkNameProperty is a dependency property that represents the name of the drink.
         /// </summary>
@@ -65,6 +55,16 @@ namespace WinUIApp.Views.Components
         /// </summary>
         public static readonly DependencyProperty ImageSourceProperty =
             DependencyProperty.Register("ImageSource", typeof(string), typeof(DrinkOfTheDayComponent), new PropertyMetadata(string.Empty));
+
+        private const float DefaultFloatValue = 0.0f;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DrinkOfTheDayComponent"/> class.
+        /// </summary>
+        public DrinkOfTheDayComponent()
+        {
+            this.InitializeComponent();
+        }
 
         /// <summary>
         /// Gets or sets the name of the drink. This property is used to display the drink's name in the UI.

@@ -1,17 +1,3 @@
-using Microsoft.UI;
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Media;
-using Org.BouncyCastle.Asn1.Ocsp;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using WinUIApp.Models;
-using WinUIApp.Services;
-using WinUIApp.Services.DummyServices;
-using WinUIApp.ViewModels;
-
 // <copyright file="UpdateDrinkFlyout.xaml.cs" company="PlaceholderCompany">
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>

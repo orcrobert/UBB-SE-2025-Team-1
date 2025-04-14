@@ -9,23 +9,36 @@ namespace WinUIApp.Tests.Integration
     public class TestDatabaseHelper
     {
         private readonly DatabaseService _databaseService;
+        private readonly string _connectionString;
 
-        public TestDatabaseHelper(DatabaseService databaseService)
+        public TestDatabaseHelper(DatabaseService databaseService, string connectionString = null)
         {
             _databaseService = databaseService;
+            _connectionString = connectionString ??
+                "Server=DESKTOP-UHDRE10\\SQLEXPRESS;Initial Catalog=WinUIAppTest;Integrated Security=True;TrustServerCertificate=True";
         }
 
         public void ClearDatabase()
         {
-            const string query = @"
-                DELETE FROM DrinkCategory;
-                DELETE FROM Drink;
-                DELETE FROM Brand;
-                DELETE FROM Category;
-                DELETE FROM UserDrink;
-                DELETE FROM Vote;
-                DELETE FROM DrinkOfTheDay;";
-            _databaseService.ExecuteDataModificationQuery(query);
+            // Use the same connection string as in other methods
+            using (var connection = new SqlConnection("Server=DESKTOP-UHDRE10\\SQLEXPRESS;Initial Catalog=WinUIAppTest;Integrated Security=True;TrustServerCertificate=True"))
+            {
+                connection.Open();
+
+                const string query = @"
+            DELETE FROM DrinkCategory;
+            DELETE FROM Drink;
+            DELETE FROM Brand;
+            DELETE FROM Category;
+            DELETE FROM UserDrink;
+            DELETE FROM Vote;
+            DELETE FROM DrinkOfTheDay;";
+
+                using (var command = new SqlCommand(query, connection))
+                {
+                    command.ExecuteNonQuery();
+                }
+            }
         }
 
         public void SeedTestData()
@@ -44,7 +57,7 @@ namespace WinUIApp.Tests.Integration
             var brand = CreateTestBrand(brandName);
 
             // Fix: Make sure we properly retrieve the DrinkId by using ExecuteScalar
-            using (var connection = new SqlConnection("Server=DESKTOP-UHDRE10\\SQLEXPRESS;Initial Catalog=WinUIApp;Integrated Security=True;TrustServerCertificate=True"))
+            using (var connection = new SqlConnection("Server=DESKTOP-UHDRE10\\SQLEXPRESS;Initial Catalog=WinUIAppTest;Integrated Security=True;TrustServerCertificate=True"))
             {
                 connection.Open();
 
@@ -110,11 +123,15 @@ namespace WinUIApp.Tests.Integration
             try
             {
                 // First try to insert the brand directly, with error handling
-                using (var connection = new SqlConnection("Server=DESKTOP-UHDRE10\\SQLEXPRESS;Initial Catalog=WinUIApp;Integrated Security=True;TrustServerCertificate=True"))
+                using (var connection = new SqlConnection("Server=DESKTOP-UHDRE10\\SQLEXPRESS;Initial Catalog=WinUIAppTest;Integrated Security=True;TrustServerCertificate=True"))
                 {
                     connection.Open();
 
                     // Try to insert and get the ID in one operation
+
+
+
+
                     string insertQuery = @"
             BEGIN TRY
                 INSERT INTO Brand (BrandName)
@@ -148,7 +165,7 @@ namespace WinUIApp.Tests.Integration
                 // If we still get a unique constraint violation, try to retrieve the brand directly
                 if (ex.Number == 2627 || ex.Number == 2601)  // Unique constraint violation error codes
                 {
-                    using (var connection = new SqlConnection("Server=DESKTOP-UHDRE10\\SQLEXPRESS;Initial Catalog=WinUIApp;Integrated Security=True;TrustServerCertificate=True"))
+                    using (var connection = new SqlConnection("Server=DESKTOP-UHDRE10\\SQLEXPRESS;Initial Catalog=WinUIAppTest;Integrated Security=True;TrustServerCertificate=True"))
                     {
                         connection.Open();
                         string query = "SELECT BrandId FROM Brand WHERE BrandName = @BrandName";

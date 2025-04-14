@@ -1,15 +1,19 @@
-﻿using Mysqlx.Crud;
-using System.Collections.Generic;
-using System.Linq;
-using WinUIApp.Models;
-using WinUIApp.Services;
-using WinUIApp.Services.DummyServices;
-using WinUIApp.Views;
-using WinUIApp.Views.Components.SearchPageComponents;
-using WinUIApp.Views.Pages;
+﻿// <copyright file="SearchPageViewModel.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
 
 namespace WinUIApp.ViewModels
 {
+    using System.Collections.Generic;
+    using System.Linq;
+    using Mysqlx.Crud;
+    using WinUIApp.Models;
+    using WinUIApp.Services;
+    using WinUIApp.Services.DummyServices;
+    using WinUIApp.Views;
+    using WinUIApp.Views.Components.SearchPageComponents;
+    using WinUIApp.Views.Pages;
+
     /// <summary>
     /// ViewModel for the SearchPage. Manages the display of drinks based on various filters and sorting options.
     /// </summary>
@@ -17,45 +21,43 @@ namespace WinUIApp.ViewModels
     /// <param name="reviewService">The review service used to manage reviews.</param>
     public class SearchPageViewModel(IDrinkService drinkService, IDrinkReviewService reviewService)
     {
-        private const string nameField = "Name";
+        private const string NameField = "Name";
 
-        private readonly IDrinkService _drinkService = drinkService;
-        private IDrinkReviewService _reviewService = reviewService;
+        private readonly IDrinkService drinkService = drinkService;
+        private IDrinkReviewService reviewService = reviewService;
 
-        private bool _isAscending = true;
-        private string _fieldToSortBy = nameField;
+        private bool isAscending = true;
+        private string fieldToSortBy = NameField;
 
-        private List<string>? _categoryFilter;
-        private List<string>? _brandFilter;
-        private float? _minAlcoholFilter;
-        private float? _maxAlcoholFilter;
-        private float? _minRatingFilter;
-        private string? _searchedTerms;
+        private List<string>? categoryFilter;
+        private List<string>? brandFilter;
+        private float? minAlcoholFilter;
+        private float? maxAlcoholFilter;
+        private float? minRatingFilter;
+        private string? searchedTerms;
 
         /// <summary>
-        /// The list of categories that are initially displayed on the search page.
+        /// Gets or sets the list of drink categories to be displayed on the page.
         /// </summary>
         public List<Category> InitialCategories { get; set; }
 
         /// <summary>
-        /// Indicates whether the sorting order of the drinks is ascending or descending.
+        /// Gets or sets a value indicating whether the drinks are sorted in ascending order. Default is true (ascending order).
         /// </summary>
         public bool IsAscending
         {
-            get => _isAscending;
-            set => _isAscending = value;
+            get => this.isAscending;
+            set => this.isAscending = value;
         }
 
         /// <summary>
-        /// Indicates the field by which the drinks are sorted. Default is "Name".
+        /// Gets or sets the field by which the drinks are sorted. Default is "Name".
         /// </summary>
         public string FieldToSortBy
         {
-            get => _fieldToSortBy;
-            set => _fieldToSortBy = value;
+            get => this.fieldToSortBy;
+            set => this.fieldToSortBy = value;
         }
-
-
 
         /// <summary>
         /// Opens the drink detail page for a specific drink ID.
@@ -71,17 +73,16 @@ namespace WinUIApp.ViewModels
         /// </summary>
         public void ClearFilters()
         {
-            _categoryFilter = null;
-            _brandFilter = null;
-            _minAlcoholFilter = null;
-            _maxAlcoholFilter = null;
-            _minRatingFilter = null;
-            _searchedTerms = null;
+            this.categoryFilter = null;
+            this.brandFilter = null;
+            this.minAlcoholFilter = null;
+            this.maxAlcoholFilter = null;
+            this.minRatingFilter = null;
+            this.searchedTerms = null;
         }
 
-
         /// <summary>
-        /// Iterates through the drinks and creates a list of DrinkDisplayItem objects representing the drinks. 
+        /// Iterates through the drinks and creates a list of DrinkDisplayItem objects representing the drinks.
         /// If the sortByField is "Name" or "Alcohol Content", it sorts the drinks accordingly.
         /// If the sortByField is not "Name" or "Alcohol Content", it sorts the drinks by average review score.
         /// If the minRatingFilter is set, it filters the drinks based on the average review score.
@@ -92,10 +93,10 @@ namespace WinUIApp.ViewModels
         {
             List<DrinkDisplayItem> displayItems = new List<DrinkDisplayItem>();
 
-            if (_fieldToSortBy == nameField || _fieldToSortBy == "Alcohol Content")
+            if (this.fieldToSortBy == NameField || this.fieldToSortBy == "Alcohol Content")
             {
                 string sortField;
-                if (_fieldToSortBy == nameField)
+                if (this.fieldToSortBy == NameField)
                 {
                     sortField = "D.DrinkName";
                 }
@@ -106,65 +107,61 @@ namespace WinUIApp.ViewModels
 
                 var orderBy = new Dictionary<string, bool>
                 {
-                    { sortField, _isAscending }
+                    { sortField, this.isAscending },
                 };
-                List<Drink> drinks = _drinkService.GetDrinks(
-                    searchKeyword: _searchedTerms,
-                    drinkBrandNameFilter: _brandFilter,
-                    drinkCategoryFilter: _categoryFilter,
-                    minimumAlcoholPercentage: _minAlcoholFilter,
-                    maximumAlcoholPercentage: _maxAlcoholFilter,
-                    orderingCriteria: orderBy
-                );
+                List<Drink> drinks = this.drinkService.GetDrinks(
+                    searchKeyword: this.searchedTerms,
+                    drinkBrandNameFilter: this.brandFilter,
+                    drinkCategoryFilter: this.categoryFilter,
+                    minimumAlcoholPercentage: this.minAlcoholFilter,
+                    maximumAlcoholPercentage: this.maxAlcoholFilter,
+                    orderingCriteria: orderBy);
 
                 displayItems = new List<DrinkDisplayItem>();
                 foreach (Drink drink in drinks)
                 {
-                    float averageScore = _reviewService.GetReviewAverageByID(drink.DrinkId);
-                    if (_minRatingFilter == null)
+                    float averageScore = this.reviewService.GetReviewAverageByID(drink.DrinkId);
+                    if (this.minRatingFilter == null)
                     {
                         displayItems.Add(new DrinkDisplayItem(drink, averageScore));
                     }
                     else
                     {
-                        if (averageScore >= _minRatingFilter)
+                        if (averageScore >= this.minRatingFilter)
                         {
                             displayItems.Add(new DrinkDisplayItem(drink, averageScore));
                         }
                     }
                 }
-
             }
             else
             {
-
-                List<Drink> drinks = _drinkService.GetDrinks(
-                    searchKeyword: _searchedTerms,
-                    drinkBrandNameFilter: _brandFilter,
-                    drinkCategoryFilter: _categoryFilter,
-                    minimumAlcoholPercentage: _minAlcoholFilter,
-                    maximumAlcoholPercentage: _maxAlcoholFilter,
-                    orderingCriteria: null
-                );
+                List<Drink> drinks = this.drinkService.GetDrinks(
+                    searchKeyword: this.searchedTerms,
+                    drinkBrandNameFilter: this.brandFilter,
+                    drinkCategoryFilter: this.categoryFilter,
+                    minimumAlcoholPercentage: this.minAlcoholFilter,
+                    maximumAlcoholPercentage: this.maxAlcoholFilter,
+                    orderingCriteria: null);
 
                 displayItems = new List<DrinkDisplayItem>();
                 foreach (Drink drink in drinks)
                 {
-                    float averageScore = _reviewService.GetReviewAverageByID(drink.DrinkId);
-                    if (_minRatingFilter == null)
+                    float averageScore = this.reviewService.GetReviewAverageByID(drink.DrinkId);
+                    if (this.minRatingFilter == null)
                     {
                         displayItems.Add(new DrinkDisplayItem(drink, averageScore));
                     }
                     else
                     {
-                        if (averageScore >= _minRatingFilter)
+                        if (averageScore >= this.minRatingFilter)
                         {
                             displayItems.Add(new DrinkDisplayItem(drink, averageScore));
                         }
                     }
                 }
 
-                if (_isAscending)
+                if (this.isAscending)
                 {
                     displayItems = displayItems.OrderBy(item => item.AverageReviewScore).ToList();
                 }
@@ -183,7 +180,7 @@ namespace WinUIApp.ViewModels
         /// <returns>The list of drink categories.</returns>
         public IEnumerable<Category> GetCategories()
         {
-            return _drinkService.GetDrinkCategories();
+            return this.drinkService.GetDrinkCategories();
         }
 
         /// <summary>
@@ -192,25 +189,25 @@ namespace WinUIApp.ViewModels
         /// <returns>The list of drink brands.</returns>
         public IEnumerable<Brand> GetBrands()
         {
-            return _drinkService.GetDrinkBrandNames();
+            return this.drinkService.GetDrinkBrandNames();
         }
 
         /// <summary>
         /// Sets the sorting field for the drinks. The default is "Name".
         /// </summary>
-        /// <param name="sortByField"></param>
+        /// <param name="sortByField">Sort parameter.</param>
         public void SetSortByField(string sortByField)
         {
-            _fieldToSortBy = sortByField;
+            this.fieldToSortBy = sortByField;
         }
 
         /// <summary>
         /// Sets the sorting order for the drinks. If true, the drinks are sorted in ascending order; otherwise, they are sorted in descending order.
         /// </summary>
-        /// <param name="isAscending"></param>
+        /// <param name="isAscending">Sort order.</param>
         public void SetSortOrder(bool isAscending)
         {
-            _isAscending = isAscending;
+            this.isAscending = isAscending;
         }
 
         /// <summary>
@@ -219,7 +216,7 @@ namespace WinUIApp.ViewModels
         /// <param name="categoryFilter">List of categories to filter the drinks by.</param>
         public void SetCategoryFilter(List<string> categoryFilter)
         {
-            _categoryFilter = categoryFilter;
+            this.categoryFilter = categoryFilter;
         }
 
         /// <summary>
@@ -228,13 +225,14 @@ namespace WinUIApp.ViewModels
         /// <param name="initialCategoties">List of categories to filter the drinks by.</param>
         public void SetInitialCategoryFilter(List<Category> initialCategoties)
         {
-            InitialCategories = initialCategoties;
+            this.InitialCategories = initialCategoties;
             List<string> categories = new List<string>();
-            foreach (Category category in InitialCategories)
+            foreach (Category category in this.InitialCategories)
             {
                 categories.Add(category.CategoryName);
             }
-            SetCategoryFilter(categories);
+
+            this.SetCategoryFilter(categories);
         }
 
         /// <summary>
@@ -243,7 +241,7 @@ namespace WinUIApp.ViewModels
         /// <param name="brandFilter">The list of brands to filter the drinks by.</param>
         public void SetBrandFilter(List<string> brandFilter)
         {
-            _brandFilter = brandFilter;
+            this.brandFilter = brandFilter;
         }
 
         /// <summary>
@@ -252,7 +250,7 @@ namespace WinUIApp.ViewModels
         /// <param name="minAlcoholFilter">The minimum alcohol content to filter the drinks by.</param>
         public void SetMinAlcoholFilter(float minAlcoholFilter)
         {
-            _minAlcoholFilter = minAlcoholFilter;
+            this.minAlcoholFilter = minAlcoholFilter;
         }
 
         /// <summary>
@@ -261,7 +259,7 @@ namespace WinUIApp.ViewModels
         /// <param name="maxAlcoholFilter">The maximum alcohol content to filter the drinks by.</param>
         public void SetMaxAlcoholFilter(float maxAlcoholFilter)
         {
-            _maxAlcoholFilter = maxAlcoholFilter;
+            this.maxAlcoholFilter = maxAlcoholFilter;
         }
 
         /// <summary>
@@ -270,7 +268,7 @@ namespace WinUIApp.ViewModels
         /// <param name="minRatingFilter">The minimum average review score to filter the drinks by.</param>
         public void SetMinRatingFilter(float minRatingFilter)
         {
-            _minRatingFilter = minRatingFilter;
+            this.minRatingFilter = minRatingFilter;
         }
 
         /// <summary>
@@ -279,8 +277,7 @@ namespace WinUIApp.ViewModels
         /// <param name="searchedTerms">The search terms to filter the drinks by.</param>
         public void SetSearchedTerms(string searchedTerms)
         {
-            _searchedTerms = searchedTerms;
+            this.searchedTerms = searchedTerms;
         }
-
     }
 }

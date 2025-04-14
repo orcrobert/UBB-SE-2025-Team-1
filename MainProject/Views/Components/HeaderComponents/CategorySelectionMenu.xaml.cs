@@ -1,31 +1,36 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Navigation;
-using WinUIApp.Models;
-using System.Collections.ObjectModel;
+// <copyright file="CategorySelectionMenu.xaml.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
 
 namespace WinUIApp.Views.Components.HeaderComponents
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.IO;
+    using System.Linq;
+    using System.Runtime.InteropServices.WindowsRuntime;
+    using Microsoft.UI.Xaml;
+    using Microsoft.UI.Xaml.Controls;
+    using Microsoft.UI.Xaml.Controls.Primitives;
+    using Microsoft.UI.Xaml.Data;
+    using Microsoft.UI.Xaml.Input;
+    using Microsoft.UI.Xaml.Media;
+    using Microsoft.UI.Xaml.Navigation;
+    using Windows.Foundation;
+    using Windows.Foundation.Collections;
+    using WinUIApp.Models;
+
+    /// <summary>
+    /// Represents a user control for selecting categories in a menu.
+    /// </summary>
     public sealed partial class CategorySelectionMenu : UserControl
     {
         private List<Category> originalCategories = new List<Category>();
         private HashSet<Category> selectedCategories = new HashSet<Category>();
-        public ObservableCollection<Category> CurrentCategories { get; set; } = new ObservableCollection<Category>();
-        public HashSet<Category> SelectedCategories => selectedCategories;
 
         /// <summary>
-        /// Initializes a new instance of the CategorySelectionMenu control.
+        /// Initializes a new instance of the <see cref="CategorySelectionMenu"/> class.
         /// </summary>
         public CategorySelectionMenu()
         {
@@ -33,13 +38,23 @@ namespace WinUIApp.Views.Components.HeaderComponents
         }
 
         /// <summary>
+        /// Gets or sets the current list of categories displayed in the menu.
+        /// </summary>
+        public ObservableCollection<Category> CurrentCategories { get; set; } = new ObservableCollection<Category>();
+
+        /// <summary>
+        /// Gets the selected categories from the menu.
+        /// </summary>
+        public HashSet<Category> SelectedCategories => this.selectedCategories;
+
+        /// <summary>
         /// Populates the menu with the provided list of categories and stores them for filtering operations.
         /// </summary>
         /// <param name="categories">The list of categories to populate the menu with.</param>
         public void PopulateCategories(List<Category> categories)
         {
-            originalCategories = categories;
-            CurrentCategories = new ObservableCollection<Category>(categories);
+            this.originalCategories = categories;
+            this.CurrentCategories = new ObservableCollection<Category>(categories);
         }
 
         /// <summary>
@@ -52,11 +67,12 @@ namespace WinUIApp.Views.Components.HeaderComponents
         {
             foreach (Category removedCategory in selectionChangedEventArgs.RemovedItems)
             {
-                selectedCategories.Remove(removedCategory);
+                this.selectedCategories.Remove(removedCategory);
             }
+
             foreach (Category addedCategory in selectionChangedEventArgs.AddedItems)
             {
-                selectedCategories.Add(addedCategory);
+                this.selectedCategories.Add(addedCategory);
             }
         }
 
@@ -68,25 +84,27 @@ namespace WinUIApp.Views.Components.HeaderComponents
         /// <param name="textChangedEventArgs">Event data for the text changed event.</param>
         private void CategorySearchBox_TextChanged(object sender, TextChangedEventArgs textChangedEventArgs)
         {
-            string searchQuery = CategorySearchBox.Text.ToLower();
-            List<Category> filteredCategories = originalCategories
+            string searchQuery = this.CategorySearchBox.Text.ToLower();
+            List<Category> filteredCategories = this.originalCategories
                 .Where(category => category.CategoryName.ToLower().Contains(searchQuery))
                 .ToList();
-            CategoryList.SelectionChanged -= CategoryList_SelectionChanged;
-            CurrentCategories.Clear();
+            this.CategoryList.SelectionChanged -= this.CategoryList_SelectionChanged;
+            this.CurrentCategories.Clear();
             foreach (Category category in filteredCategories)
             {
-                CurrentCategories.Add(category);
+                this.CurrentCategories.Add(category);
             }
-            CategoryList.SelectedItems.Clear();
+
+            this.CategoryList.SelectedItems.Clear();
             foreach (Category category in filteredCategories)
             {
-                if (selectedCategories.Contains(category))
+                if (this.selectedCategories.Contains(category))
                 {
-                    CategoryList.SelectedItems.Add(category);
+                    this.CategoryList.SelectedItems.Add(category);
                 }
             }
-            CategoryList.SelectionChanged += CategoryList_SelectionChanged;
+
+            this.CategoryList.SelectionChanged += this.CategoryList_SelectionChanged;
         }
     }
 }

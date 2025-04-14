@@ -1,8 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿// <copyright file="Drink.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
 
 namespace WinUIApp.Models
 {
+    using System;
+    using System.Collections.Generic;
+
     /// <summary>
     /// Represents a drink with associated brand, image, alcohol content, and categories.
     /// </summary>
@@ -11,44 +15,10 @@ namespace WinUIApp.Models
         private const float MaximumAlcoholContent = 100.0f;
         private const int MinimumAlcohoolContent = 0;
 
-        public int DrinkId { get; set; }
-
-        private string? _drinkName;
-        public string? DrinkName
-        {
-            get => _drinkName;
-            set => _drinkName = value;
-        }
-
-        private string _drinkImageUrl = string.Empty;
-        public string DrinkImageUrl
-        {
-            get => _drinkImageUrl;
-            set => _drinkImageUrl = value ?? string.Empty;
-        }
-
-        private List<Category> _categoryList;
-        public List<Category> CategoryList
-        {
-            get => _categoryList;
-            set => _categoryList = value;
-        }
-
-        public Brand DrinkBrand { get; set; }
-
-        private float _alcoholContent;
-        public float AlcoholContent
-        {
-            get => _alcoholContent;
-            set
-            {
-                if (value < MinimumAlcohoolContent)
-                    throw new ArgumentOutOfRangeException(nameof(AlcoholContent), "Alcohol content must be a positive value.");
-                if (value > MaximumAlcoholContent)
-                    throw new ArgumentOutOfRangeException(nameof(AlcoholContent), $"Alcohol content must not exceed {MaximumAlcoholContent}.");
-                _alcoholContent = value;
-            }
-        }
+        private string? drinkName;
+        private string drinkImageUrl = string.Empty;
+        private List<Category> categoryList;
+        private float alcoholContent;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Drink"/> class.
@@ -62,12 +32,71 @@ namespace WinUIApp.Models
         /// <exception cref="ArgumentNullException">Thrown when brand is null.</exception>
         public Drink(int id, string? drinkName, string imageUrl, List<Category> categories, Brand brand, float alcoholContent)
         {
-            DrinkId = id;
-            DrinkName = drinkName;
-            DrinkImageUrl = imageUrl;
-            CategoryList = categories;
-            DrinkBrand = brand ?? throw new ArgumentNullException(nameof(brand), "Brand cannot be null");
-            AlcoholContent = alcoholContent;
+            this.DrinkId = id;
+            this.DrinkName = drinkName;
+            this.DrinkImageUrl = imageUrl;
+            this.CategoryList = categories;
+            this.DrinkBrand = brand ?? throw new ArgumentNullException(nameof(brand), "Brand cannot be null");
+            this.AlcoholContent = alcoholContent;
+        }
+
+        /// <summary>
+        /// Gets or sets the unique identifier for the drink.
+        /// </summary>
+        public int DrinkId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the name of the drink.
+        /// </summary>
+        public string? DrinkName
+        {
+            get => this.drinkName;
+            set => this.drinkName = value;
+        }
+
+        /// <summary>
+        /// Gets or sets the URL of the drink image.
+        /// </summary>
+        public string DrinkImageUrl
+        {
+            get => this.drinkImageUrl;
+            set => this.drinkImageUrl = value ?? string.Empty;
+        }
+
+        /// <summary>
+        /// Gets or sets the list of categories associated with the drink.
+        /// </summary>
+        public List<Category> CategoryList
+        {
+            get => this.categoryList;
+            set => this.categoryList = value;
+        }
+
+        /// <summary>
+        /// Gets or sets the brand of the drink.
+        /// </summary>
+        public Brand DrinkBrand { get; set; }
+
+        /// <summary>
+        /// Gets or sets the alcohol content of the drink as a percentage.
+        /// </summary>
+        public float AlcoholContent
+        {
+            get => this.alcoholContent;
+            set
+            {
+                if (value < MinimumAlcohoolContent)
+                {
+                    throw new ArgumentOutOfRangeException(nameof(this.AlcoholContent), "Alcohol content must be a positive value.");
+                }
+
+                if (value > MaximumAlcoholContent)
+                {
+                    throw new ArgumentOutOfRangeException(nameof(this.AlcoholContent), $"Alcohol content must not exceed {MaximumAlcoholContent}.");
+                }
+
+                this.alcoholContent = value;
+            }
         }
     }
 }

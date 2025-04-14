@@ -1,15 +1,3 @@
-using Microsoft.UI;
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Media;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using WinUIApp.Models;
-using WinUIApp.Services;
-using WinUIApp.Services.DummyServices;
-using WinUIApp.ViewModels;
-
 // <copyright file="AddDrinkFlyout.xaml.cs" company="PlaceholderCompany">
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
@@ -33,15 +21,15 @@ namespace WinUIApp.Views.Components
     /// </summary>
     public sealed partial class AddDrinkFlyout : UserControl
     {
+        private readonly AdminService adminService;
         private AddDrinkMenuViewModel viewModel;
 
-        private readonly AdminService adminService;
         /// <summary>
         /// Initializes a new instance of the <see cref="AddDrinkFlyout"/> class.
         /// </summary>
         public AddDrinkFlyout()
         {
-            adminService = new AdminService();
+            this.adminService = new AdminService();
             this.InitializeComponent();
             this.Loaded += this.AddDrinkFlyout_Loaded;
             this.CategoryList.SelectionChanged += this.CategoryList_SelectionChanged;
@@ -81,7 +69,7 @@ namespace WinUIApp.Views.Components
         {
             var drinkService = new DrinkService();
             var userService = new UserService();
-            bool isAdmin = adminService.IsAdmin(this.UserId);
+            bool isAdmin = this.adminService.IsAdmin(this.UserId);
 
             var allBrands = drinkService.GetDrinkBrandNames();
             var allCategories = drinkService.GetDrinkCategories();
@@ -89,7 +77,7 @@ namespace WinUIApp.Views.Components
             this.viewModel = new AddDrinkMenuViewModel(
                 drinkService,
                 userService,
-                adminService)
+                this.adminService)
             {
                 AllBrands = allBrands,
                 AllCategoryObjects = allCategories,
@@ -135,10 +123,9 @@ namespace WinUIApp.Views.Components
         {
             try
             {
-
                 this.viewModel.ValidateUserDrinkInput();
 
-                bool isAdmin = adminService.IsAdmin(this.UserId);
+                bool isAdmin = this.adminService.IsAdmin(this.UserId);
 
                 string message;
 

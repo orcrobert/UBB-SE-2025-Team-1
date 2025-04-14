@@ -38,7 +38,6 @@ namespace WinUIApp.Views.Components
         public UpdateDrinkButton()
         {
             this.InitializeComponent();
-
         }
 
         /// <summary>

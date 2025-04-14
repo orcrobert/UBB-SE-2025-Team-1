@@ -1,25 +1,31 @@
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
-using System.Linq;
-using WinUIApp.Utils.NavigationParameters;
-using WinUIApp.Views.Pages;
-using WinUIApp.Views.ViewModels;
+// <copyright file="Header.xaml.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
 
 namespace WinUIApp.Views.Components.HeaderComponents
 {
+    using System.Linq;
+    using Microsoft.UI.Xaml;
+    using Microsoft.UI.Xaml.Controls;
+    using WinUIApp.Utils.NavigationParameters;
+    using WinUIApp.Views.Pages;
+    using WinUIApp.Views.ViewModels;
+
+    /// <summary>
+    /// Represents the header component of the application, including the logo, search box, and category menu.
+    /// </summary>
     public sealed partial class Header : UserControl
     {
         private readonly HeaderViewModel viewModel;
 
         /// <summary>
-        /// Initializes a new instance of the Header control, sets up the view model,
-        /// and populates the category menu with available categories.
+        /// Initializes a new instance of the <see cref="Header"/> class.
         /// </summary>
         public Header()
         {
             this.InitializeComponent();
-            viewModel = new HeaderViewModel(new Services.DrinkService());
-            CategoryMenu.PopulateCategories(viewModel.GetCategories());
+            this.viewModel = new HeaderViewModel(new Services.DrinkService());
+            this.CategoryMenu.PopulateCategories(this.viewModel.GetCategories());
         }
 
         /// <summary>
@@ -32,13 +38,12 @@ namespace WinUIApp.Views.Components.HeaderComponents
             MainWindow.AppMainFrame.Navigate(typeof(MainPage));
         }
 
-        // Update the property names to match the correct ones in SearchPageNavigationParameters
         private void SearchDrinksButton_Click(object sender, RoutedEventArgs routedEventArgs)
         {
             SearchPageNavigationParameters navigationParameters = new SearchPageNavigationParameters
             {
-                SelectedCategoryFilters = CategoryMenu.SelectedCategories.ToList(), // Corrected property name
-                InputSearchKeyword = DrinkSearchBox.Text // Corrected property name
+                SelectedCategoryFilters = this.CategoryMenu.SelectedCategories.ToList(),
+                InputSearchKeyword = this.DrinkSearchBox.Text,
             };
             MainWindow.AppMainFrame.Navigate(typeof(SearchPage), navigationParameters);
         }

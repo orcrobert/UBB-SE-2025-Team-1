@@ -1,11 +1,26 @@
-using Microsoft.UI.Xaml.Controls;
-using System;
-using System.Collections.Generic;
+// <copyright file="VerticalDrinkListComponent.xaml.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
 
 namespace WinUIApp.Views.Components.SearchPageComponents
 {
+    using System;
+    using System.Collections.Generic;
+    using Microsoft.UI.Xaml.Controls;
+
+    /// <summary>
+    /// Represents a user control that displays a vertical list of drink items.
+    /// </summary>
     public sealed partial class VerticalDrinkListComponent : UserControl
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VerticalDrinkListComponent"/> class.
+        /// </summary>
+        public VerticalDrinkListComponent()
+        {
+            this.InitializeComponent();
+        }
+
         /// <summary>
         /// Event that fires when a drink item is clicked, providing the ID of the selected drink.
         /// </summary>
@@ -17,11 +32,13 @@ namespace WinUIApp.Views.Components.SearchPageComponents
         public IEnumerable<DrinkDisplayItem> DrinksList { get; set; }
 
         /// <summary>
-        /// Initializes a new instance of the VerticalDrinkListComponent control.
+        /// Updates the displayed drinks list with the provided collection of drink items.
         /// </summary>
-        public VerticalDrinkListComponent()
+        /// <param name="drinks">The collection of drink items to display.</param>
+        public void SetDrinks(IEnumerable<DrinkDisplayItem> drinks)
         {
-            this.InitializeComponent();
+            this.DrinksList = drinks;
+            this.DrinkListView.ItemsSource = this.DrinksList;
         }
 
         /// <summary>
@@ -34,20 +51,8 @@ namespace WinUIApp.Views.Components.SearchPageComponents
         {
             if (itemClickEventArgs.ClickedItem is DrinkDisplayItem selectedDrink)
             {
-                DrinkClicked?.Invoke(this, selectedDrink.Drink.DrinkId);
+                this.DrinkClicked?.Invoke(this, selectedDrink.Drink.DrinkId);
             }
         }
-
-        /// <summary>
-        /// Updates the displayed drinks list with the provided collection of drink items.
-        /// </summary>
-        /// <param name="drinks">The collection of drink items to display.</param>
-        public void SetDrinks(IEnumerable<DrinkDisplayItem> drinks)
-        {
-            DrinksList = drinks;
-            DrinkListView.ItemsSource = DrinksList;
-        }
     }
-
-
 }

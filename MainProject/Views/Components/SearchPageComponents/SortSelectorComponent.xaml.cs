@@ -1,9 +1,15 @@
-using Microsoft.UI.Xaml.Controls;
-using System;
-
+// <copyright file="SortSelectorComponent.xaml.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
 
 namespace WinUIApp.Views.Components.SearchPageComponents
 {
+    using System;
+    using Microsoft.UI.Xaml.Controls;
+
+    /// <summary>
+    /// User control for selecting sorting options in a search page.
+    /// </summary>
     public sealed partial class SortSelectorComponent : UserControl
     {
         private const string SortFieldName = "Name";
@@ -17,6 +23,14 @@ namespace WinUIApp.Views.Components.SearchPageComponents
         private const int SortOrderDescendingIndex = 1;
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="SortSelectorComponent"/> class.
+        /// </summary>
+        public SortSelectorComponent()
+        {
+            this.InitializeComponent();
+        }
+
+        /// <summary>
         /// Event that fires when the sort order changes, providing a boolean indicating if the order is ascending.
         /// </summary>
         public event EventHandler<bool> SortOrderChanged;
@@ -27,26 +41,12 @@ namespace WinUIApp.Views.Components.SearchPageComponents
         public event EventHandler<string> SortByChanged;
 
         /// <summary>
-        /// Initializes a new instance of the SortSelectorComponent control.
+        /// Sets the sort order selector based on the specified direction.
         /// </summary>
-        public SortSelectorComponent()
+        /// <param name="isAscending">True for ascending order, false for descending.</param>
+        public void SetSortOrder(bool isAscending)
         {
-            this.InitializeComponent();
-        }
-
-        /// <summary>
-        /// Handles selection changes in the sort field combo box and triggers the SortByChanged event
-        /// with the selected sort field name.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="selectionChangedEventArgs">Event data for the selection changed event.</param>
-        private void SortByComboBox_SelectionChanged(object sender, SelectionChangedEventArgs selectionChangedEventArgs)
-        {
-            if (SortByComboBox.SelectedItem is ComboBoxItem selectedItem)
-            {
-                string sortField = selectedItem.Content.ToString();
-                SortByChanged?.Invoke(this, sortField);
-            }
+            this.SortOrderComboBox.SelectedIndex = isAscending ? SortOrderAscendingIndex : SortOrderDescendingIndex;
         }
 
         /// <summary>
@@ -58,14 +58,29 @@ namespace WinUIApp.Views.Components.SearchPageComponents
             switch (sortField)
             {
                 case SortFieldName:
-                    SortByComboBox.SelectedIndex = SortByNameIndex;
+                    this.SortByComboBox.SelectedIndex = SortByNameIndex;
                     break;
                 case SortFieldAlcoholContent:
-                    SortByComboBox.SelectedIndex = SortByAlcoholContentIndex;
+                    this.SortByComboBox.SelectedIndex = SortByAlcoholContentIndex;
                     break;
                 case SortFieldAverageReviewScore:
-                    SortByComboBox.SelectedIndex = SortByAverageReviewScoreIndex;
+                    this.SortByComboBox.SelectedIndex = SortByAverageReviewScoreIndex;
                     break;
+            }
+        }
+
+        /// <summary>
+        /// Handles selection changes in the sort field combo box and triggers the SortByChanged event
+        /// with the selected sort field name.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="selectionChangedEventArgs">Event data for the selection changed event.</param>
+        private void SortByComboBox_SelectionChanged(object sender, SelectionChangedEventArgs selectionChangedEventArgs)
+        {
+            if (this.SortByComboBox.SelectedItem is ComboBoxItem selectedItem)
+            {
+                string sortField = selectedItem.Content.ToString();
+                this.SortByChanged?.Invoke(this, sortField);
             }
         }
 
@@ -77,20 +92,11 @@ namespace WinUIApp.Views.Components.SearchPageComponents
         /// <param name="selectionChangedEventArgs">Event data for the selection changed event.</param>
         private void SortOrderComboBox_SelectionChanged(object sender, SelectionChangedEventArgs selectionChangedEventArgs)
         {
-            if (SortOrderComboBox.SelectedItem is ComboBoxItem selectedItem)
+            if (this.SortOrderComboBox.SelectedItem is ComboBoxItem selectedItem)
             {
                 bool isAscending = selectedItem.Content.ToString() == SortOrderAscending;
-                SortOrderChanged?.Invoke(this, isAscending);
+                this.SortOrderChanged?.Invoke(this, isAscending);
             }
-        }
-
-        /// <summary>
-        /// Sets the sort order selector based on the specified direction.
-        /// </summary>
-        /// <param name="isAscending">True for ascending order, false for descending.</param>
-        public void SetSortOrder(bool isAscending)
-        {
-            SortOrderComboBox.SelectedIndex = isAscending ? SortOrderAscendingIndex : SortOrderDescendingIndex;
         }
     }
 }

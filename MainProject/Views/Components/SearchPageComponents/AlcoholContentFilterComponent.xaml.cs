@@ -1,37 +1,27 @@
-using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using System;
+// <copyright file="AlcoholContentFilterComponent.xaml.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
 
 namespace WinUIApp.Views.Components.SearchPageComponents
 {
+    using System;
+    using Microsoft.UI.Xaml.Controls;
+    using Microsoft.UI.Xaml.Controls.Primitives;
+
+    /// <summary>
+    /// Represents a user control for filtering drinks based on their alcohol content.
+    /// </summary>
     public sealed partial class AlcoholContentFilterComponent : UserControl
     {
-        // Constants for slider default values
         private const double MinimumAlcoholPercentage = 0;
         private const double MaximumAlcoholPercentage = 100;
 
         /// <summary>
-        /// Gets or sets the minimum alcohol content percentage value.
+        /// Initializes a new instance of the <see cref="AlcoholContentFilterComponent"/> class.
         /// </summary>
-        public double MinimumAlcoholContent
+        public AlcoholContentFilterComponent()
         {
-            get => MinValueSlider.Value;
-            set
-            {
-                MinValueSlider.Value = value;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the maximum alcohol content percentage value.
-        /// </summary>
-        public double MaximumAlcoholContent
-        {
-            get => MaxValueSlider.Value;
-            set
-            {
-                MaxValueSlider.Value = value;
-            }
+            this.InitializeComponent();
         }
 
         /// <summary>
@@ -45,11 +35,54 @@ namespace WinUIApp.Views.Components.SearchPageComponents
         public event EventHandler<double> MaximumAlcoholContentChanged;
 
         /// <summary>
-        /// Initializes a new instance of the AlcoholContentFilterComponent control.
+        /// Gets or sets the minimum alcohol content percentage value.
         /// </summary>
-        public AlcoholContentFilterComponent()
+        public double MinimumAlcoholContent
         {
-            this.InitializeComponent();
+            get => this.MinValueSlider.Value;
+            set
+            {
+                this.MinValueSlider.Value = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the maximum alcohol content percentage value.
+        /// </summary>
+        public double MaximumAlcoholContent
+        {
+            get => this.MaxValueSlider.Value;
+            set
+            {
+                this.MaxValueSlider.Value = value;
+            }
+        }
+
+        /// <summary>
+        /// Resets the minimum value slider to its default value and triggers the change event.
+        /// </summary>
+        public void ResetMinSlider()
+        {
+            this.MinValueSlider.Value = MinimumAlcoholPercentage;
+            this.MinimumAlcoholContentChanged?.Invoke(this, this.MinValueSlider.Value);
+        }
+
+        /// <summary>
+        /// Resets the maximum value slider to its default value and triggers the change event.
+        /// </summary>
+        public void ResetMaxSlider()
+        {
+            this.MaxValueSlider.Value = MaximumAlcoholPercentage;
+            this.MaximumAlcoholContentChanged?.Invoke(this, this.MaxValueSlider.Value);
+        }
+
+        /// <summary>
+        /// Resets both minimum and maximum sliders to their default values.
+        /// </summary>
+        public void ResetSliders()
+        {
+            this.ResetMinSlider();
+            this.ResetMaxSlider();
         }
 
         /// <summary>
@@ -59,12 +92,13 @@ namespace WinUIApp.Views.Components.SearchPageComponents
         /// <param name="valueChangedEventArgs">Event data for the value changed event.</param>
         private void MinValueSlider_ValueChanged(object sender, RangeBaseValueChangedEventArgs valueChangedEventArgs)
         {
-            if (MinValueSlider.Value > MaxValueSlider.Value)
+            if (this.MinValueSlider.Value > this.MaxValueSlider.Value)
             {
-                MinValueSlider.Value = MinimumAlcoholPercentage;
+                this.MinValueSlider.Value = MinimumAlcoholPercentage;
                 return;
             }
-            MinimumAlcoholContentChanged?.Invoke(this, MinValueSlider.Value);
+
+            this.MinimumAlcoholContentChanged?.Invoke(this, this.MinValueSlider.Value);
         }
 
         /// <summary>
@@ -74,40 +108,13 @@ namespace WinUIApp.Views.Components.SearchPageComponents
         /// <param name="valueChangedEventArgs">Event data for the value changed event.</param>
         private void MaxValueSlider_ValueChanged(object sender, RangeBaseValueChangedEventArgs valueChangedEventArgs)
         {
-            if (MaxValueSlider.Value < MinValueSlider.Value)
+            if (this.MaxValueSlider.Value < this.MinValueSlider.Value)
             {
-                MaxValueSlider.Value = MaximumAlcoholPercentage;
+                this.MaxValueSlider.Value = MaximumAlcoholPercentage;
                 return;
             }
-            MaximumAlcoholContentChanged?.Invoke(this, MaxValueSlider.Value);
-        }
 
-        /// <summary>
-        /// Resets the minimum value slider to its default value and triggers the change event.
-        /// </summary>
-        public void ResetMinSlider()
-        {
-            MinValueSlider.Value = MinimumAlcoholPercentage;
-            MinimumAlcoholContentChanged?.Invoke(this, MinValueSlider.Value);
-        }
-
-        /// <summary>
-        /// Resets the maximum value slider to its default value and triggers the change event.
-        /// </summary>
-        public void ResetMaxSlider()
-        {
-            MaxValueSlider.Value = MaximumAlcoholPercentage;
-            MaximumAlcoholContentChanged?.Invoke(this, MaxValueSlider.Value);
-        }
-
-        /// <summary>
-        /// Resets both minimum and maximum sliders to their default values.
-        /// </summary>
-        public void ResetSliders()
-        {
-            ResetMinSlider();
-            ResetMaxSlider();
+            this.MaximumAlcoholContentChanged?.Invoke(this, this.MaxValueSlider.Value);
         }
     }
-
 }

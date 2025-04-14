@@ -1,16 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using WinUIApp.Models;
-using WinUIApp.Services;
-using WinUIApp.Services.DummyServices;
+﻿// <copyright file="UpdateDrinkMenuViewModel.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
 
 namespace WinUIApp.ViewModels
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.ComponentModel;
+    using System.Diagnostics;
+    using System.Linq;
+    using System.Runtime.CompilerServices;
+    using WinUIApp.Models;
+    using WinUIApp.Services;
+    using WinUIApp.Services.DummyServices;
+
     /// <summary>
     /// ViewModel for the UpdateDrinkMenu page. Displays a form for updating an existing drinkToUpdate, including name, image URL, brand, alcohol content, and categories.
     /// </summary>
@@ -29,44 +33,46 @@ namespace WinUIApp.ViewModels
     {
         private const float MaxAlcoholContent = 100.0f;
         private const float MinAlcoholContent = 0.0f;
-        private readonly IDrinkService _drinkService = drinkService;
-        private readonly IUserService _userService = userService;
-        private readonly IAdminService _adminService = adminService;
+        private readonly IDrinkService drinkService = drinkService;
+        private readonly IUserService userService = userService;
+        private readonly IAdminService adminService = adminService;
+        private Drink drinkToUpdate = drinkToUpdate;
 
         /// <summary>
-        /// List of all available categories.
+        /// Event handler for property changes. This is used for data binding in the UI.
         /// </summary>
-        public List<string> AllCategories { get; set; } = new();
-
-        /// <summary>
-        /// Collection of selected categories when updating a drinkToUpdate.
-        /// </summary>
-        public ObservableCollection<string> SelectedCategoryNames { get; set; } = new();
-
-        /// <summary>
-        /// List of all available categories as objects. Used for data binding.
-        /// </summary>
-        public List<Category> AllCategoryObjects { get; set; } = new();
-
-        /// <summary>
-        /// List of all available brands.
-        /// </summary>
-        public List<Brand> AllBrands { get; set; } = new();
-
-        private Drink _drinkToUpdate = drinkToUpdate;
-
         public event PropertyChangedEventHandler PropertyChanged;
+
+        /// <summary>
+        /// Gets or sets the list of all available drink categories.
+        /// </summary>
+        public List<string> AllCategories { get; set; } = new ();
+
+        /// <summary>
+        /// Gets or sets the list of selected drink categories.
+        /// </summary>
+        public ObservableCollection<string> SelectedCategoryNames { get; set; } = new ();
+
+        /// <summary>
+        /// Gets or sets the list of all available drink categories as objects.
+        /// </summary>
+        public List<Category> AllCategoryObjects { get; set; } = new ();
+
+        /// <summary>
+        /// Gets or sets the list of all available drink brands.
+        /// </summary>
+        public List<Brand> AllBrands { get; set; } = new ();
 
         /// <summary>
         /// Gets or sets the drinkToUpdate to be updated. This property is used for data binding in the UI.
         /// </summary>
         public Drink DrinkToUpdate
         {
-            get => _drinkToUpdate;
+            get => this.drinkToUpdate;
             set
             {
-                _drinkToUpdate = value;
-                OnPropertyChanged();
+                this.drinkToUpdate = value;
+                this.OnPropertyChanged();
             }
         }
 
@@ -75,13 +81,13 @@ namespace WinUIApp.ViewModels
         /// </summary>
         public string DrinkName
         {
-            get => DrinkToUpdate.DrinkName;
+            get => this.DrinkToUpdate.DrinkName;
             set
             {
-                if (DrinkToUpdate.DrinkName != value)
+                if (this.DrinkToUpdate.DrinkName != value)
                 {
-                    DrinkToUpdate.DrinkName = value;
-                    OnPropertyChanged();
+                    this.DrinkToUpdate.DrinkName = value;
+                    this.OnPropertyChanged();
                 }
             }
         }
@@ -92,13 +98,13 @@ namespace WinUIApp.ViewModels
 
         public string DrinkURL
         {
-            get => DrinkToUpdate.DrinkImageUrl;
+            get => this.DrinkToUpdate.DrinkImageUrl;
             set
             {
-                if (DrinkToUpdate.DrinkImageUrl != value)
+                if (this.DrinkToUpdate.DrinkImageUrl != value)
                 {
-                    DrinkToUpdate.DrinkImageUrl = value;
-                    OnPropertyChanged();
+                    this.DrinkToUpdate.DrinkImageUrl = value;
+                    this.OnPropertyChanged();
                 }
             }
         }
@@ -111,18 +117,20 @@ namespace WinUIApp.ViewModels
         {
             get
             {
-                if (DrinkToUpdate.DrinkBrand == null)
+                if (this.DrinkToUpdate.DrinkBrand == null)
                 {
                     return string.Empty;
                 }
-                return DrinkToUpdate.DrinkBrand.BrandName;
+
+                return this.DrinkToUpdate.DrinkBrand.BrandName;
             }
+
             set
             {
-                if (DrinkToUpdate.DrinkBrand == null || DrinkToUpdate.DrinkBrand.BrandName != value)
+                if (this.DrinkToUpdate.DrinkBrand == null || this.DrinkToUpdate.DrinkBrand.BrandName != value)
                 {
-                    DrinkToUpdate.DrinkBrand = new Brand(0, value);
-                    OnPropertyChanged();
+                    this.DrinkToUpdate.DrinkBrand = new Brand(0, value);
+                    this.OnPropertyChanged();
                 }
             }
         }
@@ -132,13 +140,13 @@ namespace WinUIApp.ViewModels
         /// </summary>
         public string AlcoholContent
         {
-            get => DrinkToUpdate.AlcoholContent.ToString();
+            get => this.DrinkToUpdate.AlcoholContent.ToString();
             set
             {
-                if (float.TryParse(value, out float parsedAlcoholContent) && DrinkToUpdate.AlcoholContent != parsedAlcoholContent)
+                if (float.TryParse(value, out float parsedAlcoholContent) && this.DrinkToUpdate.AlcoholContent != parsedAlcoholContent)
                 {
-                    DrinkToUpdate.AlcoholContent = parsedAlcoholContent;
-                    OnPropertyChanged();
+                    this.DrinkToUpdate.AlcoholContent = parsedAlcoholContent;
+                    this.OnPropertyChanged();
                 }
             }
         }
@@ -149,7 +157,7 @@ namespace WinUIApp.ViewModels
         /// <returns>The list of all available categories.</returns>
         public List<Category> GetSelectedCategories()
         {
-            return SelectedCategoryNames
+            return this.SelectedCategoryNames
                 .Select(name => AllCategoryObjects.FirstOrDefault(category => category.CategoryName == name))
                 .Where(SelectedCategory => SelectedCategory != null)
                 .ToList();
@@ -162,43 +170,38 @@ namespace WinUIApp.ViewModels
         /// <exception cref="ArgumentException">Thrown when any of the drink details are invalid.</exception>
         public void ValidateUpdatedDrinkDetails()
         {
-            if (string.IsNullOrWhiteSpace(DrinkName))
+            if (string.IsNullOrWhiteSpace(this.DrinkName))
+            {
                 throw new ArgumentException("Drink name is required");
+            }
 
-            if (string.IsNullOrWhiteSpace(BrandName))
+            if (string.IsNullOrWhiteSpace(this.BrandName))
+            {
                 throw new ArgumentException("Brand is required");
+            }
 
-            if (string.IsNullOrWhiteSpace(BrandName))
+            if (string.IsNullOrWhiteSpace(this.BrandName))
+            {
                 throw new ArgumentException("Brand is required.");
+            }
 
-            var validBrand = AllBrands.FirstOrDefault(brand => brand.BrandName.Equals(BrandName, StringComparison.OrdinalIgnoreCase));
+            var validBrand = this.AllBrands.FirstOrDefault(brand => brand.BrandName.Equals(this.BrandName, StringComparison.OrdinalIgnoreCase));
             if (validBrand == null)
+            {
                 throw new ArgumentException("The brand you entered does not exist.");
+            }
 
-            DrinkToUpdate.DrinkBrand = validBrand;
+            this.DrinkToUpdate.DrinkBrand = validBrand;
 
-            if (!float.TryParse(AlcoholContent, out var alcoholContent) || alcoholContent < MinAlcoholContent || alcoholContent > MaxAlcoholContent)
+            if (!float.TryParse(this.AlcoholContent, out var alcoholContent) || alcoholContent < MinAlcoholContent || alcoholContent > MaxAlcoholContent)
+            {
                 throw new ArgumentException("Valid alcohol content (0–100%) is required");
+            }
 
-            if (SelectedCategoryNames.Count == 0)
+            if (this.SelectedCategoryNames.Count == 0)
+            {
                 throw new ArgumentException("At least one category must be selected");
-        }
-
-        /// <summary>
-        /// Searches for a brand by its name in the list of available brands.
-        /// </summary>
-        /// <param name="searchedBrandName">The name of the brand to search for.</param>
-        /// <returns>The matching brand object, if found; null otherwise.</returns>
-        /// <exception cref="ArgumentException">Thrown when the brand is not found.</exception>
-        private Brand FindBrandByName(string searchedBrandName)
-        {
-            var existingBrands = _drinkService.GetDrinkBrandNames();
-            var match = existingBrands.FirstOrDefault(searchedBrand => searchedBrand.BrandName.Equals(searchedBrandName, StringComparison.OrdinalIgnoreCase));
-
-            if (match == null)
-                throw new ArgumentException("The brand you tried to add was not found.");
-
-            return match;
+            }
         }
 
         /// <summary>
@@ -209,14 +212,14 @@ namespace WinUIApp.ViewModels
         {
             try
             {
-                DrinkToUpdate.DrinkBrand = FindBrandByName(BrandName);
-                DrinkToUpdate.CategoryList = GetSelectedCategories();
-                _drinkService.UpdateDrink(DrinkToUpdate);
+                this.DrinkToUpdate.DrinkBrand = this.FindBrandByName(this.BrandName);
+                this.DrinkToUpdate.CategoryList = this.GetSelectedCategories();
+                this.drinkService.UpdateDrink(this.DrinkToUpdate);
                 Debug.WriteLine("Drink updated successfully (admin).");
             }
-            catch (Exception InstantUpdateDrinkException)
+            catch (Exception instantUpdateDrinkException)
             {
-                Debug.WriteLine($"Error updating drinkToUpdate: {InstantUpdateDrinkException.Message}");
+                Debug.WriteLine($"Error updating drinkToUpdate: {instantUpdateDrinkException.Message}");
             }
         }
 
@@ -228,15 +231,15 @@ namespace WinUIApp.ViewModels
         {
             try
             {
-                adminService.SendNotificationFromUserToAdmin(
-                senderUserId: _userService.CurrentUserId,
+                this.adminService.SendNotificationFromUserToAdmin(
+                senderUserId: this.userService.CurrentUserId,
                 userModificationRequestType: "Drink Update Request",
-                userModificationRequestDetails: $"User requested to update drinkToUpdate: {DrinkToUpdate.DrinkName}");
+                userModificationRequestDetails: $"User requested to update drinkToUpdate: {this.DrinkToUpdate.DrinkName}");
                 Debug.WriteLine("Drink update request sent to admin.");
             }
-            catch (Exception SendUpdateDrinkRequestException)
+            catch (Exception sendUpdateDrinkRequestException)
             {
-                Debug.WriteLine($"Error sending update request: {SendUpdateDrinkRequestException.Message}");
+                Debug.WriteLine($"Error sending update request: {sendUpdateDrinkRequestException.Message}");
             }
         }
 
@@ -246,7 +249,26 @@ namespace WinUIApp.ViewModels
         /// <param name="propertyName">Name of the property that changed.</param>
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            PropertyChanged.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            this.PropertyChanged.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        /// <summary>
+        /// Searches for a brand by its name in the list of available brands.
+        /// </summary>
+        /// <param name="searchedBrandName">The name of the brand to search for.</param>
+        /// <returns>The matching brand object, if found; null otherwise.</returns>
+        /// <exception cref="ArgumentException">Thrown when the brand is not found.</exception>
+        private Brand FindBrandByName(string searchedBrandName)
+        {
+            var existingBrands = this.drinkService.GetDrinkBrandNames();
+            var match = existingBrands.FirstOrDefault(searchedBrand => searchedBrand.BrandName.Equals(searchedBrandName, StringComparison.OrdinalIgnoreCase));
+
+            if (match == null)
+            {
+                throw new ArgumentException("The brand you tried to add was not found.");
+            }
+
+            return match;
         }
     }
 }

@@ -1,18 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Windows.Management.Deployment;
-using WinUIApp.Models;
-using WinUIApp.Services;
-using WinUIApp.Services.DummyServices;
-using WinUIApp.Views.Pages;
+﻿// <copyright file="DrinkDetailPageViewModel.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
 
 namespace WinUIApp.Views.ViewModels
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.ComponentModel;
+    using System.Linq;
+    using System.Text;
+    using System.Threading.Tasks;
+    using Windows.Management.Deployment;
+    using WinUIApp.Models;
+    using WinUIApp.Services;
+    using WinUIApp.Services.DummyServices;
+    using WinUIApp.Views.Pages;
+
     /// <summary>
     /// ViewModel for the DrinkDetailPage. Shows detailed information about a drink, including name, image, alcohol content, categories, and reviews.
     /// </summary>
@@ -26,42 +30,47 @@ namespace WinUIApp.Views.ViewModels
     public partial class DrinkDetailPageViewModel(DrinkService drinkService, DrinkReviewService reviewService, UserService userService, AdminService adminService) : INotifyPropertyChanged
     {
         private const string CategorySeparator = ", ";
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        private readonly DrinkService _drinkService = drinkService;
-        private readonly DrinkReviewService _reviewService = reviewService;
-        private readonly UserService _userService = userService;
-        private readonly AdminService _adminService = adminService;
-
-
-        private Drink _drink;
+        private readonly DrinkService drinkService = drinkService;
+        private readonly DrinkReviewService reviewService = reviewService;
+        private readonly UserService userService = userService;
+        private readonly AdminService adminService = adminService;
+        private Drink drink;
+        private float averageReviewScore;
 
         /// <summary>
-        /// The drink object that is being displayed in the detail page.
+        /// Event handler for property changes. This is used for data binding in the UI.
+        /// </summary>
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        /// <summary>
+        /// Gets or sets the drink object. This contains all the details about the drink, including name, image URL, alcohol content, and categories.
         /// </summary>
         public Drink Drink
         {
-            get { return _drink; }
+            get
+            {
+                return this.drink;
+            }
+
             set
             {
-                _drink = value;
-                OnPropertyChanged(nameof(Drink));
-                OnPropertyChanged(nameof(CategoriesDisplay));
+                this.drink = value;
+                this.OnPropertyChanged(nameof(this.Drink));
+                this.OnPropertyChanged(nameof(this.CategoriesDisplay));
             }
         }
 
         /// <summary>
-        /// A string representation of the drink's categories, used for display purposes.
+        /// Gets or sets the name of the drink. This is used for display purposes.
         /// </summary>
         /// <returns>A comma-separated string of category names.</returns>
         public string CategoriesDisplay
         {
             get
             {
-                if (Drink?.CategoryList != null)
+                if (this.Drink?.CategoryList != null)
                 {
-                    return string.Join(CategorySeparator, Drink.CategoryList.Select(drinkCategory => drinkCategory.CategoryName));
+                    return string.Join(CategorySeparator, this.Drink.CategoryList.Select(drinkCategory => drinkCategory.CategoryName));
                 }
                 else
                 {
@@ -70,23 +79,21 @@ namespace WinUIApp.Views.ViewModels
             }
         }
 
-        private float _averageReviewScore;
-
         /// <summary>
         /// Gets or sets the average review score of the drink.
         /// </summary>
         public float AverageReviewScore
         {
-            get => _averageReviewScore;
+            get => this.averageReviewScore;
             set
             {
-                _averageReviewScore = value;
-                OnPropertyChanged(nameof(AverageReviewScore));
+                this.averageReviewScore = value;
+                this.OnPropertyChanged(nameof(this.AverageReviewScore));
             }
         }
 
         /// <summary>
-        /// A collection of reviews for the drink. Used to display user feedback and ratings.
+        /// Gets or sets the list of reviews for the drink. This is an observable collection that allows for dynamic updates to the UI when reviews are added or removed.
         /// </summary>
         public ObservableCollection<Review> Reviews { get; set; } = new ObservableCollection<Review>();
 
@@ -96,24 +103,13 @@ namespace WinUIApp.Views.ViewModels
         /// <param name="drinkId">The ID of the drink to load.</param>
         public void LoadDrink(int drinkId)
         {
-            Drink=_drinkService.GetDrinkById(drinkId);
-            AverageReviewScore=_reviewService.GetReviewAverageByID(drinkId);
-            List<Review> reviews = _reviewService.GetReviewsByID(drinkId);
-            Reviews.Clear();
+            this.Drink = this.drinkService.GetDrinkById(drinkId);
+            this.AverageReviewScore = this.reviewService.GetReviewAverageByID(drinkId);
+            List<Review> reviews = this.reviewService.GetReviewsByID(drinkId);
+            this.Reviews.Clear();
             foreach (Review review in reviews)
             {
-                Reviews.Add(review);
-            }
-        }
-        /// <summary>
-        /// Raises the PropertyChanged event for the specified property name.
-        /// </summary>
-        /// <param name="propertyName">The name of the property that changed.</param>
-        protected void OnPropertyChanged(string propertyName)
-        {
-            if (PropertyChanged != null)
-            {
-                PropertyChanged.Invoke(this, new PropertyChangedEventArgs(propertyName));
+                this.Reviews.Add(review);
             }
         }
 
@@ -123,7 +119,7 @@ namespace WinUIApp.Views.ViewModels
         /// <returns>True if the user is an admin; otherwise, false.</returns>
         public bool IsCurrentUserAdmin()
         {
-            return adminService.IsAdmin(_userService.GetCurrentUserId());
+            return this.adminService.IsAdmin(this.userService.GetCurrentUserId());
         }
 
         /// <summary>
@@ -131,29 +127,42 @@ namespace WinUIApp.Views.ViewModels
         /// </summary>
         public void RemoveDrink()
         {
-            if (IsCurrentUserAdmin())
+            if (this.IsCurrentUserAdmin())
             {
-                _drinkService.DeleteDrink(Drink.DrinkId);
+                this.drinkService.DeleteDrink(this.Drink.DrinkId);
             }
             else
             {
-                adminService.SendNotificationFromUserToAdmin(_userService.GetCurrentUserId(), "Removal of drink with id:"+Drink.DrinkId +" and name:"+Drink.DrinkName, "User requested removal of drink from database.");
+                this.adminService.SendNotificationFromUserToAdmin(this.userService.GetCurrentUserId(), "Removal of drink with id:" + this.Drink.DrinkId + " and name:" + this.Drink.DrinkName, "User requested removal of drink from database.");
             }
         }
+
         /// <summary>
         /// Votes for the drink of the day. This method checks if the user is an admin and if the drink is already voted for. If not, it allows the user to vote.
         /// </summary>
         /// <exception cref="Exception">Thrown if an error occurs while voting for the drink.</exception>
         public void VoteForDrink()
         {
-            int userId = _userService.GetCurrentUserId();
+            int userId = this.userService.GetCurrentUserId();
             try
             {
-                _drinkService.VoteDrinkOfTheDAy(userId, Drink.DrinkId);
+                this.drinkService.VoteDrinkOfTheDay(userId, this.Drink.DrinkId);
             }
-            catch (Exception VoteForDrinkException)
+            catch (Exception voteForDrinkException)
             {
-                throw new Exception("Error happened while voting for a drink:", VoteForDrinkException);
+                throw new Exception("Error happened while voting for a drink:", voteForDrinkException);
+            }
+        }
+
+        /// <summary>
+        /// Raises the PropertyChanged event for the specified property name.
+        /// </summary>
+        /// <param name="propertyName">The name of the property that changed.</param>
+        protected void OnPropertyChanged(string propertyName)
+        {
+            if (this.PropertyChanged != null)
+            {
+                this.PropertyChanged.Invoke(this, new PropertyChangedEventArgs(propertyName));
             }
         }
     }

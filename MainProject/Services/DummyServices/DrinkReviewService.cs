@@ -1,10 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using WinUIApp.Models;
+﻿// <copyright file="DrinkReviewService.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
 
 namespace WinUIApp.Services.DummyServices
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using WinUIApp.Models;
+
+    /// <summary>
+    /// Service for managing drink reviews.
+    /// </summary>
     public class DrinkReviewService : IDrinkReviewService
     {
         private readonly HashSet<Review> dummyReviews =
@@ -56,16 +63,30 @@ namespace WinUIApp.Services.DummyServices
     new Review(7, 4.0f, 13, "Pretty good", "Would have it again.", DateTime.Now.AddDays(-1))
 ];
 
-
+        /// <summary>
+        /// Retrieves all reviews for a specific drink by its ID.
+        /// </summary>
+        /// <param name="drinkID"> Drink id. </param>
+        /// <returns> Reviews for the drink. </returns>
         public List<Review> GetReviewsByID(int drinkID)
         {
-            return dummyReviews.Where(r => r.DrinkId == drinkID).ToList();
+            return this.dummyReviews.Where(r => r.DrinkId == drinkID).ToList();
         }
 
+        /// <summary>
+        /// Calculates the average review score for a drink by its ID.
+        /// </summary>
+        /// <param name="drinkID"> Drink id. </param>
+        /// <returns> Average review. </returns>
         public float GetReviewAverageByID(int drinkID)
         {
-            var reviews = GetReviewsByID(drinkID);
-            if (reviews.Count == 0) return 0;
+            var reviews = this.GetReviewsByID(drinkID);
+
+            if (reviews.Count == 0)
+            {
+                return 0;
+            }
+
             return reviews.Average(r => r.ReviewScore);
         }
     }

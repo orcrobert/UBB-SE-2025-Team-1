@@ -1,137 +1,142 @@
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Navigation;
-using System.Collections.Generic;
-using WinUIApp.Models;
-using WinUIApp.Utils.NavigationParameters;
-using WinUIApp.ViewModels;
-using WinUIApp.Views.Components.SearchPageComponents;
+// <copyright file="SearchPage.xaml.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
 
 namespace WinUIApp.Views.Pages
 {
+    using System.Collections.Generic;
+    using Microsoft.UI.Xaml;
+    using Microsoft.UI.Xaml.Controls;
+    using Microsoft.UI.Xaml.Navigation;
+    using WinUIApp.Models;
+    using WinUIApp.Utils.NavigationParameters;
+    using WinUIApp.ViewModels;
+    using WinUIApp.Views.Components.SearchPageComponents;
+
+    /// <summary>
+    /// SearchPage.xaml's interaction logic.
+    /// </summary>
     public sealed partial class SearchPage : Page
     {
-        private SearchPageViewModel _searchPageViewModel;
+        private SearchPageViewModel searchPageViewModel;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SearchPage"/> class.
+        /// </summary>
         public SearchPage()
         {
             this.InitializeComponent();
         }
 
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+        /// <summary>
+        /// Handles the navigation to this page.
+        /// </summary>
+        /// <param name="eventArguments">Event arguments.</param>
+        protected override void OnNavigatedTo(NavigationEventArgs eventArguments)
         {
-            base.OnNavigatedTo(e);
+            base.OnNavigatedTo(eventArguments);
             MainWindow.PreviousPage = typeof(SearchPage);
-            _searchPageViewModel = new SearchPageViewModel(new Services.DrinkService(), new Services.DummyServices.DrinkReviewService());
-            SortSelectorControl.SetSortOrder(_searchPageViewModel.IsAscending);
-            if (e.Parameter is SearchPageNavigationParameters parameters)
+            this.searchPageViewModel = new SearchPageViewModel(new Services.DrinkService(), new Services.DummyServices.DrinkReviewService());
+            this.SortSelectorControl.SetSortOrder(this.searchPageViewModel.IsAscending);
+            if (eventArguments.Parameter is SearchPageNavigationParameters parameters)
             {
                 if (parameters.SelectedCategoryFilters != null)
                 {
-                    _searchPageViewModel.SetInitialCategoryFilter(parameters.SelectedCategoryFilters);
+                    this.searchPageViewModel.SetInitialCategoryFilter(parameters.SelectedCategoryFilters);
                 }
+
                 if (parameters.InputSearchKeyword != null)
                 {
-                    _searchPageViewModel.SetSearchedTerms(parameters.InputSearchKeyword);
+                    this.searchPageViewModel.SetSearchedTerms(parameters.InputSearchKeyword);
                 }
             }
-            LoadDrinks();
-            LoadCategoriesFilter();
-            LoadBrandsFilter();
+
+            this.LoadDrinks();
+            this.LoadCategoriesFilter();
+            this.LoadBrandsFilter();
         }
 
-        //Filter Button
-        private void FilterButtonClick(object sender, RoutedEventArgs e)
+        private void FilterButtonClick(object sender, RoutedEventArgs eventArguments)
         {
-            LoadDrinks();
+            this.LoadDrinks();
         }
 
-        private void ClearFiltersClick(object sender, RoutedEventArgs e)
+        private void ClearFiltersClick(object sender, RoutedEventArgs eventArguments)
         {
-            _searchPageViewModel.ClearFilters();
-            CategoryFilterControl.ClearSelection();
-            BrandFilterControl.ClearSelection();
-            AlcoholContentFilterControl.ResetSliders();
-            RatingFilterControl.ClearSelection();
-            //Clear searched term
-            LoadDrinks();
+            this.searchPageViewModel.ClearFilters();
+            this.CategoryFilterControl.ClearSelection();
+            this.BrandFilterControl.ClearSelection();
+            this.AlcoholContentFilterControl.ResetSliders();
+            this.RatingFilterControl.ClearSelection();
+            this.LoadDrinks();
         }
 
-        //DrinkList
         private void VerticalDrinkListControl_DrinkClicked(object sender, int drinkId)
         {
-            _searchPageViewModel.OpenDrinkDetailPage(drinkId);
+            this.searchPageViewModel.OpenDrinkDetailPage(drinkId);
         }
-
 
         private void LoadDrinks()
         {
-            IEnumerable<DrinkDisplayItem> drinks = _searchPageViewModel.GetDrinks();
-            VerticalDrinkListControl.SetDrinks(drinks);
+            IEnumerable<DrinkDisplayItem> drinks = this.searchPageViewModel.GetDrinks();
+            this.VerticalDrinkListControl.SetDrinks(drinks);
         }
-
-        //Sort
 
         private void SortByDropdownControl_SortByChanged(object sender, string sortField)
         {
-            _searchPageViewModel.SetSortByField(sortField);
-            LoadDrinks();
+            this.searchPageViewModel.SetSortByField(sortField);
+            this.LoadDrinks();
         }
 
         private void SortSelectorControl_SortOrderChanged(object sender, bool isAscending)
         {
-            _searchPageViewModel.SetSortOrder(isAscending);
-            LoadDrinks();
+            this.searchPageViewModel.SetSortOrder(isAscending);
+            this.LoadDrinks();
         }
 
-        // Category filter
         private void LoadCategoriesFilter()
         {
-            IEnumerable<Category> categories = _searchPageViewModel.GetCategories();
-            IEnumerable<Category> initialCategories = GetInitialCategories();
-            CategoryFilterControl.SetCategoriesFilter(categories, initialCategories);
+            IEnumerable<Category> categories = this.searchPageViewModel.GetCategories();
+            IEnumerable<Category> initialCategories = this.GetInitialCategories();
+            this.CategoryFilterControl.SetCategoriesFilter(categories, initialCategories);
         }
 
         private void CategoryFilterControl_CategoryChanged(object sender, List<string> categories)
         {
-            _searchPageViewModel.SetCategoryFilter(categories);
+            this.searchPageViewModel.SetCategoryFilter(categories);
         }
 
         private List<Category> GetInitialCategories()
         {
-            return _searchPageViewModel.InitialCategories;
+            return this.searchPageViewModel.InitialCategories;
         }
-
 
         private void LoadBrandsFilter()
         {
-            IEnumerable<Brand> brands = _searchPageViewModel.GetBrands();
-            BrandFilterControl.SetBrandFilter(brands);
+            IEnumerable<Brand> brands = this.searchPageViewModel.GetBrands();
+            this.BrandFilterControl.SetBrandFilter(brands);
         }
 
         private void BrandFilterControl_BrandChanged(object sender, List<string> brands)
         {
-            _searchPageViewModel.SetBrandFilter(brands);
+            this.searchPageViewModel.SetBrandFilter(brands);
         }
-
-        // Alcohol filter
 
         private void AlcoholContentFilterControl_MinimumAlcoholContentChanged(object sender, double minimumAlcoholContent)
         {
             float minAlcoholContent = (float)minimumAlcoholContent;
-            _searchPageViewModel.SetMinAlcoholFilter(minAlcoholContent);
+            this.searchPageViewModel.SetMinAlcoholFilter(minAlcoholContent);
         }
 
         private void AlcoholContentFilterControl_MaximumAlcoholContentChanged(object sender, double maximumAlcoholContent)
         {
             float maxAlcoholContent = (float)maximumAlcoholContent;
-            _searchPageViewModel.SetMaxAlcoholFilter(maxAlcoholContent);
+            this.searchPageViewModel.SetMaxAlcoholFilter(maxAlcoholContent);
         }
 
-        // Rating Filter
         private void RatingFilterControl_RatingChanged(object sender, float rating)
         {
-            _searchPageViewModel.SetMinRatingFilter(rating);
+            this.searchPageViewModel.SetMinRatingFilter(rating);
         }
     }
 }

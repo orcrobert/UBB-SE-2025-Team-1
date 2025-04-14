@@ -1,17 +1,31 @@
-using Microsoft.UI.Xaml.Controls;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using WinUIApp.Models;
+// <copyright file="BrandFilterComponent.xaml.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
 
 namespace WinUIApp.Views.Components.SearchPageComponents
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.Linq;
+    using Microsoft.UI.Xaml.Controls;
+    using WinUIApp.Models;
+
+    /// <summary>
+    /// A user control for filtering drinks by brand.
+    /// </summary>
     public sealed partial class BrandFilterComponent : UserControl
     {
         private List<Brand> originalBrands = new List<Brand>();
         private HashSet<Brand> selectedBrands = new HashSet<Brand>();
-        public ObservableCollection<Brand> CurrentBrands { get; set; } = new ObservableCollection<Brand>();
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BrandFilterComponent"/> class.
+        /// </summary>
+        public BrandFilterComponent()
+        {
+            this.InitializeComponent();
+        }
 
         /// <summary>
         /// Event that fires when the selected brands change, providing a list of selected brand names.
@@ -19,11 +33,42 @@ namespace WinUIApp.Views.Components.SearchPageComponents
         public event EventHandler<List<string>> BrandChanged;
 
         /// <summary>
-        /// Initializes a new instance of the BrandFilterComponent control.
+        /// Gets or sets the list of currently available brands for filtering.
         /// </summary>
-        public BrandFilterComponent()
+        public ObservableCollection<Brand> CurrentBrands { get; set; } = new ObservableCollection<Brand>();
+
+        /// <summary>
+        /// Updates the available brands for filtering and restores any previous selections
+        /// that are still valid with the new brand list.
+        /// </summary>
+        /// <param name="brands">The collection of brands to be used for filtering.</param>
+        public void SetBrandFilter(IEnumerable<Brand> brands)
         {
-            this.InitializeComponent();
+            this.originalBrands = brands?.ToList() ?? new List<Brand>();
+            this.CurrentBrands.Clear();
+            foreach (Brand brand in this.originalBrands)
+            {
+                this.CurrentBrands.Add(brand);
+            }
+
+            this.BrandList.SelectedItems.Clear();
+            foreach (Brand brand in this.CurrentBrands)
+            {
+                if (this.selectedBrands.Contains(brand))
+                {
+                    this.BrandList.SelectedItems.Add(brand);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Clears all selected brands and triggers the BrandChanged event with an empty list.
+        /// </summary>
+        public void ClearSelection()
+        {
+            this.BrandList.SelectedItems.Clear();
+            this.selectedBrands.Clear();
+            this.BrandChanged?.Invoke(this, new List<string>());
         }
 
         /// <summary>
@@ -36,13 +81,15 @@ namespace WinUIApp.Views.Components.SearchPageComponents
         {
             foreach (Brand removedBrand in selectionChangedEventArgs.RemovedItems)
             {
-                selectedBrands.Remove(removedBrand);
+                this.selectedBrands.Remove(removedBrand);
             }
+
             foreach (Brand addedBrand in selectionChangedEventArgs.AddedItems)
             {
-                selectedBrands.Add(addedBrand);
+                this.selectedBrands.Add(addedBrand);
             }
-            BrandChanged?.Invoke(this, selectedBrands.Select(brand => brand.BrandName).ToList());
+
+            this.BrandChanged?.Invoke(this, this.selectedBrands.Select(brand => brand.BrandName).ToList());
         }
 
         /// <summary>
@@ -53,63 +100,29 @@ namespace WinUIApp.Views.Components.SearchPageComponents
         /// <param name="textChangedEventArgs">Event data for the text changed event.</param>
         private void SearchBox_TextChanged(object sender, TextChangedEventArgs textChangedEventArgs)
         {
-            string searchQuery = SearchBox.Text.ToLower();
-            List<Brand> filteredBrands = originalBrands
+            string searchQuery = this.SearchBox.Text.ToLower();
+            List<Brand> filteredBrands = this.originalBrands
                 .Where(brand => brand.BrandName.ToLower().Contains(searchQuery))
                 .ToList();
 
-            BrandList.SelectionChanged -= BrandListView_SelectionChanged;
+            this.BrandList.SelectionChanged -= this.BrandListView_SelectionChanged;
 
-            CurrentBrands.Clear();
+            this.CurrentBrands.Clear();
             foreach (Brand brand in filteredBrands)
             {
-                CurrentBrands.Add(brand);
+                this.CurrentBrands.Add(brand);
             }
 
-            BrandList.SelectedItems.Clear();
+            this.BrandList.SelectedItems.Clear();
             foreach (Brand brand in filteredBrands)
             {
-                if (selectedBrands.Contains(brand))
+                if (this.selectedBrands.Contains(brand))
                 {
-                    BrandList.SelectedItems.Add(brand);
+                    this.BrandList.SelectedItems.Add(brand);
                 }
             }
 
-            BrandList.SelectionChanged += BrandListView_SelectionChanged;
-        }
-
-        /// <summary>
-        /// Updates the available brands for filtering and restores any previous selections
-        /// that are still valid with the new brand list.
-        /// </summary>
-        /// <param name="brands">The collection of brands to be used for filtering.</param>
-        public void SetBrandFilter(IEnumerable<Brand> brands)
-        {
-            originalBrands = brands?.ToList() ?? new List<Brand>();
-            CurrentBrands.Clear();
-            foreach (Brand brand in originalBrands)
-            {
-                CurrentBrands.Add(brand);
-            }
-
-            BrandList.SelectedItems.Clear();
-            foreach (Brand brand in CurrentBrands)
-            {
-                if (selectedBrands.Contains(brand))
-                {
-                    BrandList.SelectedItems.Add(brand);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Clears all selected brands and triggers the BrandChanged event with an empty list.
-        /// </summary>
-        public void ClearSelection()
-        {
-            BrandList.SelectedItems.Clear();
-            selectedBrands.Clear();
-            BrandChanged?.Invoke(this, new List<string>());
+            this.BrandList.SelectionChanged += this.BrandListView_SelectionChanged;
         }
     }
 }

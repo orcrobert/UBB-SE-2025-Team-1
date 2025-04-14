@@ -1,84 +1,100 @@
-﻿using System;
-using System.Configuration;
-using System.Diagnostics;
-using Microsoft.Data.SqlClient; // Ensure you have the correct using directive for SQL Server
+﻿// <copyright file="DatabaseConnection.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
 
 namespace WinUIApp.Database
 {
+    using System;
+    using System.Configuration;
+    using System.Diagnostics;
+    using Microsoft.Data.SqlClient;
+
+    /// <summary>
+    /// Singleton class for managing the database connection.
+    /// </summary>
     public class DatabaseConnection
     {
-        private static DatabaseConnection _instance;
-        private static readonly object _lock = new();
-        private SqlConnection _connection;
-        private static readonly string _connectionString;
+        private static readonly object @Lock = new ();
+        private static readonly string ConnectionString;
+        private static DatabaseConnection instance;
+        private SqlConnection connection;
 
         static DatabaseConnection()
         {
-            _connectionString = "Data Source=DESKTOP-2JEMU2O\\SQLEXPRESS;Initial Catalog=ISSApp;Integrated Security=True;TrustServerCertificate=True";
+            ConnectionString = "Data Source=DESKTOP-2JEMU2O\\SQLEXPRESS;Initial Catalog=ISSApp;Integrated Security=True;TrustServerCertificate=True";
         }
 
-
-
+        /// <summary>
+        /// Gets the singleton instance of the DatabaseConnection class.
+        /// </summary>
         public static DatabaseConnection Instance
         {
             get
             {
-                if (_instance == null)
+                if (instance == null)
                 {
-                    lock (_lock)
+                    lock (@Lock)
                     {
-                        _instance ??= new DatabaseConnection();
+                        instance ??= new DatabaseConnection();
                     }
                 }
-                return _instance;
+
+                return instance;
             }
         }
 
+        /// <summary>
+        /// Gets the connection to the database.
+        /// </summary>
+        /// <returns> An sql connection. </returns>
         public SqlConnection GetConnection()
         {
-            if (_connection == null || _connection.State == System.Data.ConnectionState.Broken)
+            if (this.connection == null || this.connection.State == System.Data.ConnectionState.Broken)
             {
-                _connection = new SqlConnection(_connectionString);
+                this.connection = new SqlConnection(ConnectionString);
             }
 
-            return _connection;
+            return this.connection;
         }
 
-
+        /// <summary>
+        /// Opens the connection to the database.
+        /// </summary>
         public void OpenConnection()
         {
             try
             {
-                var connection = GetConnection();
+                var connection = this.GetConnection();
 
                 if (connection.State == System.Data.ConnectionState.Closed)
                 {
                     connection.Open();
                 }
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
-                Debug.WriteLine($"Error opening connection: {ex.Message}");
+                Debug.WriteLine($"Error opening connection: {exception.Message}");
             }
         }
 
-
+        /// <summary>
+        /// Closes the connection to the database.
+        /// </summary>
         public void CloseConnection()
         {
             try
             {
-                var connection = GetConnection();
+                var connection = this.GetConnection();
 
                 if (connection.State == System.Data.ConnectionState.Open)
                 {
                     connection.Close();
                 }
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
-                Debug.WriteLine($"Error closing connection: {ex.Message}");
+                Debug.WriteLine($"Error closing connection: {exception.Message}");
             }
         }
-
     }
 }

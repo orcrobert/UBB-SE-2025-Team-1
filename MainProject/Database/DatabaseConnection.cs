@@ -10,11 +10,12 @@ namespace WinUIApp.Database
         private static DatabaseConnection _instance;
         private static readonly object _lock = new();
         private SqlConnection _connection;
-        private static readonly string _connectionString = "Data Source=DESKTOP-TE49281;Initial Catalog=DrinkData;Integrated Security=True;TrustServerCertificate=True";
+        private static readonly string _connectionString;
 
         static DatabaseConnection()
         {
-            _connectionString = "Data Source=DESKTOP-TE49281;Initial Catalog=DrinkData;Integrated Security=True;TrustServerCertificate=True";        }
+            _connectionString = "Data Source=DESKTOP-2JEMU2O\\SQLEXPRESS;Initial Catalog=ISSApp;Integrated Security=True;TrustServerCertificate=True";
+        }
 
 
 

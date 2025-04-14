@@ -8,18 +8,20 @@ namespace WinUIApp.Utils.Converters
 {
     public class CategoriesConverter : IValueConverter
     {
-        public object Convert(object value, Type targetType, object parameter, string language)
+        private const string DefaultDrinkCategoriesDisplay = "N/A";
+        private const string DrinkCategoriesSeparator = ", ";
+        public object Convert(object drinkCategoriesSourceValue, Type destinationType, object converterParameter, string formattingCulture)
         {
-            if (value is List<Category> categories && categories.Count > 0)
+            if (drinkCategoriesSourceValue is List<Category> drinkCategories && drinkCategories.Count > 0)
             {
-                return string.Join(", ", categories.Select(c => c.CategoryName));
+                return string.Join(DrinkCategoriesSeparator, drinkCategories.Select(category => category.CategoryName));
             }
-            return "N/A";
+            return DefaultDrinkCategoriesDisplay;
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, string language)
+        public object ConvertBack(object drinkCategoriesContentValue, Type sourcePropertyType, object converterParameter, string formattingCulture)
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException("Converting from a formatted categories string back to a list of Category objects is not supported.");
         }
     }
 }

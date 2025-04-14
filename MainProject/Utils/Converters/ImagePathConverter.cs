@@ -11,9 +11,18 @@ namespace WinUIApp.Utils.Converters
     /// <summary>
     /// Converter for converting image paths to BitmapImage objects.
     /// </summary>
-    public class ImagePathConverter : IValueConverter
+    public partial class ImagePathConverter(IBitmapImageFactory bitmapImageFactory) : IValueConverter
     {
-        private const string FallbackImagePath = "ms-appx:///Assets/DefaultDrink.png";
+        private const string FallbackImagePath = "ms-appx:///Assets/DefaultDrink.jpg";
+        private readonly IBitmapImageFactory bitmapImageFactory = bitmapImageFactory;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ImagePathConverter"/> class.
+        /// </summary>
+        public ImagePathConverter()
+            : this(new DefaultBitmapImageFactory())
+        {
+        }
 
         /// <summary>
         /// Converts a string image path to a BitmapImage.
@@ -23,24 +32,21 @@ namespace WinUIApp.Utils.Converters
         /// <param name="converterParameter">Parameter.</param>
         /// <param name="formattingCulture">Culture.</param>
         /// <returns>Object.</returns>
-
         public object Convert(object imagePathSourceValue, Type destinationType, object converterParameter, string formattingCulture)
         {
             if (imagePathSourceValue is string url && !string.IsNullOrEmpty(url))
             {
                 try
                 {
-                    return _bitmapImageFactory.Create(url);
+                    return this.bitmapImageFactory.Create(url);
                 }
-                catch (Exception)
-
+                catch
                 {
-                    return _bitmapImageFactory.Create(FallbackImagePath);
+                    return this.bitmapImageFactory.Create(FallbackImagePath);
                 }
             }
 
-            return new BitmapImage(new Uri(FallbackImagePath));
-
+            return this.bitmapImageFactory.Create(FallbackImagePath);
         }
 
         /// <summary>

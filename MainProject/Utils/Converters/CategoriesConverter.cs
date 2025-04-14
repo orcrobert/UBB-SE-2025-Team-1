@@ -15,21 +15,24 @@ namespace WinUIApp.Utils.Converters
     /// </summary>
     public class CategoriesConverter : IValueConverter
     {
+        private const string DefaultDrinkCategoriesDisplay = "N/A";
+        private const string DrinkCategoriesSeparator = ", ";
+
         /// <summary>
         /// Converts a list of categories to a comma-separated string.
         /// </summary>
-        /// <param name="value">value.</param>
-        /// <param name="targetType">Type.</param>
-        /// <param name="parameter">Parameter.</param>
-        /// <param name="language">Language.</param>
+        /// <param name="drinkCategoriesSourceValue">value.</param>
+        /// <param name="destinationType">Type.</param>
+        /// <param name="converterParameter">Parameter.</param>
+        /// <param name="formattingCulture">Language.</param>
         /// <returns>Object.</returns>
-        public object Convert(object value, Type targetType, object parameter, string language)
-
+        public object Convert(object drinkCategoriesSourceValue, Type destinationType, object converterParameter, string formattingCulture)
         {
             if (drinkCategoriesSourceValue is List<Category> drinkCategories && drinkCategories.Count > 0)
             {
                 return string.Join(DrinkCategoriesSeparator, drinkCategories.Select(category => category.CategoryName));
             }
+
             return DefaultDrinkCategoriesDisplay;
         }
 

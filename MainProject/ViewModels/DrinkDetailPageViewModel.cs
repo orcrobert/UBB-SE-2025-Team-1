@@ -27,13 +27,13 @@ namespace WinUIApp.Views.ViewModels
     /// <param name="reviewService">The review service used to manage reviews.</param>
     /// <param name="userService">The user service used to manage users.</param>
     /// <param name="adminService">The admin service used to manage admin actions.</param>
-    public partial class DrinkDetailPageViewModel(DrinkService drinkService, DrinkReviewService reviewService, UserService userService, AdminService adminService) : INotifyPropertyChanged
+    public partial class DrinkDetailPageViewModel(IDrinkService drinkService, IDrinkReviewService reviewService, IUserService userService, IAdminService adminService) : INotifyPropertyChanged
     {
         private const string CategorySeparator = ", ";
-        private readonly DrinkService drinkService = drinkService;
-        private readonly DrinkReviewService reviewService = reviewService;
-        private readonly UserService userService = userService;
-        private readonly AdminService adminService = adminService;
+        private readonly IDrinkService drinkService = drinkService;
+        private readonly IDrinkReviewService reviewService = reviewService;
+        private readonly IUserService userService = userService;
+        private readonly IAdminService adminService = adminService;
         private Drink drink;
         private float averageReviewScore;
 
@@ -68,7 +68,7 @@ namespace WinUIApp.Views.ViewModels
         {
             get
             {
-                if (this.Drink?.CategoryList != null)
+                if (this.Drink != null && this.Drink.CategoryList != null)
                 {
                     return string.Join(CategorySeparator, this.Drink.CategoryList.Select(drinkCategory => drinkCategory.CategoryName));
                 }

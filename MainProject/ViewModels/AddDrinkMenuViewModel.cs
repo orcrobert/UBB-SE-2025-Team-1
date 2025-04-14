@@ -25,15 +25,15 @@ namespace WinUIApp.ViewModels
     /// <param name="userService">The user service used to manage users.</param>
     /// <param name="adminService">The admin service used to manage admin actions.</param>
     public partial class AddDrinkMenuViewModel(
-        DrinkService drinkService,
-        UserService userService,
-        AdminService adminService) : INotifyPropertyChanged
+        IDrinkService drinkService,
+        IUserService userService,
+        IAdminService adminService) : INotifyPropertyChanged
     {
         private const float MaxAlcoholContent = 100.0f;
         private const float MinAlcoholContent = 0.0f;
-        private readonly DrinkService drinkService = drinkService;
-        private readonly UserService userService = userService;
-        private readonly AdminService adminService = adminService;
+        private readonly IDrinkService drinkService = drinkService;
+        private readonly IUserService userService = userService;
+        private readonly IAdminService adminService = adminService;
         private string newDrinkName = string.Empty;
         private string newDrinkURL = string.Empty;
         private string newDrinkBrandName = string.Empty;
@@ -233,7 +233,10 @@ namespace WinUIApp.ViewModels
         /// <param name="propertyName"> Name. </param>
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            this.PropertyChanged.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            if (this.PropertyChanged != null)
+            {
+                this.PropertyChanged.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            }
         }
     }
 }

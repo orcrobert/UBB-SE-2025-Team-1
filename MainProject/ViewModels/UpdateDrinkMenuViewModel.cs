@@ -177,11 +177,6 @@ namespace WinUIApp.ViewModels
 
             if (string.IsNullOrWhiteSpace(this.BrandName))
             {
-                throw new ArgumentException("Brand is required");
-            }
-
-            if (string.IsNullOrWhiteSpace(this.BrandName))
-            {
                 throw new ArgumentException("Brand is required.");
             }
 
@@ -249,7 +244,10 @@ namespace WinUIApp.ViewModels
         /// <param name="propertyName">Name of the property that changed.</param>
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            this.PropertyChanged.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            if (this.PropertyChanged != null)
+            {
+                this.PropertyChanged.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            }
         }
 
         /// <summary>

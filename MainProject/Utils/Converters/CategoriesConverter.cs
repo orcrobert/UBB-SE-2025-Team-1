@@ -24,12 +24,13 @@ namespace WinUIApp.Utils.Converters
         /// <param name="language">Language.</param>
         /// <returns>Object.</returns>
         public object Convert(object value, Type targetType, object parameter, string language)
+
         {
-            if (value is List<Category> categories && categories.Count > 0)
+            if (drinkCategoriesSourceValue is List<Category> drinkCategories && drinkCategories.Count > 0)
             {
-                return string.Join(", ", categories.Select(c => c.CategoryName));
+                return string.Join(DrinkCategoriesSeparator, drinkCategories.Select(category => category.CategoryName));
             }
-            return "N/A";
+            return DefaultDrinkCategoriesDisplay;
         }
 
         /// <summary>
@@ -42,8 +43,9 @@ namespace WinUIApp.Utils.Converters
         /// <returns>Object.</returns>
         /// <exception cref="NotImplementedException">Not implemented.</exception>
         public object ConvertBack(object value, Type targetType, object parameter, string language)
+
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException("Converting from a formatted categories string back to a list of Category objects is not supported.");
         }
     }
 }

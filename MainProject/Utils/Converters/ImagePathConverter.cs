@@ -1,4 +1,4 @@
-﻿// <copyright file="ImagePathConverter.cs" company="PlaceholderCompany">
+// <copyright file="ImagePathConverter.cs" company="PlaceholderCompany">
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
@@ -23,23 +23,24 @@ namespace WinUIApp.Utils.Converters
         /// <param name="converterParameter">Parameter.</param>
         /// <param name="formattingCulture">Culture.</param>
         /// <returns>Object.</returns>
+
         public object Convert(object imagePathSourceValue, Type destinationType, object converterParameter, string formattingCulture)
         {
             if (imagePathSourceValue is string url && !string.IsNullOrEmpty(url))
             {
-                BitmapImage bitmapImage = new BitmapImage();
                 try
                 {
-                    bitmapImage = new BitmapImage(new Uri(url));
-                    return bitmapImage;
+                    return _bitmapImageFactory.Create(url);
                 }
                 catch (Exception)
+
                 {
-                    return new BitmapImage(new Uri(FallbackImagePath));
+                    return _bitmapImageFactory.Create(FallbackImagePath);
                 }
             }
 
             return new BitmapImage(new Uri(FallbackImagePath));
+
         }
 
         /// <summary>

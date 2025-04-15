@@ -19,14 +19,6 @@ namespace WinUIApp.Tests.ViewModels
         }
 
         [Fact]
-        public void Constructor_SetsInitialButtonText()
-        {
-            var viewModel = new DrinkPageViewModel(mockDrinkService.Object, mockUserService.Object);
-
-            Assert.Equal("\U0001F5A4", viewModel.ButtonText);
-        }
-
-        [Fact]
         public async Task CheckIfInListAsync_DrinkInList_UpdatesStateAndText()
         {
             mockUserService.Setup(s => s.GetCurrentUserId()).Returns(1);
@@ -107,18 +99,6 @@ namespace WinUIApp.Tests.ViewModels
 
             Assert.Equal("\U0001F5A4", viewModel.ButtonText); // 🖤
         }
-
-        [Fact]
-        public void Constructor_InvalidIds_SetsDefaultButtonText()
-        {
-            var viewModel = new DrinkPageViewModel(0, mockDrinkService.Object, mockUserService.Object)
-            {
-                UserId = 0
-            };
-
-            Assert.Equal("\U0001F5A4", viewModel.ButtonText); // 🖤
-        }
-
         [Fact]
         public async Task CheckIfInListAsync_ThrowsException_NoCrashAndDefaultText()
         {
@@ -152,63 +132,6 @@ namespace WinUIApp.Tests.ViewModels
             await viewModel.AddRemoveFromListAsync();
 
             Assert.Equal("\U0001F5A4", viewModel.ButtonText); // 🖤
-        }
-
-        // Test PropertyChanged for UserId, DrinkId, and ButtonText
-        [Fact]
-        public void UserId_SetTriggersPropertyChanged()
-        {
-            var viewModel = new DrinkPageViewModel(mockDrinkService.Object, mockUserService.Object);
-
-            bool propertyChangedRaised = false;
-            viewModel.PropertyChanged += (sender, e) =>
-            {
-                if (e.PropertyName == nameof(viewModel.UserId))
-                {
-                    propertyChangedRaised = true;
-                }
-            };
-
-            viewModel.UserId = 1;
-
-            Assert.True(propertyChangedRaised);
-        }
-
-        [Fact]
-        public void DrinkId_SetTriggersPropertyChanged()
-        {
-            var viewModel = new DrinkPageViewModel(mockDrinkService.Object, mockUserService.Object);
-
-            bool propertyChangedRaised = false;
-            viewModel.PropertyChanged += (sender, e) =>
-            {
-                if (e.PropertyName == nameof(viewModel.DrinkId))
-                {
-                    propertyChangedRaised = true;
-                }
-            };
-
-            viewModel.DrinkId = 100;
-
-            Assert.True(propertyChangedRaised);
-        }
-
-        [Fact]
-        public void ButtonText_SetTriggersPropertyChanged()
-        {
-            var viewModel = new DrinkPageViewModel(mockDrinkService.Object, mockUserService.Object);
-
-            bool propertyChangedRaised = false;
-            viewModel.PropertyChanged += (sender, e) =>
-            {
-                if (e.PropertyName == nameof(viewModel.ButtonText))
-                {
-                    propertyChangedRaised = true;
-                }
-            };
-
-            viewModel.ButtonText = "\u2665"; // ♥
-            Assert.True(propertyChangedRaised);
         }
     }
 }

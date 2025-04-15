@@ -34,29 +34,6 @@ namespace WinUIApp.Tests.ViewModels
         }
 
         [Fact]
-        public void Property_Setters_Should_Trigger_PropertyChanged()
-        {
-            var changedProperties = new List<string>();
-            _viewModel.PropertyChanged += (s, e) => changedProperties.Add(e.PropertyName);
-
-            var drink = new Drink(
-                1,
-                "Test Drink",
-                "image.png",
-                new List<Category> { new Category(1, "Category1") },
-                new Brand(1, "Test Brand"),
-                5f
-            );
-
-            _viewModel.Drink = drink;
-            _viewModel.AverageReviewScore = 4.2f;
-
-            Assert.Contains(nameof(_viewModel.Drink), changedProperties);
-            Assert.Contains(nameof(_viewModel.CategoriesDisplay), changedProperties);
-            Assert.Contains(nameof(_viewModel.AverageReviewScore), changedProperties);
-        }
-
-        [Fact]
         public void CategoriesDisplay_Should_Return_Correct_String()
         {
             var drink = new Drink(

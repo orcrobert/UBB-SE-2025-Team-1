@@ -15,7 +15,7 @@ namespace WinUIApp.Views.ViewModels
     /// <summary>
     /// ViewModel for the Header component. Manages the state and behavior of the header, including fetching drink categories.
     /// </summary>
-    public class HeaderViewModel
+    internal class HeaderViewModel
     {
         private IDrinkService drinkService;
 

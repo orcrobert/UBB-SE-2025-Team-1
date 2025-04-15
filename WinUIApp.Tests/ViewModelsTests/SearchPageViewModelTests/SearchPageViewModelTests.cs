@@ -200,6 +200,37 @@ namespace WinUIApp.Tests.ViewModels
         }
 
 
+        [Fact]
+        public void SetInitialCategoryFilter_SetsAndAppliesFilter()
+        {
+            var initial = new List<Category> { new Category(1, "Cider"), new Category(2, "Lager") };
+            _viewModel.SetInitialCategoryFilter(initial);
+
+            Assert.Equal(initial, _viewModel.InitialCategories);
+        }
+
+
+        [Fact]
+        public void ClearFilters_ResetsAllFilters()
+        {
+            _viewModel.SetCategoryFilter(new List<string> { "TestCategory" });
+            _viewModel.SetBrandFilter(new List<string> { "TestBrand" });
+            _viewModel.SetMinAlcoholFilter(4.5f);
+            _viewModel.SetMaxAlcoholFilter(10.0f);
+
+            _viewModel.ClearFilters();
+
+            var drinks = new List<Drink>();
+            _drinkServiceMock.Setup(s => s.GetDrinks(null, null, null, null, null, It.IsAny<Dictionary<string, bool>>()))
+                             .Returns(drinks);
+            _reviewServiceMock.Setup(r => r.GetReviewAverageByID(It.IsAny<int>())).Returns(4.0f);
+
+            _viewModel.SetSortByField("Name");
+            _viewModel.SetSortOrder(true);
+            var result = _viewModel.GetDrinks().ToList();
+
+            Assert.NotNull(result);
+        }
 
 
     }

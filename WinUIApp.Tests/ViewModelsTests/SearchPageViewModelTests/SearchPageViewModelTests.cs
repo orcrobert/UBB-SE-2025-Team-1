@@ -198,6 +198,31 @@ namespace WinUIApp.Tests.ViewModels
             Assert.Single(result);
             Assert.Equal(1, result[0].Drink.DrinkId);
         }
+        [Fact]
+        public void GetDrinks_WithMinRatingFilter_WhenNoValidFieldSet()
+        {
+            var drinks = new List<Drink>
+            {
+                CreateDrink(1, "Drink A", 5.0f),
+                CreateDrink(2, "Drink B", 5.0f)
+            };
+
+            _drinkServiceMock.Setup(s => s.GetDrinks(null, null, null, null, null, It.IsAny<Dictionary<string, bool>>()))
+                             .Returns(drinks);
+
+            _reviewServiceMock.Setup(r => r.GetReviewAverageByID(1)).Returns(3.5f);
+            _reviewServiceMock.Setup(r => r.GetReviewAverageByID(2)).Returns(2.5f);
+
+            _viewModel.SetMinRatingFilter(3.0f);
+            _viewModel.SetSortByField("UnknownField");
+            _viewModel.SetSortOrder(false); // descending
+
+
+            var result = _viewModel.GetDrinks().ToList();
+
+            Assert.Single(result);
+            Assert.Equal(1, result[0].Drink.DrinkId);
+        }
 
 
         [Fact]
@@ -231,7 +256,5 @@ namespace WinUIApp.Tests.ViewModels
 
             Assert.NotNull(result);
         }
-
-
     }
 }

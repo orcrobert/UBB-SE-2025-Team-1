@@ -18,7 +18,7 @@ namespace WinUIApp.ViewModels
     /// <summary>
     /// ViewModel for the MainPage. Manages the display of the drink of the day and a personal drink list.
     /// </summary>
-    public class MainPageViewModel
+    internal class MainPageViewModel
     {
         private const int HardCodedNumberOfDrinks = 5;
         private IDrinkService drinkService;
